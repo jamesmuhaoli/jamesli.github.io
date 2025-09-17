@@ -3,88 +3,25 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Courses – James Li</title>
+  <title>Courses — James Li</title>
 
-  <!-- Oswald for headings -->
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&display=swap" rel="stylesheet">
-
+  <link rel="stylesheet" href="style.css">
   <style>
-    :root{
-      --bar:#0a2c56;   /* top/bottom ribbons */
-      --ink:#0a1a2a;   /* main text (almost-black navy) */
-      --bg:#f5f5f5;
-      --indent: 2rem;  /* "tab" for descriptions */
-    }
-    html,body{height:100%;margin:0}
-    body{
-      background:var(--bg);
-      color:var(--ink);
-      font-family:"Times New Roman", Times, serif;
-      font-size:1.05rem;
-      line-height:1.75;
-    }
-    .page{min-height:100svh;display:flex;flex-direction:column}
-
-    /* Slim dark-blue ribbons */
-    .topbar,.bottombar{
-      background:var(--bar);color:#fff;text-align:center;
-      padding:.38rem .75rem;
-      font-family:"Oswald","Arial Narrow",sans-serif;
-      letter-spacing:.3px;
-    }
-    .topbar{position:sticky;top:0;z-index:1000;box-shadow:0 1px 0 rgba(0,0,0,.12)}
-    .nav{display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap}
-    .nav a{color:#fff;text-decoration:none;font-weight:400;font-size:1rem}
-    .nav a:hover{text-decoration:underline}
-
-    /* Main content */
-    main{
-      flex:1;
-      width:75%;
-      margin:0 auto;
-      padding:3rem 1rem 2.5rem;
-      text-align:left;            /* left aligned */
-    }
-    h1, h2.section{
-      font-family:"Oswald","Arial Narrow",sans-serif;
-      color:var(--ink);
-      letter-spacing:.4px;
-      margin:0 0 .75rem;
-    }
-    h1{font-size:2.2rem;font-weight:500;margin-bottom:1.25rem;text-align:left}
+    /* Page-specific tiny bits */
+    :root { --indent: 2rem; }
     .intro{max-width:70ch;margin:0 0 1.25rem}
-
-    /* Subject divider */
-    .subject{
-      display:flex;align-items:center;gap:.75rem;margin:2rem 0 1rem;
-    }
+    .subject{display:flex;align-items:center;gap:.75rem;margin:2rem 0 1rem}
     .subject .line{flex:1;height:1px;background:#d9d9d9}
-    .subject .label{
-      font-family:"Oswald","Arial Narrow",sans-serif;
-      font-size:1.1rem;letter-spacing:.3px;
-    }
-
-    /* Course listing — title left, description indented like a "tab" */
-    .courses{display:block;margin:0;padding:0;list-style:none}
+    .subject .label{font-family:"Oswald","Arial Narrow",sans-serif;font-size:1.1rem;letter-spacing:.3px}
+    .courses{list-style:none;margin:0;padding:0}
     .course{margin:0 0 .9rem}
-    .course-title{
-      font-family:"Oswald","Arial Narrow",sans-serif;
-      font-size:1.25rem;font-weight:500;margin:0;
-    }
-    .course-desc{
-      margin: .15rem 0 0 var(--indent);   /* tab indent */
-      max-width:70ch;
-    }
-
-    .bottombar{margin-top:auto;font-size:.95rem}
-
-    @media (max-width:900px){ main{width:82%} }
-    @media (max-width:720px){ main{width:92%}; :root{--indent:1.25rem} }
+    .course-title{font-family:"Oswald","Arial Narrow",sans-serif;font-size:1.25rem;font-weight:500;margin:0}
+    .course-desc{margin:.15rem 0 0 var(--indent);max-width:70ch}
   </style>
 </head>
 <body>
   <div class="page">
-    <!-- Top slim ribbon -->
     <header class="topbar">
       <nav class="nav" aria-label="Primary">
         <a href="index.html">Home</a>
@@ -93,20 +30,26 @@
       </nav>
     </header>
 
-    <!-- Content -->
-    <main>
+    <main style="text-align:left;">
       <h1>Selected Courses</h1>
       <p class="intro">Below is a selection of courses I’ve completed at UW–Madison:</p>
 
       <!-- ECONOMICS -->
       <div class="subject">
-        <span class="label">Economics</span>
-        <span class="line" aria-hidden="true"></span>
+        <span class="label">Economics</span><span class="line"></span>
       </div>
       <ul class="courses">
         <li class="course">
+          <h3 class="course-title">ECON 330: Money and Banking</h3>
+          <p class="course-desc">Financial markets, yield curve, balance sheet, and monetary system.</p>
+        </li>
+        <li class="course">
           <h3 class="course-title">ECON 410: Econometrics</h3>
           <p class="course-desc">Estimation &amp; inference in linear regression; panel data; IV methods.</p>
+        </li>
+        <li class="course">
+          <h3 class="course-title">ECON 460: Econometric Forecasting</h3>
+          <p class="course-desc">Utilize databases (BLS, BEA, FRED) to develope and evaluate time-series forecasts on economic indicators, in R & Stata.</p>
         </li>
         <li class="course">
           <h3 class="course-title">ECON 461: International Macroeconomics</h3>
@@ -114,36 +57,34 @@
         </li>
         <li class="course">
           <h3 class="course-title">ECON 468: Industrial Organization</h3>
-          <p class="course-desc">Cournot competition, price discrimination, and market-structure analysis.</p>
+          <p class="course-desc">Cournot competition, price discrimination, and market concentration and structure analysis.</p>
         </li>
         <li class="course">
           <h3 class="course-title">ECON 661: Issues in International Macroeconomics</h3>
-          <p class="course-desc">Two-period household/firms model with intertemporal budget constraint via Lagrange.</p>
+          <p class="course-desc">Two-period household/firms model with intertemporal budget constraint via Lagrange. Sudden Stop Crisis and Foreign Exchange.</p>
         </li>
         <li class="course">
           <h3 class="course-title">ECON 690: Auction Theory and Market Design</h3>
-          <p class="course-desc">In progress…</p>
+          <p class="course-desc">Competitveness monopolistic market design; large markets auction and game theory.</p>
         </li>
       </ul>
 
       <!-- DATA SCIENCE -->
       <div class="subject" style="margin-top:2.2rem;">
-        <span class="label">Data Science / Computer Science</span>
-        <span class="line" aria-hidden="true"></span>
+        <span class="label">Data Science / Computer Science</span><span class="line"></span>
       </div>
       <ul class="courses">
-        <li class="course">
-          <h3 class="course-title">CS 544: Big Data Systems</h3>
-          <p class="course-desc">Docker, gRPC, Spark, Cassandra, Parquet, PyArrow; building fault-tolerant pipelines with I/O optimization and cache management.</p>
-        </li>
         <li class="course">
           <h3 class="course-title">CS 540: Artificial Intelligence and Machine Learning</h3>
           <p class="course-desc">Principal component analysis, isolation forests, and natural language processing.</p>
         </li>
+        <li class="course">
+          <h3 class="course-title">CS 544: Big Data Systems</h3>
+          <p class="course-desc">Docker, gRPC, Spark, Cassandra, Parquet, PyArrow; building fault-tolerant pipelines with I/O optimization and cache management.</p>
+        </li>
       </ul>
     </main>
 
-    <!-- Bottom slim ribbon -->
     <footer class="bottombar">
       © 2025 James Li — All Rights Reserved
     </footer>
