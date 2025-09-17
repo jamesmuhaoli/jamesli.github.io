@@ -1,240 +1,152 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Courses – James Li</title>
 
-  <!-- Font Awesome & Google Fonts -->
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-  />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
-    rel="stylesheet"
-  />
-
-  <title>James Li – Courses</title>
+  <!-- Oswald for headings -->
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&display=swap" rel="stylesheet">
 
   <style>
-    :root {
-      --bg: #f5f5f5;
-      --fg: #24292e;
-      --muted: #57606a;
-      --link: #0366d6;
-      --border: #e1e4e8;
+    :root{
+      --bar:#0a2c56;   /* top/bottom ribbons */
+      --ink:#0a1a2a;   /* main text (almost-black navy) */
+      --bg:#f5f5f5;
+      --indent: 2rem;  /* "tab" for descriptions */
     }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Roboto', sans-serif;
-      font-size: 1rem;
-      line-height: 1.6;
-      color: var(--fg);
-      background: var(--bg);
+    html,body{height:100%;margin:0}
+    body{
+      background:var(--bg);
+      color:var(--ink);
+      font-family:"Times New Roman", Times, serif;
+      font-size:1.05rem;
+      line-height:1.75;
+    }
+    .page{min-height:100svh;display:flex;flex-direction:column}
+
+    /* Slim dark-blue ribbons */
+    .topbar,.bottombar{
+      background:var(--bar);color:#fff;text-align:center;
+      padding:.38rem .75rem;
+      font-family:"Oswald","Arial Narrow",sans-serif;
+      letter-spacing:.3px;
+    }
+    .topbar{position:sticky;top:0;z-index:1000;box-shadow:0 1px 0 rgba(0,0,0,.12)}
+    .nav{display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap}
+    .nav a{color:#fff;text-decoration:none;font-weight:400;font-size:1rem}
+    .nav a:hover{text-decoration:underline}
+
+    /* Main content */
+    main{
+      flex:1;
+      width:75%;
+      margin:0 auto;
+      padding:3rem 1rem 2.5rem;
+      text-align:left;            /* left aligned */
+    }
+    h1, h2.section{
+      font-family:"Oswald","Arial Narrow",sans-serif;
+      color:var(--ink);
+      letter-spacing:.4px;
+      margin:0 0 .75rem;
+    }
+    h1{font-size:2.2rem;font-weight:500;margin-bottom:1.25rem;text-align:left}
+    .intro{max-width:70ch;margin:0 0 1.25rem}
+
+    /* Subject divider */
+    .subject{
+      display:flex;align-items:center;gap:.75rem;margin:2rem 0 1rem;
+    }
+    .subject .line{flex:1;height:1px;background:#d9d9d9}
+    .subject .label{
+      font-family:"Oswald","Arial Narrow",sans-serif;
+      font-size:1.1rem;letter-spacing:.3px;
     }
 
-    /* Top nav */
-    header.top-nav {
-      background: #fff;
-      border-bottom: 1px solid var(--border);
-      height: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 2rem;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
+    /* Course listing — title left, description indented like a "tab" */
+    .courses{display:block;margin:0;padding:0;list-style:none}
+    .course{margin:0 0 .9rem}
+    .course-title{
+      font-family:"Oswald","Arial Narrow",sans-serif;
+      font-size:1.25rem;font-weight:500;margin:0;
     }
-    header .site-title {
-      font-size: 1.375rem;
-      font-weight: 700;
-      color: var(--fg);
-    }
-    header nav a {
-      margin-left: 1.5rem;
-      font-size: 0.875rem;
-      font-weight: 500;
-      color: var(--muted);
-      text-decoration: none;
-    }
-    header nav a:hover {
-      color: var(--link);
-      text-decoration: underline;
+    .course-desc{
+      margin: .15rem 0 0 var(--indent);   /* tab indent */
+      max-width:70ch;
     }
 
-    /* Layout */
-    .wrapper {
-      display: flex;
-      max-width: 1200px;
-      margin: 3rem auto;
-      background: #fff;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-      border-radius: 6px;
-      overflow: hidden;
-    }
-    aside.sidebar {
-      width: 280px;
-      background: #f7f7f7;
-      padding: 2rem 1.5rem;
-      border-right: 1px solid var(--border);
-    }
-    aside .profile-pic {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      object-fit: cover;
-      display: block;
-      margin: 0 auto 1rem;
-    }
-    aside h2 {
-      text-align: center;
-      font-size: 1.375rem;
-      font-weight: 700;
-      margin-bottom: 0.25rem;
-    }
-    aside .handle {
-      text-align: center;
-      font-size: 0.875rem;
-      color: var(--muted);
-      margin-bottom: 1rem;
-    }
-    aside .bio {
-      text-align: center;
-      font-size: 0.875rem;
-      color: var(--muted);
-      margin-bottom: 2rem;
-    }
-    aside .contact-list {
-      list-style: none;
-      font-size: 0.875rem;
-      color: var(--muted);
-    }
-    aside .contact-list li {
-      display: flex;
-      align-items: center;
-      margin-bottom: 0.75rem;
-    }
-    aside .contact-list li i {
-      margin-right: 0.5rem;
-      font-size: 1.125rem;
-    }
-    aside .contact-list a {
-      color: var(--link);
-      text-decoration: none;
-    }
-    aside .contact-list a:hover {
-      text-decoration: underline;
-    }
+    .bottombar{margin-top:auto;font-size:.95rem}
 
-    main.content {
-      flex: 1;
-      padding: 2rem;
-    }
-    main.content h1 {
-      font-size: 1.875rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-    }
-    main.content h2 {
-      font-size: 1.25rem;
-      font-weight: 600;
-      margin: 2rem 0 0.5rem;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 0.25rem;
-    }
-    main.content p {
-      margin-bottom: 1.25rem;
-    }
-
-    footer {
-      text-align: center;
-      padding: 1.5rem 0;
-      font-size: 0.875rem;
-      color: var(--muted);
-    }
+    @media (max-width:900px){ main{width:82%} }
+    @media (max-width:720px){ main{width:92%}; :root{--indent:1.25rem} }
   </style>
 </head>
 <body>
+  <div class="page">
+    <!-- Top slim ribbon -->
+    <header class="topbar">
+      <nav class="nav" aria-label="Primary">
+        <a href="index.html">Home</a>
+        <a href="project.html">Projects</a>
+        <a href="courses.html" aria-current="page">Courses</a>
+      </nav>
+    </header>
 
-  <header class="top-nav">
-    <div class="site-title">James Li</div>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="project.html">Projects</a>
-      <a href="courses.html">Courses</a>
-    </nav>
-  </header>
+    <!-- Content -->
+    <main>
+      <h1>Selected Courses</h1>
+      <p class="intro">Below is a selection of courses I’ve completed at UW–Madison:</p>
 
-  <div class="wrapper">
-    <aside class="sidebar">
-      <img src="profile.JPG" alt="James Li" class="profile-pic" />
-      <h2>James Li</h2>
-      <p class="handle">@jamesmuhaoli</p>
-      <p class="bio">
-        UW‑Madison student in Economics, Mathematics & Data Science.  
-        Interested in energy maket, monetary economics, and database management.
-      </p>
-      <ul class="contact-list">
-        <li><i class="fas fa-map-marker-alt"></i>Los Angeles, CA</li>
-        <li><i class="fas fa-university"></i>UW‑Madison</li>
-        <li>
-          <i class="fas fa-envelope"></i>
-          <a href="mailto:muhao0225@gmail.com">muhao0225@gmail.com</a>
+      <!-- ECONOMICS -->
+      <div class="subject">
+        <span class="label">Economics</span>
+        <span class="line" aria-hidden="true"></span>
+      </div>
+      <ul class="courses">
+        <li class="course">
+          <h3 class="course-title">ECON 410: Econometrics</h3>
+          <p class="course-desc">Estimation &amp; inference in linear regression; panel data; IV methods.</p>
         </li>
-        <li>
-          <i class="fab fa-github"></i>
-          <a href="https://github.com/jamesmuhaoli" target="_blank">GitHub</a>
+        <li class="course">
+          <h3 class="course-title">ECON 461: International Macroeconomics</h3>
+          <p class="course-desc">Balance of payments, exchange-rate models, and frictions linking FX and money (IS–LM) markets; financial hedging tools.</p>
         </li>
-        <li>
-          <i class="fab fa-linkedin"></i>
-          <a href="https://www.linkedin.com/in/muhao-li" target="_blank">LinkedIn</a>
+        <li class="course">
+          <h3 class="course-title">ECON 468: Industrial Organization</h3>
+          <p class="course-desc">Cournot competition, price discrimination, and market-structure analysis.</p>
+        </li>
+        <li class="course">
+          <h3 class="course-title">ECON 661: Issues in International Macroeconomics</h3>
+          <p class="course-desc">Two-period household/firms model with intertemporal budget constraint via Lagrange.</p>
+        </li>
+        <li class="course">
+          <h3 class="course-title">ECON 690: Auction Theory and Market Design</h3>
+          <p class="course-desc">In progress…</p>
         </li>
       </ul>
-    </aside>
 
-    <main class="content">
-      <h1>Selected Courses</h1>
-      <p>Below is a selection of courses I’ve completed at UW‑Madison:</p>
-      <ul class="course-list">
-        <li>
-          <h2>ECON 410: Econometrics</h2>
-          <p>Estimation & inference in linear regression; panel data; IV methods.</p>
+      <!-- DATA SCIENCE -->
+      <div class="subject" style="margin-top:2.2rem;">
+        <span class="label">Data Science / Computer Science</span>
+        <span class="line" aria-hidden="true"></span>
+      </div>
+      <ul class="courses">
+        <li class="course">
+          <h3 class="course-title">CS 544: Big Data Systems</h3>
+          <p class="course-desc">Docker, gRPC, Spark, Cassandra, Parquet, PyArrow; building fault-tolerant pipelines with I/O optimization and cache management.</p>
         </li>
-        <li>
-          <h2>ECON 461: International Macroeconomics</h2>
-          <p>Balance of payments, exchange‑rate models, and market frictions among foregin exchange (FX) and money (IS-LM) market. Financial hedging tools.</p>
+        <li class="course">
+          <h3 class="course-title">CS 540: Artificial Intelligence and Machine Learning</h3>
+          <p class="course-desc">Principal component analysis, isolation forests, and natural language processing.</p>
         </li>
-        <li>
-          <h2>CS 544: Big Data Systems</h2>
-          <p>Docker, gRPC, Spark, Cassandra, Parquet, PyArrow; building fault‑tolerant pipelines with I/O optimization and cache management.</p>
-        </li>
-        <li>
-          <h2>ECON 468: Industrial Organization</h2>
-          <p>Cournot competition, price discrimination, and market structure analysis.</p>
-        </li>
-        <li>
-          <h2>ECON 661: Issues in International Macroeconomic</h2>
-          <p>Two period household/firms model with Intertemporal Budget Constraint derived with Lagrange. </p>
-        </li>
-        <li>
-          <h2>ECON 690: Auction Theory and Market Design</h2>
-          <p>In progress... </p>
-        </li>
-        <li>
-          <h2>CS 540: Artificial Intelligence and Machine Learning</h2>
-          <p>Principal Component Analysis, random and isolate forests, Natural Language Processing </p>
-        </li>
-        <!-- add more as you like -->
       </ul>
     </main>
+
+    <!-- Bottom slim ribbon -->
+    <footer class="bottombar">
+      © 2025 James Li — All Rights Reserved
+    </footer>
   </div>
-
-  <footer>
-    &copy; 2025 James Li. All rights reserved.
-  </footer>
-
 </body>
 </html>

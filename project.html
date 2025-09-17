@@ -1,252 +1,121 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Projects – James Li</title>
 
-  <!-- Font Awesome & Google Fonts -->
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-  />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
-    rel="stylesheet"
-  />
-
-  <title>James Li – Projects</title>
+  <!-- Oswald headings -->
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&display=swap" rel="stylesheet">
 
   <style>
-    :root {
-      --bg: #f5f5f5;
-      --fg: #24292e;
-      --muted: #57606a;
-      --link: #0366d6;
-      --border: #e1e4e8;
+    :root{
+      --bar:#0a2c56;    /* top/bottom bar color */
+      --ink:#0a1a2a;    /* main text color (dark navy like :contentReference[oaicite:0]{index=0}) */
+      --bg:#f5f5f5;
     }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Roboto', sans-serif;
-      font-size: 1rem;
-      line-height: 1.6;
-      color: var(--fg);
-      background: var(--bg);
+    html,body{height:100%;margin:0}
+    body{
+      background:var(--bg);
+      color:var(--ink);
+      font-family:"Times New Roman", Times, serif;
+      font-size:1.05rem;
+      line-height:1.75;
+    }
+    .page{min-height:100svh;display:flex;flex-direction:column}
+
+    /* Top/Bottom slim bars */
+    .topbar,.bottombar{
+      background:var(--bar);
+      color:#fff;
+      text-align:center;
+      padding:.38rem .75rem;
+      font-family:"Oswald","Arial Narrow",sans-serif;
+      letter-spacing:.3px;
+    }
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:1000;
+      box-shadow:0 1px 0 rgba(0,0,0,.12);
+    }
+    .nav{display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap}
+    .nav a{
+      color:#fff;
+      text-decoration:none;
+      font-weight:400;
+      font-size:1rem;
+    }
+    .nav a:hover{text-decoration:underline}
+
+    /* Main content */
+    main{
+      flex:1;
+      width:75%;
+      margin:0 auto;
+      padding:3rem 1rem 2.5rem;
+    }
+    h1,h2,h3{
+      font-family:"Oswald","Arial Narrow",sans-serif;
+      color:var(--ink);
+      letter-spacing:.4px;
+      margin:0 0 .5rem;
+    }
+    h1{font-size:2.2rem;font-weight:500;text-align:center;margin-bottom:1.5rem}
+    h2{font-size:1.4rem;font-weight:500;margin-top:2rem;border-bottom:1px solid #ddd;padding-bottom:.25rem}
+    p{max-width:60ch;margin:0 auto 1.25rem}
+
+    /* Embedded frames */
+    .frame{
+      width:100%;
+      height:600px;
+      border:1px solid #ddd;
+      box-shadow:0 2px 6px rgba(0,0,0,.08);
+      margin:1rem 0 1.5rem;
     }
 
-    /* Top nav */
-    header.top-nav {
-      background: #fff;
-      border-bottom: 1px solid var(--border);
-      height: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 2rem;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-    }
-    header .site-title {
-      font-size: 1.375rem;
-      font-weight: 700;
-      color: var(--fg);
-    }
-    header nav a {
-      margin-left: 1.5rem;
-      font-size: 0.875rem;
-      font-weight: 500;
-      color: var(--muted);
-      text-decoration: none;
-    }
-    header nav a:hover {
-      color: var(--link);
-      text-decoration: underline;
-    }
+    /* Footer */
+    .bottombar{margin-top:auto;font-size:.95rem}
 
-    /* Layout */
-    .wrapper {
-      display: flex;
-      max-width: 1200px;
-      margin: 3rem auto;
-      background: #fff;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-      border-radius: 6px;
-      overflow: hidden;
-    }
-    aside.sidebar {
-      width: 280px;
-      background: #f7f7f7;
-      padding: 2rem 1.5rem;
-      border-right: 1px solid var(--border);
-    }
-    aside .profile-pic {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      object-fit: cover;
-      display: block;
-      margin: 0 auto 1rem;
-    }
-    aside h2 {
-      text-align: center;
-      font-size: 1.375rem;
-      font-weight: 700;
-      margin-bottom: 0.25rem;
-    }
-    aside .handle {
-      text-align: center;
-      font-size: 0.875rem;
-      color: var(--muted);
-      margin-bottom: 1rem;
-    }
-    aside .bio {
-      text-align: center;
-      font-size: 0.875rem;
-      color: var(--muted);
-      margin-bottom: 2rem;
-    }
-    aside .contact-list {
-      list-style: none;
-      font-size: 0.875rem;
-      color: var(--muted);
-    }
-    aside .contact-list li {
-      display: flex;
-      align-items: center;
-      margin-bottom: 0.75rem;
-    }
-    aside .contact-list li i {
-      margin-right: 0.5rem;
-      font-size: 1.125rem;
-    }
-    aside .contact-list a {
-      color: var(--link);
-      text-decoration: none;
-    }
-    aside .contact-list a:hover {
-      text-decoration: underline;
-    }
-
-    main.content {
-      flex: 1;
-      padding: 2rem;
-    }
-    main.content h1 {
-      font-size: 1.875rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-    }
-    main.content h2 {
-      font-size: 1.25rem;
-      font-weight: 600;
-      margin: 2rem 0 0.5rem;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 0.25rem;
-    }
-    main.content p {
-      margin-bottom: 1.25rem;
-    }
-
-    footer {
-      text-align: center;
-      padding: 1.5rem 0;
-      font-size: 0.875rem;
-      color: var(--muted);
-    }
-
-    .iframe-container {
-      width: 100%;
-      max-width: 100%;
-      height: 600px;
-      margin-bottom: 2rem;
-      border: 1px solid var(--border);
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-    }
-
-    .iframe-container iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
+    @media (max-width:900px){ main{width:82%} }
+    @media (max-width:720px){ main{width:92%} }
   </style>
 </head>
 <body>
+  <div class="page">
+    <!-- Top slim bar -->
+    <header class="topbar">
+      <nav class="nav" aria-label="Primary">
+        <a href="index.html">Home</a>
+        <a href="project.html" aria-current="page">Projects</a>
+        <a href="courses.html">Courses</a>
+      </nav>
+    </header>
 
-  <header class="top-nav">
-    <div class="site-title">James Li</div>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="project.html">Projects</a>
-      <a href="courses.html">Courses</a>
-    </nav>
-  </header>
+    <!-- Content -->
+    <main>
+      <h1>Projects & Research</h1>
 
-  <div class="wrapper">
-    <aside class="sidebar">
-      <img src="profile.JPG" alt="James Li" class="profile-pic" />
-      <h2>James Li</h2>
-      <p class="handle">@jamesmuhaoli</p>
-      <p class="bio">
-        UW‑Madison student in Economics, Mathematics & Data Science.  
-        Interested in energy market, monetary economics, and database management.
-      </p>
-      <ul class="contact-list">
-        <li><i class="fas fa-map-marker-alt"></i>Los Angeles, CA</li>
-        <li><i class="fas fa-university"></i>UW‑Madison</li>
-        <li>
-          <i class="fas fa-envelope"></i>
-          <a href="mailto:muhao0225@gmail.com">muhao0225@gmail.com</a>
-        </li>
-        <li>
-          <i class="fab fa-github"></i>
-          <a href="https://github.com/jamesmuhaoli" target="_blank">GitHub</a>
-        </li>
-        <li>
-          <i class="fab fa-linkedin"></i>
-          <a href="https://www.linkedin.com/in/muhao-li" target="_blank">LinkedIn</a>
-        </li>
-      </ul>
-    </aside>
+      <p><em>*The projects below are from early years and will be updated once they are moved to GitHub.</em></p>
 
-    <main class="content">
-      <h1>*The projects below are very outdated, back in my freshman year, I will update them soon once I move them over to github.</h1>
-      <!-- <h1>Projects &amp; Research</h1>
-
+      <!-- Example sections (uncomment and replace with your own) -->
+      <!--
       <h2>RStudio Project: Weather Analysis</h2>
-      <p>
-        An interactive exploration of Lake Monona winter trends using R 
-        (tidyverse, ggplot2).
-      </p>
-      <div class="iframe-container">
-        <iframe src="rstudio_show.pdf"></iframe>
-      </div>
-      <p>
-        We examined first‑freeze timing and winter duration over 100+ years. 
-        Visualizations revealed shorter winters and later freezes—evidence of 
-        local climate shifts.
-      </p>
+      <p>Interactive exploration of Lake Monona winter trends using R (tidyverse, ggplot2).</p>
+      <iframe class="frame" src="rstudio_show.pdf"></iframe>
+      <p>We examined first-freeze timing and winter duration over 100+ years. Visualizations revealed shorter winters and later freezes—evidence of local climate shifts.</p>
 
       <h2>Stata Project: Labor & Betting Models</h2>
-      <p>
-        Econometric analysis of mortgage approval disparities and 
-        college basketball betting markets.
-      </p>
-      <div class="iframe-container">
-        <iframe src="stata_show.pdf"></iframe>
-      </div>
-      <p>
-        Linear probability and probit models showed a 4.27 ppt higher approval 
-        likelihood for white applicants, and strong predictive power in betting spreads.
-      </p> -->
-
+      <p>Econometric analysis of mortgage approval disparities and college basketball betting markets.</p>
+      <iframe class="frame" src="stata_show.pdf"></iframe>
+      <p>Linear probability and probit models showed a 4.27 ppt higher approval likelihood for white applicants, and strong predictive power in betting spreads.</p>
+      -->
     </main>
+
+    <!-- Bottom slim bar -->
+    <footer class="bottombar">
+      © 2025 James Li — All Rights Reserved
+    </footer>
   </div>
-
-  <footer>
-    &copy; 2025 James Li. All rights reserved.
-  </footer>
-
 </body>
 </html>
