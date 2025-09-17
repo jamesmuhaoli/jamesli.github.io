@@ -1,0 +1,85 @@
+/* style.css */
+:root {
+    --bar:#0a2c56;
+    --ink:#0a1a2a;
+    --bg:#f5f5f5;
+    --indent: 2rem;
+  }
+  
+  html,body {
+    height:100%;
+    margin:0;
+  }
+  
+  body {
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"Times New Roman", Times, serif;
+    font-size:1.05rem;
+    line-height:1.75;
+  }
+  
+  .page {
+    min-height:100svh;
+    display:flex;
+    flex-direction:column;
+  }
+  
+  /* Shared top and bottom ribbons */
+  .topbar,.bottombar {
+    background:var(--bar);
+    color:#fff;
+    text-align:center;
+    padding:.38rem .75rem;
+    font-family:"Oswald","Arial Narrow",sans-serif;
+    letter-spacing:.3px;
+  }
+  
+  .topbar {
+    position:sticky;
+    top:0;
+    z-index:1000;
+    box-shadow:0 1px 0 rgba(0,0,0,.12);
+  }
+  
+  .nav {
+    display:flex;
+    gap:1.5rem;
+    justify-content:center;
+    flex-wrap:wrap;
+  }
+  
+  .nav a {
+    color:#fff;
+    text-decoration:none;
+    font-weight:400;
+    font-size:1rem;
+  }
+  
+  .nav a:hover {
+    text-decoration:underline;
+  }
+  
+  /* Shared main layout */
+  main {
+    flex:1;
+    width:50%;
+    margin:0 auto;
+    padding:3rem 1rem 2.5rem;
+  }
+  
+  @media (max-width:900px){ main{width:70%} }
+  @media (max-width:720px){ main{width:90%} :root{--indent:1.25rem} }
+  
+  /* Optional typography helpers */
+  h1,h2,h3 {
+    font-family:"Oswald","Arial Narrow",sans-serif;
+    color:var(--ink);
+    letter-spacing:.4px;
+  }
+  
+  .bottombar {
+    margin-top:auto;
+    font-size:.95rem;
+  }
+  
