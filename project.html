@@ -7,6 +7,18 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* Page-specific tiny bits */
+    :root { --indent: 2rem; }
+    .intro{max-width:70ch;margin:0 0 1.25rem}
+    .subject{display:flex;align-items:center;gap:.75rem;margin:2rem 0 1rem}
+    .subject .line{flex:1;height:1px;background:#d9d9d9}
+    .subject .label{font-family:"Oswald","Arial Narrow",sans-serif;font-size:1.1rem;letter-spacing:.3px}
+    .courses{list-style:none;margin:0;padding:0}
+    .course{margin:0 0 .9rem}
+    .course-title{font-family:"Oswald","Arial Narrow",sans-serif;font-size:1.25rem;font-weight:500;margin:0}
+    .course-desc{margin:.15rem 0 0 var(--indent);max-width:70ch}
+  </style>
 </head>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-JY8E367EKL"></script>
@@ -27,13 +39,38 @@
       </nav>
     </header>
 
-    <main>
-      <h1 style="text-align:center;margin-bottom:1.2rem;">Projects & Research</h1>
-      <p class="intro" style="text-align:center;max-width:60ch;margin:0 auto 1.25rem;">
-        <em>*Updating my projects soon...on California ISO API data analysis, New York Fed data, FRB/US DSGE model, economic indicator forecasting, Phillips Curve thesis, and etc.</em>
-      </p>
+    <main style="text-align:left;">
+      <h1>Projects</h1>
+      <p class="intro">Below is a list of ongoing projects that I am interested in:</p>
 
+      <!-- ENERGY -->
+      <div class="subject">
+        <span class="label">CAISO OASIS Data API</span><span class="line"></span>
+      </div>
+      <ul class="project">
+        <li class="project">
+          <p class="project-desc">Ongoing exploratory analysis of the CAISO Locational Marginal Pricing map analysis and policy analysis.</p>
+        </li>
+      </ul>
 
+      <!-- THESIS -->
+      <div class="subject" style="margin-top:2.2rem;">
+        <span class="label">Thesis: Unemployment Insurance and Nonlinear Phillips Curve</span><span class="line"></span>
+      </div>
+      <ul class="project">
+        <li class="project">
+          <p class="project-desc">Building econometric models in Python to quantify inflation-labor market tradeoffs, capturing emerging non-linearities in the Phillips Curve, under labor market shocks and fiscal policy shfits. </p>
+        </li>
+      </ul>
+      <!-- FED -->
+      <div class="subject" style="margin-top:2.2rem;">
+        <span class="label">New York Fed Markets Data API & FRED API</span><span class="line"></span>
+      </div>
+      <ul class="project">
+        <li class="project">
+          <p class="project-desc">Repo, market stress monitoring, yield curve and Fed's balance sheet.</p>
+        </li>
+      </ul>
     </main>
 
     <footer class="bottombar">
