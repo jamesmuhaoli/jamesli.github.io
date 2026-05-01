@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Photography — James Li</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* Wider main column for the gallery — overrides the 50% from style.css */
+    main.gallery-main{
+      width: 90%;
+      max-width: 1280px;
+    }
+    @media (max-width: 900px){ main.gallery-main{ width: 92%; } }
+    @media (max-width: 720px){ main.gallery-main{ width: 94%; } }
+
+    .intro{
+      max-width: 70ch;
+      margin: 0 0 1.75rem;
+      font-family: "Oswald","Arial Narrow",sans-serif;
+      font-size: 1.35rem;
+      letter-spacing: .3px;
+    }
+
+    /* CSS-columns masonry — handles mixed portrait/landscape gracefully */
+    .masonry{
+      column-count: 3;
+      column-gap: 1rem;
+    }
+    @media (max-width: 1000px){ .masonry{ column-count: 2; } }
+    @media (max-width: 600px){  .masonry{ column-count: 1; } }
+
+    .photo{
+      break-inside: avoid;
+      margin: 0 0 1rem;
+      background: #fff;
+      border: 1px solid #e6e6e6;
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,.06);
+      transition: transform .25s ease, box-shadow .25s ease;
+    }
+    .photo:hover{
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,.12);
+    }
+
+    .photo img,
+    .photo video{
+      display: block;
+      width: 100%;
+      height: auto;
+      cursor: zoom-in;
+      background: #fafafa;
+    }
+    .photo video{ cursor: default; }
+
+    .caption{
+      font-family: "Times New Roman", Times, serif;
+      font-style: italic;
+      font-size: .95rem;
+      letter-spacing: .2px;
+      color: #888;
+      padding: .55rem .8rem .65rem;
+      border-top: 1px solid #eee;
+      text-align: left;
+    }
+
+    /* Lightbox */
+    .lightbox{
+      position: fixed; inset: 0;
+      background: rgba(10, 26, 42, .94);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      padding: 2rem;
+    }
+    .lightbox.open{ display: flex; }
+    .lightbox img{
+      max-width: 100%;
+      max-height: 90vh;
+      object-fit: contain;
+      box-shadow: 0 8px 30px rgba(0,0,0,.5);
+    }
+    .lightbox .lb-caption{
+      position: absolute;
+      bottom: 1.2rem;
+      left: 0; right: 0;
+      text-align: center;
+      color: #fff;
+      font-family: "Oswald","Arial Narrow",sans-serif;
+      letter-spacing: .4px;
+      font-size: 1rem;
+      text-shadow: 0 1px 2px rgba(0,0,0,.6);
+    }
+    .lightbox .lb-close,
+    .lightbox .lb-prev,
+    .lightbox .lb-next{
+      position: absolute;
+      background: rgba(255,255,255,.12);
+      color: #fff;
+      border: none;
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      font-size: 1.4rem;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .2s ease;
+    }
+    .lightbox .lb-close:hover,
+    .lightbox .lb-prev:hover,
+    .lightbox .lb-next:hover{ background: rgba(255,255,255,.25); }
+    .lightbox .lb-close{ top: 1rem; right: 1rem; }
+    .lightbox .lb-prev{ left: 1rem; top: 50%; transform: translateY(-50%); }
+    .lightbox .lb-next{ right: 1rem; top: 50%; transform: translateY(-50%); }
+
+    @media (max-width: 600px){
+      .lightbox{ padding: .5rem; }
+      .lightbox .lb-prev{ left: .25rem; }
+      .lightbox .lb-next{ right: .25rem; }
+    }
+  </style>
+</head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-JY8E367EKL"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-JY8E367EKL');
+</script>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <nav class="nav" aria-label="Primary">
+        <a href="index.html">Home</a>
+        <a href="project.html">Projects</a>
+        <a href="courses.html">Courses</a>
+        <a href="photography.html" aria-current="page">Photography</a>
+      </nav>
+    </header>
+
+    <main class="gallery-main" style="text-align:left;">
+      <h1>Photography</h1>
+      <p class="intro">Muhao's lenses and shoes :)</p>
+
+      <div class="masonry" id="masonry">
+
+        <figure class="photo">
+          <img src="photography/Wisconsin_capitol_April_2026.JPG"
+               alt="Wisconsin Capitol, April 2026"
+               loading="lazy"
+               data-caption="Wisconsin Capitol — April 2026">
+          <figcaption class="caption">Wisconsin Capitol — April 2026</figcaption>
+        </figure>
+
+        <figure class="photo">
+          <img src="photography/mendota_lake_wisconsin_april_2026.JPG"
+               alt="Mendota Lake, Wisconsin, April 2026"
+               loading="lazy"
+               data-caption="Mendota Lake, Wisconsin — April 2026">
+          <figcaption class="caption">Mendota Lake, Wisconsin — April 2026</figcaption>
+        </figure>
+
+        <figure class="photo">
+          <video controls preload="metadata" playsinline
+                 poster="photography/mendota_lake_wisconsin_april_2026.JPG">
+            <source src="photography/mendota_lake_wisconsin_April_2026.mov" type="video/quicktime">
+            <source src="photography/mendota_lake_wisconsin_April_2026.mov" type="video/mp4">
+            Your browser does not support embedded video.
+          </video>
+          <figcaption class="caption">Mendota Lake, Wisconsin — April 2026 (video)</figcaption>
+        </figure>
+
+        <figure class="photo">
+          <img src="photography/chin_hills_april_2026.JPG"
+               alt="Chino Hill, April 2026"
+               loading="lazy"
+               data-caption="Chino Hill — April 2026">
+          <figcaption class="caption">Chino Hill — April 2026</figcaption>
+        </figure>
+
+        <figure class="photo">
+          <img src="photography/del_mar_blvd_Pasadena_April_2026.JPG"
+               alt="Del Mar Blvd, Pasadena, April 2026"
+               loading="lazy"
+               data-caption="Del Mar Blvd, Pasadena — April 2026">
+          <figcaption class="caption">Del Mar Blvd, Pasadena — April 2026</figcaption>
+        </figure>
+
+        <figure class="photo">
+          <img src="photography/san_diego_march_2026.JPG"
+               alt="San Diego, March 2026"
+               loading="lazy"
+               data-caption="San Diego — March 2026">
+          <figcaption class="caption">San Diego — March 2026</figcaption>
+        </figure>
+
+        <figure class="photo">
+          <img src="photography/san_diego_march_2026_1.JPG"
+               alt="San Diego, March 2026"
+               loading="lazy"
+               data-caption="San Diego — March 2026">
+          <figcaption class="caption">San Diego — March 2026</figcaption>
+        </figure>
+
+        <figure class="photo">
+          <img src="photography/san_diego_march_2026_4.JPG"
+               alt="San Diego, March 2026"
+               loading="lazy"
+               data-caption="San Diego — March 2026">
+          <figcaption class="caption">San Diego — March 2026</figcaption>
+        </figure>
+
+        <figure class="photo">
+          <img src="photography/san_diego_march_2026_2.JPG"
+               alt="San Diego, March 2026"
+               loading="lazy"
+               data-caption="San Diego — March 2026">
+          <figcaption class="caption">San Diego — March 2026</figcaption>
+        </figure>
+
+        <figure class="photo">
+          <img src="photography/san_diego_march_2026_3.JPG"
+               alt="San Diego, March 2026"
+               loading="lazy"
+               data-caption="San Diego — March 2026">
+          <figcaption class="caption">San Diego — March 2026</figcaption>
+        </figure>
+
+        <figure class="photo">
+          <img src="photography/san_diego_march_2026_5.JPG"
+               alt="San Diego, March 2026"
+               loading="lazy"
+               data-caption="San Diego — March 2026">
+          <figcaption class="caption">San Diego — March 2026</figcaption>
+        </figure>
+
+        <figure class="photo">
+          <img src="photography/san_diego_march_2026_6.JPG"
+               alt="San Diego, March 2026"
+               loading="lazy"
+               data-caption="San Diego — March 2026">
+          <figcaption class="caption">San Diego — March 2026</figcaption>
+        </figure>
+
+      </div>
+    </main>
+
+    <footer class="bottombar">
+      © 2025 James Li — All Rights Reserved
+    </footer>
+  </div>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer">
+    <button class="lb-close" id="lbClose" aria-label="Close">&times;</button>
+    <button class="lb-prev"  id="lbPrev"  aria-label="Previous photo">&#8249;</button>
+    <button class="lb-next"  id="lbNext"  aria-label="Next photo">&#8250;</button>
+    <img id="lbImage" src="" alt="">
+    <div class="lb-caption" id="lbCaption"></div>
+  </div>
+
+  <script>
+    (function(){
+      const imgs = Array.from(document.querySelectorAll('.masonry .photo img'));
+      const lightbox = document.getElementById('lightbox');
+      const lbImage  = document.getElementById('lbImage');
+      const lbCap    = document.getElementById('lbCaption');
+      const lbClose  = document.getElementById('lbClose');
+      const lbPrev   = document.getElementById('lbPrev');
+      const lbNext   = document.getElementById('lbNext');
+      let idx = 0;
+
+      function show(i){
+        idx = (i + imgs.length) % imgs.length;
+        const el = imgs[idx];
+        lbImage.src = el.src;
+        lbImage.alt = el.alt;
+        lbCap.textContent = el.dataset.caption || el.alt || '';
+        lightbox.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      }
+      function hide(){
+        lightbox.classList.remove('open');
+        lbImage.src = '';
+        document.body.style.overflow = '';
+      }
+
+      imgs.forEach((el, i) => el.addEventListener('click', () => show(i)));
+      lbClose.addEventListener('click', hide);
+      lbPrev .addEventListener('click', e => { e.stopPropagation(); show(idx - 1); });
+      lbNext .addEventListener('click', e => { e.stopPropagation(); show(idx + 1); });
+      lightbox.addEventListener('click', e => { if (e.target === lightbox) hide(); });
+
+      document.addEventListener('keydown', e => {
+        if (!lightbox.classList.contains('open')) return;
+        if (e.key === 'Escape')      hide();
+        if (e.key === 'ArrowLeft')   show(idx - 1);
+        if (e.key === 'ArrowRight')  show(idx + 1);
+      });
+
+      // Touch swipe
+      let touchStartX = null;
+      lightbox.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, {passive:true});
+      lightbox.addEventListener('touchend',   e => {
+        if (touchStartX === null) return;
+        const dx = e.changedTouches[0].clientX - touchStartX;
+        if (Math.abs(dx) > 50) show(idx + (dx < 0 ? 1 : -1));
+        touchStartX = null;
+      });
+    })();
+  </script>
+</body>
+</html>
