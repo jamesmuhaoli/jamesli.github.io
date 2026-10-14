@@ -4,113 +4,69 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Courses — James Li</title>
-
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&display=swap" rel="stylesheet">
+  <meta name="description" content="Selected economics, data science and mathematics coursework at UW–Madison.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
-  <style>
-    /* Page-specific tiny bits */
-    :root { --indent: 2rem; }
-    .intro{max-width:70ch;margin:0 0 1.25rem}
-    .subject{display:flex;align-items:center;gap:.75rem;margin:2rem 0 1rem}
-    .subject .line{flex:1;height:1px;background:#d9d9d9}
-    .subject .label{font-family:"Oswald","Arial Narrow",sans-serif;font-size:1.1rem;letter-spacing:.3px}
-    .courses{list-style:none;margin:0;padding:0}
-    .course{margin:0 0 .9rem}
-    .course-title{font-family:"Oswald","Arial Narrow",sans-serif;font-size:1.25rem;font-weight:500;margin:0}
-    .course-desc{margin:.15rem 0 0 var(--indent);max-width:70ch}
-  </style>
-</head>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-JY8E367EKL"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
 
-  gtag('config', 'G-JY8E367EKL');
-</script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-JY8E367EKL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-JY8E367EKL');
+  </script>
+</head>
 <body>
   <div class="page">
     <header class="topbar">
-      <nav class="nav" aria-label="Primary">
-        <a href="index.html">Home</a>
-        <a href="project.html">Projects</a>
-        <a href="courses.html" aria-current="page">Courses</a>
-        <a href="photography.html">Photography</a>
-      </nav>
+      <div class="wrap">
+        <a class="brand" href="index.html">James Li<span>.</span></a>
+        <nav class="nav" aria-label="Primary">
+          <a href="index.html">Home</a>
+          <a href="courses.html" aria-current="page">Courses</a>
+          <a href="photography.html">Photography</a>
+        </nav>
+      </div>
     </header>
 
-    <main style="text-align:left;">
-      <h1>Selected Courses</h1>
-      <p class="intro">Below is a selection of courses I’ve completed at UW–Madison:</p>
+    <main>
+      <div class="wrap">
+        <p class="eyebrow">University of Wisconsin–Madison</p>
+        <h1>Selected Courses</h1>
+        <p class="lede">A selection of the economics, data science and mathematics courses I've completed.</p>
 
-      <!-- ECONOMICS -->
-      <div class="subject">
-        <span class="label">Economics</span><span class="line"></span>
-      </div>
-      <ul class="courses">
-        <li class="course">
-          <h3 class="course-title">ECON 330: Money and Banking</h3>
-          <p class="course-desc">Financial markets, yield curve, balance sheet, and monetary system.</p>
-        </li>
-        <li class="course">
-          <h3 class="course-title">ECON 410: Econometrics</h3>
-          <p class="course-desc">Estimation &amp; inference in linear regression; panel data; IV methods.</p>
-        </li>
-        <li class="course">
-          <h3 class="course-title">ECON 460: Econometric Forecasting</h3>
-          <p class="course-desc">Utilize databases (BLS, BEA, FRED) to develope and evaluate time-series forecasts on economic indicators, in R & Stata.</p>
-        </li>
-        <li class="course">
-          <h3 class="course-title">ECON 461: International Macroeconomics</h3>
-          <p class="course-desc">Balance of payments, exchange-rate models, and frictions linking FX and money (IS–LM) markets; financial hedging tools.</p>
-        </li>
-        <li class="course">
-          <h3 class="course-title">ECON 468: Industrial Organization</h3>
-          <p class="course-desc">Cournot competition, price discrimination, and market concentration and structure analysis.</p>
-        </li>
-        <li class="course">
-          <h3 class="course-title">ECON 621: Markets and Models</h3>
-          <p class="course-desc">Market design and auction theory. ERCOT electricity market model, Uber pricing model, ads market, and dating market model.</p>
-        <li class="course">
-          <h3 class="course-title">ECON 661: Issues in International Macroeconomics</h3>
-          <p class="course-desc">Two-period household/firms model with intertemporal budget constraint via Lagrange. Sudden Stop Crisis and Foreign Exchange.</p>
-        </li>
-        <li class="course">
-          <h3 class="course-title">ECON 690: Auction Theory and Market Design</h3>
-          <p class="course-desc">Competitveness monopolistic market design; large markets auction and game theory.</p>
-        </li>
-      </ul>
+        <section class="subject" style="margin-top:3rem"><h2>Economics</h2>
+          <ul class="courses">
+            <li class="course"><span class="code">ECON 330</span><h3>Money and Banking</h3><p>Financial markets, yield curve, balance sheet, and monetary system.</p><p class="skills"><strong>Yield Curve Analysis</strong> · <strong>Interest Rate Risk</strong> · <strong>Monetary Policy Transmission</strong> · <strong>Financial Markets</strong></p></li>
+            <li class="course"><span class="code">ECON 410</span><h3>Econometrics</h3><p>Estimation &amp; inference in linear regression; panel data; IV methods.</p><p class="skills"><strong>Regression Analysis</strong> · <strong>Panel Data</strong> · <strong>Instrumental Variables</strong> · <strong>Causal Inference</strong></p></li>
+            <li class="course"><span class="code">ECON 460</span><h3>Econometric Forecasting</h3><p>Use databases (BLS, BEA, FRED) to develop and evaluate time-series forecasts of economic indicators, in R &amp; Stata.</p><p class="skills"><strong>Time Series Forecasting</strong> · <strong>Forecast Evaluation</strong> · <strong>BLS / BEA / FRED Data</strong> · <strong>R &amp; Stata</strong></p></li>
+            <li class="course"><span class="code">ECON 461</span><h3>International Macroeconomics</h3><p>Balance of payments, exchange-rate models, and frictions linking FX and money (IS–LM) markets; financial hedging tools.</p><p class="skills"><strong>FX Risk Hedging</strong> · <strong>Macro Modeling</strong> · <strong>Open-Economy Analysis</strong> · <strong>Commodity Price Exposure</strong></p></li>
+            <li class="course"><span class="code">ECON 468</span><h3>Industrial Organization</h3><p>Cournot competition, price discrimination, and market concentration and structure analysis.</p><p class="skills"><strong>Market Power</strong> · <strong>Cournot Competition</strong> · <strong>Price Discrimination</strong> · <strong>Market Concentration (HHI)</strong></p></li>
+            <li class="course"><span class="code">ECON 621</span><h3>Markets and Models</h3><p>Market design and auction theory. ERCOT electricity market model, Uber pricing model, ads market, and dating market model.</p><p class="skills"><strong>Market Design</strong> · <strong>Electricity Market Modeling (ERCOT)</strong> · <strong>Auction Theory</strong> · <strong>Pricing Models</strong></p></li>
+            <li class="course"><span class="code">ECON 661</span><h3>Issues in International Macroeconomics</h3><p>Two-period household/firm model with intertemporal budget constraint via Lagrange. Sudden Stop crisis and foreign exchange.</p><p class="skills"><strong>Dynamic Optimization</strong> · <strong>Lagrangian Methods</strong> · <strong>Intertemporal Models</strong> · <strong>Crisis Risk Analysis</strong></p></li>
+            <li class="course"><span class="code">ECON 690</span><h3>Auction Theory and Market Design</h3><p>Competitive monopolistic market design; large-market auctions and game theory.</p><p class="skills"><strong>Auction Theory</strong> · <strong>Mechanism Design</strong> · <strong>Game Theory</strong> · <strong>Large-Market Equilibrium</strong></p></li>
+          </ul>
+        </section>
 
-      <!-- DATA SCIENCE -->
-      <div class="subject" style="margin-top:2.2rem;">
-        <span class="label">Data Science / Computer Science</span><span class="line"></span>
+        <section class="subject" style="margin-top:3rem"><h2>Data Science &amp; Computer Science</h2>
+          <ul class="courses">
+            <li class="course"><span class="code">CS 540</span><h3>Artificial Intelligence and Machine Learning</h3><p>Principal component analysis, isolation forests, and natural language processing.</p><p class="skills"><strong>Machine Learning</strong> · <strong>Anomaly Detection</strong> · <strong>PCA / Dimensionality Reduction</strong> · <strong>Natural Language Processing</strong></p></li>
+            <li class="course"><span class="code">CS 544</span><h3>Big Data Systems</h3><p>Docker, gRPC, Spark, Cassandra, Parquet, PyArrow; building fault-tolerant pipelines with I/O optimization and cache management.</p><p class="skills"><strong>Data Engineering</strong> · <strong>Distributed Computing (Spark)</strong> · <strong>Databases (Cassandra)</strong> · <strong>Parquet / Arrow</strong> · <strong>Docker &amp; gRPC</strong></p></li>
+          </ul>
+        </section>
+
+        <section class="subject" style="margin-top:3rem"><h2>Mathematics</h2>
+          <ul class="courses">
+            <li class="course"><span class="code">MATH 616</span><h3>Data-driven Dynamical Systems, Stochastic Modeling and Prediction</h3><p>Stochastic calculus, Kalman filtering, and numerical simulation of SDEs; applying computational methods (Python, Matlab) to estimate system parameters and assess forecasting accuracy.</p><p class="skills"><strong>Stochastic Modeling</strong> · <strong>Kalman Filtering</strong> · <strong>SDE Simulation</strong> · <strong>Predictive Forecasting (Python/Matlab)</strong></p></li>
+          </ul>
+        </section>
       </div>
-      <ul class="courses">
-        <li class="course">
-          <h3 class="course-title">CS 540: Artificial Intelligence and Machine Learning</h3>
-          <p class="course-desc">Principal component analysis, isolation forests, and natural language processing.</p>
-        </li>
-        <li class="course">
-          <h3 class="course-title">CS 544: Big Data Systems</h3>
-          <p class="course-desc">Docker, gRPC, Spark, Cassandra, Parquet, PyArrow; building fault-tolerant pipelines with I/O optimization and cache management.</p>
-        </li>
-      </ul>
-      <!-- MATHEMATICS -->
-      <div class="subject" style="margin-top:2.2rem;">
-        <span class="label">Mathematics</span><span class="line"></span>
-      </div>
-      <ul class="courses">
-        <li class="course">
-          <h3 class="course-title">MATH 616: Data-driven Dynamical Systems, Stochastic Modeling and Prediction</h3>
-          <p class="course-desc">Training in stochastic calculus, Kalman filtering, and numerical simulation of SDEs; applying computational methods (Python, Matlab) to estimate system parameters and assess forecasting accuracy.</p>
-        </li>
-      </ul>
     </main>
 
-    <footer class="bottombar">
-      © 2025 James Li — All Rights Reserved
-    </footer>
+    <footer class="bottombar">© 2026 James Li — All Rights Reserved</footer>
   </div>
 </body>
 </html>

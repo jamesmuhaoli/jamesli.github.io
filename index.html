@@ -3,111 +3,142 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>James (Muhao) Li — Home</title>
+  <title>James (Muhao) Li — Economics, Math &amp; Data Science</title>
+  <meta name="description" content="James (Muhao) Li — senior at UW–Madison studying economics, mathematics and data science. Research in monetary economics and labor markets; photography on the side.">
 
-  <!-- Fonts & Icons -->
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-
-  <!-- Site CSS -->
   <link rel="stylesheet" href="style.css">
 
-  <style>
-    /* Page-specific centering */
-    .avatar-wrap{
-      width:170px;height:170px;
-      border-radius:50%;
-      overflow:hidden;
-      margin:0 auto 1.6rem;
-      box-shadow:0 1px 3px rgba(0,0,0,.08);
-    }
-    .avatar{
-      width:100%;height:100%;
-      object-fit:cover;
-      object-position:center 28%;   /* keeps face centered in the circle */
-      transform:scale(1.55);          /* zoom in */
-      transform-origin:center 30%;
-      display:block;
-    }
-    .name{ text-align:center; margin:0 0 .25rem; }
-    .handle{
-      text-align:center;
-      color:#555;
-      font-style:italic;
-      margin:0 0 1.6rem;
-    }
-    .intro{
-      text-align:center;
-      max-width:55ch;
-      margin:0 auto 1.25rem;
-    }
-    .meta,.links{
-      display:flex;
-      flex-direction:column;
-      gap:.5rem;
-      align-items:center;
-      color:#555;
-    }
-    .links a{
-      color:inherit;
-      text-decoration:none;
-      font-weight:400;
-    }
-    .links a:hover{text-decoration:underline}
-  </style>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-JY8E367EKL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-JY8E367EKL');
+  </script>
 </head>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-JY8E367EKL"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-JY8E367EKL');
-</script>
 <body>
   <div class="page">
-    <!-- Top ribbon -->
     <header class="topbar">
-      <nav class="nav" aria-label="Primary">
-        <a href="index.html" aria-current="page">Home</a>
-        <a href="project.html">Projects</a>
-        <a href="courses.html">Courses</a>
-        <a href="photography.html">Photography</a>
-      </nav>
+      <div class="wrap">
+        <a class="brand" href="index.html">James Li<span>.</span></a>
+        <nav class="nav" aria-label="Primary">
+          <a href="index.html" aria-current="page">Home</a>
+          <a href="courses.html">Courses</a>
+          <a href="photography.html">Photography</a>
+        </nav>
+      </div>
     </header>
 
     <main>
-      <div class="avatar-wrap">
-        <img src="pfp_graduated.JPG" alt="James (Muhao) Li headshot" class="avatar">
-      </div>
-      <h1 class="name">James (Muhao) Li</h1>
-      <div class="handle">@jamesmuhaoli</div>
+      <div class="wrap">
 
-      <div class="intro">
-        <a href="https://drive.google.com/file/d/1BVjFmG8W7nuujn3wy_kf4xmBzlrldjD7/view?usp=drive_link" target="_blank" rel="noopener"><i class="fa-solid fa-file-pdf" style="margin-right:.5rem;color:#555;"></i>Research Draft: Fiscal Stabilizer and the Phillips Curve. (currently working on)</a>
-        <p>^^Feel free to send a quick access request with your email address!</p>
-        <p>Senior at UW–Madison in Economics, Math, and Data Science.</p>
-        <p>Interested in energy/electricity markets, monetary economics, and data engineering/analytics.</p>
-      </div>
-      
+        <!-- Hero -->
+        <section class="hero" style="margin-top:0">
+          <p class="eyebrow">Economics · Mathematics · Data Science</p>
+          <h1>James (Muhao) Li</h1>
+          <p class="sub">Senior at the University of Wisconsin–Madison.</p>
+          <p class="lede">I study how money, labor markets and prices interact, and I like building the data and models to test those ideas. Interested in energy and electricity markets, monetary economics, and data engineering and analytics.</p>
+          <p class="meta">
+            <span><i class="fa-solid fa-location-dot"></i>Los Angeles, CA</span>
+            <span><i class="fa-solid fa-graduation-cap"></i>University of Wisconsin–Madison</span>
+          </p>
+          <div class="btn-row">
+            <a class="btn primary" href="mailto:muhao0225@gmail.com"><i class="fa-solid fa-envelope"></i>Get in touch</a>
+            <a class="btn ghost" href="https://www.linkedin.com/in/muhao-li" target="_blank" rel="noopener"><i class="fa-brands fa-linkedin"></i>LinkedIn</a>
+            <a class="btn ghost" href="https://github.com/jamesmuhaoli" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i>GitHub</a>
+          </div>
+        </section>
 
-      <div class="meta">
-        <div><i class="fa-solid fa-location-dot" style="margin-right:.5rem;color:#555;"></i>Los Angeles, CA</div>
-        <div><i class="fa-solid fa-graduation-cap" style="margin-right:.5rem;color:#555;"></i>University of Wisconsin–Madison</div>
-      </div>
+        <!-- Featured research -->
+        <section>
+          <div class="card featured">
+            <div>
+              <span class="tag">Currently working on</span>
+              <h3>Fiscal Stabilizer and the Phillips Curve</h3>
+              <p>Research draft on how fiscal stabilizers shape the relationship between labor market slack and inflation.</p>
+              <p class="note"><i class="fa-regular fa-envelope" style="margin-right:.4rem"></i>The draft is access-controlled. Send a quick request from your email address and I'll approve it.</p>
+            </div>
+            <a class="btn primary" href="https://drive.google.com/file/d/1BVjFmG8W7nuujn3wy_kf4xmBzlrldjD7/view?usp=drive_link" target="_blank" rel="noopener"><i class="fa-solid fa-file-pdf"></i>Read the draft</a>
+          </div>
+        </section>
 
-      <div class="links" style="margin-top:1.2rem;">
-        <a href="mailto:muhao0225@gmail.com"><i class="fa-solid fa-envelope" style="margin-right:.5rem;color:#555;"></i>muhao0225@gmail.com</a>
-        <a href="https://github.com/jamesmuhaoli" target="_blank" rel="noopener"><i class="fa-brands fa-github" style="margin-right:.5rem;color:#555;"></i>GitHub</a>
-        <a href="https://www.linkedin.com/in/muhao-li" target="_blank" rel="noopener"><i class="fa-brands fa-linkedin" style="margin-right:.5rem;color:#555;"></i>LinkedIn</a>
+        <!-- Experience -->
+        <section>
+          <div class="section-head"><h2>Experience</h2></div>
+          <div>
+            <div class="card">
+              <span class="tag">Leadership</span>
+              <h3 style="margin-top:.5rem">College Fed Challenge — Senior Lead, Energy Team</h3>
+              <p>Led the energy team in the Federal Reserve Challenge, analyzing and forecasting energy commodities, inflation and the broader economy.</p>
+              <ul class="chips"><li>Money markets</li><li>Cross-commodities</li><li>GDP &amp; labor</li><li>Credit delinquency</li><li>Inflation</li><li>SOFR &amp; repo rates</li></ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Skills -->
+        <section>
+          <div class="section-head"><h2>Skills</h2></div>
+          <div class="card">
+            <div class="grid-2" style="gap:1.5rem">
+              <div><h3>Forecasting &amp; econometrics</h3><p>Time series, panel data, causal inference.</p></div>
+              <div><h3>Market design &amp; optimization</h3><p>Auction theory, mechanism design, dynamic optimization, electricity market modeling.</p></div>
+              <div><h3>Data engineering</h3><p>Pipelines with Spark, Docker, gRPC and Cassandra; SQL and Parquet/Arrow.</p></div>
+              <div><h3>Tools</h3><ul class="chips" style="margin-top:.5rem"><li>Python</li><li>R</li><li>SQL</li><li>Stata</li><li>Matlab</li><li>Tableau</li></ul></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Focus areas -->
+        <section>
+          <div class="section-head"><h2>What I work on</h2><a href="courses.html">Coursework →</a></div>
+          <div class="grid-3">
+            <div class="card">
+              <h3><i class="fa-solid fa-landmark"></i>Monetary &amp; macro</h3>
+              <p>Phillips curves, search-and-matching labor markets, fiscal and monetary policy.</p>
+              <ul class="chips"><li>New Keynesian</li><li>Search &amp; matching</li><li>Forecasting</li></ul>
+            </div>
+            <div class="card">
+              <h3><i class="fa-solid fa-bolt"></i>Energy markets</h3>
+              <p>Electricity market design and price analysis across US grid operators.</p>
+              <ul class="chips"><li>CAISO</li><li>ERCOT</li><li>PJM</li><li>Auctions</li></ul>
+            </div>
+            <div class="card">
+              <h3><i class="fa-solid fa-database"></i>Data engineering</h3>
+              <p>Reliable pipelines and analysis, from raw economic data to a finished model.</p>
+              <ul class="chips"><li>Python</li><li>R</li><li>SQL</li><li>Stata</li><li>Spark</li><li>Docker</li></ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Photography teaser -->
+        <section>
+          <div class="section-head"><h2>Behind the lens</h2><a href="photography.html">All photography →</a></div>
+          <div class="strip">
+            <a href="photography.html" aria-label="Mendota Lake at dusk"><img src="assets/home-1.jpg" alt="Sailboat on Lake Mendota at dusk" loading="lazy"></a>
+            <a href="photography.html" aria-label="San Diego flower fields"><img src="assets/home-2.jpg" alt="Ranunculus flowers in San Diego" loading="lazy"></a>
+            <a href="photography.html" aria-label="Pasadena jacaranda"><img src="assets/home-3.jpg" alt="Jacaranda blossoms in Pasadena" loading="lazy"></a>
+          </div>
+        </section>
+
+        <!-- Contact -->
+        <section>
+          <h2>Contact</h2>
+          <div class="contact">
+            <a href="mailto:muhao0225@gmail.com"><i class="fa-solid fa-envelope"></i>muhao0225@gmail.com</a>
+            <a href="https://www.linkedin.com/in/muhao-li" target="_blank" rel="noopener"><i class="fa-brands fa-linkedin"></i>LinkedIn</a>
+            <a href="https://github.com/jamesmuhaoli" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i>GitHub</a>
+          </div>
+        </section>
 
       </div>
     </main>
 
-    <footer class="bottombar">
-      © 2025 James Li — All Rights Reserved
-    </footer>
+    <footer class="bottombar">© 2026 James Li — All Rights Reserved</footer>
   </div>
 </body>
 </html>
