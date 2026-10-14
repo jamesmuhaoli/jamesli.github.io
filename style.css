@@ -177,8 +177,18 @@ section { margin-top: 4rem; }
 @media (max-width: 600px) { .lightbox { padding: .5rem; } .lb-prev { left: .25rem; } .lb-next { right: .25rem; } }
 
 /* ---------- Footer ---------- */
-.bottombar { border-top: 1px solid var(--line); color: var(--muted); font-size: .88rem; text-align: center; padding: 1.5rem 1rem; }
+.bottombar {
+  position: sticky; bottom: 0; z-index: 900;
+  background: rgba(250, 248, 244, .92);
+  backdrop-filter: saturate(1.4) blur(10px);
+  -webkit-backdrop-filter: saturate(1.4) blur(10px);
+  border-top: 1px solid var(--line); color: var(--muted);
+  font-size: .8rem; line-height: 1.4; text-align: center; padding: .5rem 1rem;
+}
 
 /* Course skill keywords */
 .course .skills { margin-top: .7rem; padding-top: .6rem; border-top: 1px dashed var(--line); font-size: .84rem; line-height: 1.6; color: var(--navy); }
 .course .skills strong { font-weight: 600; }
+
+.bottombar .credit { display: block; font-size: .72rem; opacity: .8; }
+.bottombar .credit a { color: inherit; }
