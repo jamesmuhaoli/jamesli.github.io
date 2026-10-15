@@ -22,6 +22,7 @@
   --shadow:none;
   --c-solar:#FFA30A; --c-wind:#5DBA2E; --c-nuclear:#7B4DC4; --c-geo:#A86A3D; --c-hydro:#0072BC;
   --c-battery:#00A6A0; --c-imports:#B3BABC; --c-cc:#868F93; --c-peaker:#E45454;
+  --cat-clean:#3E9A1F; --cat-fossil:#8A5536; --cat-mixed:#9AA4A8;
   --f:"Jost","Futura PT",Futura,"Century Gothic",system-ui,sans-serif;
   --ease:cubic-bezier(.25,.1,.25,1);
 }
@@ -30,13 +31,13 @@
   --brand:#3FA3E6; --brand-dk:#2A8ACB; --brand-soft:#0C3A55; --seg-on:#3FA3E6;
   --dem:#2EC4BE; --sup:#A57CF0; --gain:#7FD452; --gold:#FFB840; --alert:#FF7A7A;
   --c-solar:#FFB840; --c-wind:#7FD452; --c-nuclear:#A57CF0; --c-geo:#C98B5E; --c-hydro:#3FA3E6;
-  --c-battery:#2EC4BE; --c-imports:#9FB0B5; --c-cc:#A9B3B6; --c-peaker:#FF7A7A; color-scheme:dark}}
+  --c-battery:#2EC4BE; --c-imports:#9FB0B5; --c-cc:#A9B3B6; --c-peaker:#FF7A7A; --cat-clean:#7FD452; --cat-fossil:#D3936A; --cat-mixed:#9FB0B5; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#01212D; --paper:#062B39; --ink:#FFFFFF; --body:#C9D3D6; --ink-2:#9FB0B5; --grid:#0E3746; --line:#1D4A5A; --soft:#0A3141; --fill:#0A3141;
   --brand:#3FA3E6; --brand-dk:#2A8ACB; --brand-soft:#0C3A55; --seg-on:#3FA3E6;
   --dem:#2EC4BE; --sup:#A57CF0; --gain:#7FD452; --gold:#FFB840; --alert:#FF7A7A;
   --c-solar:#FFB840; --c-wind:#7FD452; --c-nuclear:#A57CF0; --c-geo:#C98B5E; --c-hydro:#3FA3E6;
-  --c-battery:#2EC4BE; --c-imports:#9FB0B5; --c-cc:#A9B3B6; --c-peaker:#FF7A7A; color-scheme:dark}
+  --c-battery:#2EC4BE; --c-imports:#9FB0B5; --c-cc:#A9B3B6; --c-peaker:#FF7A7A; --cat-clean:#7FD452; --cat-fossil:#D3936A; --cat-mixed:#9FB0B5; color-scheme:dark}
 
 body{background:var(--bg);color:var(--body);font-family:var(--f);font-size:17px;line-height:1.5}
 .wrap{max-width:1160px;margin:0 auto;padding-block:0 72px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:56px}
@@ -193,6 +194,28 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
 .mline{position:absolute;left:-4px;right:-4px;height:0;border-top:3px dashed var(--dem);transition:top .15s}
 .mline span{position:absolute;left:8px;top:-13px;font:500 11.5px var(--f);background:var(--dem);color:#fff;padding:3px 8px;border-radius:999px;white-space:nowrap;font-variant-numeric:tabular-nums}
 @media (prefers-reduced-motion:reduce){.mline{transition:none}}
+.gamegrid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:16px;margin-top:12px;align-items:start}
+@media (max-width:720px){.gamegrid{grid-template-columns:1fr}}
+#cards{display:flex;flex-direction:column;gap:12px;min-width:0}
+#cards .cards{margin-top:6px}
+.chead{display:flex;align-items:baseline;gap:8px;font:500 15px var(--f);color:var(--ink)}
+.chead small{font-size:13px;color:var(--ink-2)}
+.cdot{display:inline-block;width:10px;height:10px;border-radius:50%;flex:none;align-self:center}
+.clean .cdot{background:var(--cat-clean)} .fossil .cdot{background:var(--cat-fossil)} .mixed .cdot{background:var(--cat-mixed)}
+.card.clean{background:color-mix(in srgb,var(--cat-clean) 7%,var(--paper))}
+.card.fossil{background:color-mix(in srgb,var(--cat-fossil) 8%,var(--paper))}
+.rank{border:1px solid var(--line);border-radius:4px;background:var(--soft);padding:14px;display:flex;flex-direction:column;gap:10px}
+.rtitle{font:500 17px var(--f);color:var(--ink)}
+.rsub{font-size:13px;color:var(--ink-2);margin-top:-8px}
+.rgroup{display:flex;flex-direction:column;gap:5px}
+.rlbl{display:flex;align-items:center;gap:7px;font:500 13px var(--f);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
+.rrow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr) 46px;gap:8px;align-items:center;font-size:14px;font-variant-numeric:tabular-nums}
+.rrow .rn{color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rrow .rbar{height:10px;background:var(--paper);border-radius:2px;overflow:hidden}
+.rrow .rbar i{display:block;height:100%;border-radius:2px}
+.clean .rbar i{background:var(--cat-clean)} .fossil .rbar i{background:var(--cat-fossil)} .mixed .rbar i{background:var(--cat-mixed)}
+.rrow .rp{text-align:right;font-weight:500;color:var(--ink)}
+.rrow.off{opacity:.4}
 .fine{font-size:12.5px;color:var(--ink-2);margin:0}
 @media (prefers-reduced-motion:reduce){.progress > i{transition:none}}
 .home{display:inline-block;font-size:15px;color:var(--ink-2);text-decoration:none;margin-bottom:16px}.home:hover{color:var(--ink)}
@@ -259,7 +282,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
             <div class="progress"><i id="prog" style="width:0%"></i></div>
             <button class="btn" id="reset">Reset</button>
           </div>
-          <div class="cards" id="cards"></div>
+          <div class="gamegrid"><div id="cards"></div><aside class="rank" id="rank" aria-label="Price ranking by type"></aside></div>
         </div>
       </div>
       <div class="panel stage">
@@ -566,11 +589,30 @@ function side(res,isGame,best){
     else if(res.marg&&res.marg.id==='peaker'){tag.hidden=false;tag.className='tag';tag.textContent='Price spike'}
   }
 }
+const CAT={solar:'clean',wind:'clean',hydro:'clean',geo:'clean',nuclear:'clean',battery:'clean',imports:'mixed',cc:'fossil',peaker:'fossil'};
+const CATS=[['clean','Clean','no smoke'],['mixed','Mixed','power from other states'],['fossil','Burns gas','makes smoke']];
 function drawCards(res){
-  document.getElementById('cards').innerHTML=GENS.map(g=>{
-    const cap=g.cap(S.hour),idx=S.picks.indexOf(g.id),dis=cap<=0.01;
-    return `<button class="card" style="--sw:var(--c-${g.id})" data-id="${g.id}" aria-pressed="${idx>=0}" ${dis?'disabled':''}>${idx>=0?`<span class="order">${idx+1}</span>`:''}<span class="nm">${g.name}</span><span class="meta">${money(g.offer())}</span><span class="meta">${dis?'off':r1(cap)+' GW'}</span></button>`;
-  }).join('');
+  let h='';
+  for(const [k,lbl,sub] of CATS){
+    const gs=GENS.filter(g=>CAT[g.id]===k);
+    h+=`<div class="cgroup ${k}"><div class="chead"><span class="cdot"></span>${lbl}<small>${sub}</small></div><div class="cards">`;
+    h+=gs.map(g=>{
+      const cap=g.cap(S.hour),idx=S.picks.indexOf(g.id),dis=cap<=0.01;
+      return `<button class="card ${k}" style="--sw:var(--cat-${k})" data-id="${g.id}" aria-pressed="${idx>=0}" ${dis?'disabled':''}>${idx>=0?`<span class="order">${idx+1}</span>`:''}<span class="nm">${g.name}</span><span class="meta">${money(g.offer())}</span><span class="meta">${dis?'off':r1(cap)+' GW'}</span></button>`;
+    }).join('');
+    h+='</div></div>';
+  }
+  document.getElementById('cards').innerHTML=h;
+  // price ranking, cheapest at the top, clean vs burns gas
+  const lo=-20,hi=Math.max(...GENS.map(g=>g.offer()))+10,w=v=>Math.max(4,100*(v-lo)/(hi-lo));
+  let r='<div class="rtitle">Price ranking</div><div class="rsub">cheapest at the top</div>';
+  for(const [k,lbl] of [['clean','Clean'],['fossil','Burns gas'],['mixed','Mixed']]){
+    const gs=GENS.filter(g=>CAT[g.id]===k).sort((a,b)=>a.offer()-b.offer());
+    r+=`<div class="rgroup ${k}"><div class="rlbl"><span class="cdot"></span>${lbl}</div>`;
+    r+=gs.map(g=>{const off=g.cap(S.hour)<=0.01;return `<div class="rrow${off?' off':''}"><span class="rn">${g.name}</span><span class="rbar"><i style="width:${w(g.offer()).toFixed(0)}%"></i></span><span class="rp">${money(g.offer())}</span></div>`}).join('');
+    r+='</div>';
+  }
+  document.getElementById('rank').innerHTML=r;
   document.getElementById('prog').style.width=Math.min(100,100*res.supplied/res.d)+'%';
 }
 document.getElementById('cards').addEventListener('click',e=>{const b=e.target.closest('.card');if(!b||b.disabled)return;const id=b.dataset.id,i=S.picks.indexOf(id);if(i>=0)S.picks.splice(i,1);else S.picks.push(id);render()});
