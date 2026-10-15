@@ -65,7 +65,7 @@ svg text{font-family:var(--f)}
 .eqn .D{color:var(--dem)} .eqn .S{color:var(--sup)} .eqn .op{color:var(--ink)}
 .sub{font:500 clamp(17px,2vw,21px)/1.3 var(--f);color:var(--ink-2);font-variant-numeric:tabular-nums}
 .sub.up{color:var(--dem)} .sub.down{color:var(--sup)} .sub.ok{color:var(--gain)}
-#bkSub,#subB{font-size:44px;line-height:1}
+#bkSub,#subB,#subA{font-size:44px;line-height:1}
 .ctl{display:flex;flex-direction:column;gap:10px}
 .ctl .row{display:flex;align-items:center;gap:14px}
 input[type=range]{accent-color:var(--brand)}
@@ -322,7 +322,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
       </div>
       <div class="bookgrid">
         <div class="ladderwrap">
-          <div class="lhead"><span>Bid</span><span>Price</span><span>GW</span></div>
+          <div class="lhead"><span>Bid</span><span>Price</span><span>MW</span></div>
           <div class="ladder" id="ladder">
             <div id="bkRows"></div>
             <div class="cline" id="cline" tabindex="0" role="slider" aria-label="Clearing line: bids below it are accepted" aria-valuemin="0">
@@ -331,7 +331,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
           </div>
         </div>
         <div class="buyers">
-          <div class="bnum" id="bkNeed">31.5 GW</div>
+          <div class="bnum" id="bkNeed">31,500 MW</div>
           <div class="gauge"><i id="bkGauge"></i></div>
           <div class="eqn small" id="bkEq" style="margin-top:14px"></div>
           <div class="sub" id="bkSub"></div>
@@ -351,21 +351,20 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
         <div><div class="eyebrow">Time</div><div class="clock big" id="bClock">12:00 AM</div></div>
         <div class="readeq">
           <div class="eqn small"><span class="D">Demand</span><span class="op">=</span><span class="S">Supply</span></div>
-          <div class="sub ok" id="bNums">15.5 GW = 15.5 GW</div>
+          <div class="sub ok" id="bNums">15,500 MW = 15,500 MW</div>
         </div>
         <div><div class="eyebrow">Price</div><div class="price" id="bPrice">$35</div></div>
       </div>
       <div class="p3grid">
         <div class="minibook">
           <div class="eyebrow" style="margin-bottom:6px">Bid stack, live</div>
-          <div class="lhead sm"><span>Bid</span><span>Price</span><span>GW</span></div>
+          <div class="lhead sm"><span>Bid</span><span>Price</span><span>MW</span></div>
           <div class="ladder mini"><div id="mbRows"></div><div class="mline" id="mbLine"><span id="mbLbl">Demand</span></div></div>
         </div>
         <div class="svgbox wide"><svg id="bridge" viewBox="0 0 1000 760" role="img" aria-label="Demand moving across the supply steps, with each moment's price traced over the day"><g id="bStatic"></g><g id="bDyn"></g></svg></div>
       </div>
       <div class="playbar">
         <button class="btn solid" id="bPlay">Play the day</button>
-        <button class="btn" id="bSpeed">Speed 1×</button>
         <input type="range" id="bT" min="0" max="287" step="1" value="0" aria-label="Time of day">
       </div>
       <a class="live" href="https://www.caiso.com/todays-outlook" target="_blank" rel="noopener" style="margin-top:14px"><span><span class="eyebrow">See it live</span> on CAISO Today's Outlook →</span></a>
@@ -379,6 +378,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
 (function(){
 const reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
 const r1=x=>Math.round(x*10)/10;
+const mw=x=>(Math.round(x*100)*10).toLocaleString();
 const money=p=>(p<0?'−$':'$')+Math.abs(Math.round(p));
 const cash=p=>'$'+(p%1?p.toFixed(2):p);
 
@@ -405,7 +405,7 @@ function drawA(p){
   let s=axes('a',A.L,A.R,A.T,A.B,'Price','($ per cup)','Cups','(per day)');
   for(const t of [2,4,6,8,10]){s+=`<line x1="${A.L}" x2="${A.R}" y1="${ay(t)}" y2="${ay(t)}" stroke="var(--grid)"/>`;
     if(Math.abs(ay(t)-ay(p))>16) s+=`<text x="${A.L-10}" y="${ay(t)+5}" text-anchor="end" font-size="14" fill="var(--ink-2)">$${t}</text>`}
-  for(const t of [20,40,60,80,100]) if(!eq||Math.abs(ax(t)-ax(qs(pe)))>22) s+=`<text x="${ax(t)}" y="${A.B+22}" text-anchor="middle" font-size="14" fill="var(--ink-2)">${t}</text>`;
+  for(const t of [20,40,60,80,100]) if(!eq||Math.abs(ax(t)-ax(qs(pe)))>22) s+=`<text x="${ax(t)}" y="${A.B+22}" text-anchor="middle" font-size="14" fill="var(--ink-2)">${(t*1000).toLocaleString()}</text>`;
   // supply
   s+=`<line x1="${ax(0)}" y1="${ay(0)}" x2="${ax(100)}" y2="${ay(10)}" stroke="var(--sup)" stroke-width="5" stroke-linecap="round"/>`;
   s+=`<text x="${ax(100)}" y="${ay(10)-12}" text-anchor="end" font-size="20" font-weight="500" fill="var(--sup)">Supply</text>`;
@@ -434,7 +434,7 @@ function drawA(p){
     s+=`<circle cx="${ax(d)}" cy="${y}" r="8" fill="var(--dem)" stroke="var(--paper)" stroke-width="2"/>`;
     s+=`<circle cx="${ax(u)}" cy="${y}" r="8" fill="var(--sup)" stroke="var(--paper)" stroke-width="2"/>`;
     const mid=Math.max(A.L+80,Math.min(A.R-80,(ax(a)+ax(b))/2)), ly=y<A.T+40?y+32:y-18;
-    s+=`<text x="${mid}" y="${ly}" text-anchor="middle" font-size="17" font-weight="500" fill="${col}">${sur?`${b-a} extra cups`:`${b-a} cups short`}</text>`;
+    s+=`<text x="${mid}" y="${ly}" text-anchor="middle" font-size="17" font-weight="500" fill="${col}">${sur?`${b-a} too much`:`${b-a} too few`}</text>`;
     s+=`<text x="${A.L-10}" y="${y+6}" text-anchor="end" font-size="16" font-weight="500" fill="var(--ink)">${cash(p)}</text>`;
     // big direction arrow
     const ax0=A.L+22, dy=sur?34:-34;
@@ -442,9 +442,9 @@ function drawA(p){
   }
   document.getElementById('boba').innerHTML=s;
   const E=document.getElementById('eqA'),Sb=document.getElementById('subA');
-  if(eq){E.innerHTML=eqHTML('eq');Sb.className='sub ok';Sb.textContent=`${qs(pe)} cups = ${qs(pe)} cups ✓`}
-  else if(qs(p)>qd(p)){E.innerHTML=eqHTML('sur');Sb.className='sub down';Sb.textContent='Price goes down ↓'}
-  else{E.innerHTML=eqHTML('sho');Sb.className='sub up';Sb.textContent='Price goes up ↑'}
+  if(eq){E.innerHTML=eqHTML('eq');Sb.className='sub ok';Sb.textContent='✓'}
+  else if(qs(p)>qd(p)){E.innerHTML=eqHTML('sur');Sb.className='sub down';Sb.textContent='↓'}
+  else{E.innerHTML=eqHTML('sho');Sb.className='sub up';Sb.textContent='↑'}
   document.getElementById('pAV').textContent=cash(p);
 }
 function animate(input,frames,draw,btn){
@@ -500,7 +500,7 @@ const XMAX=45,YMIN=-30,YMAX=220,L=70,R=680,T=54,B=350;
 const xs=v=>L+(v/XMAX)*(R-L),ys=v=>B-((v-YMIN)/(YMAX-YMIN))*(B-T);
 function drawStack(res,isGame){
   const met=res.rem<=0.01, showEq=met&&!res.short&&res.price!==null;
-  let s=axes('stk',L,R,T,B,'Price','($ per MWh)','Electricity','(GW)');
+  let s=axes('stk',L,R,T,B,'Price','($ per MWh)','Electricity','(MW)');
   for(const t of [0,50,100,150,200]){
     s+=`<line x1="${L}" x2="${R}" y1="${ys(t)}" y2="${ys(t)}" stroke="${t===0?'var(--line)':'var(--grid)'}" stroke-width="${t===0?2:1}"/>`;
     if(!(showEq&&Math.abs(ys(t)-ys(res.price))<16)) s+=`<text x="${L-10}" y="${ys(t)+5}" text-anchor="end" font-size="14" fill="var(--ink-2)">$${t}</text>`;
@@ -522,7 +522,7 @@ function drawStack(res,isGame){
   s+=`<line x1="${dx}" x2="${dx}" y1="${T}" y2="${B}" stroke="var(--dem)" stroke-width="4"/>`;
   s+=`<text x="${dx-10}" y="${T+16}" text-anchor="end" font-size="18" font-weight="500" fill="var(--dem)">Demand</text>`;
   if(isGame&&!met){
-    s+=`<text x="${dx-10}" y="${T+38}" text-anchor="end" font-size="15" font-weight="500" fill="var(--ink-2)">${r1(res.rem)} GW to go</text>`;
+    s+=`<text x="${dx-10}" y="${T+38}" text-anchor="end" font-size="15" font-weight="500" fill="var(--ink-2)">${mw(res.rem)} MW to go</text>`;
   } else if(res.short){
     s+=`<rect x="${xs(res.supplied)}" y="${T}" width="${dx-xs(res.supplied)}" height="${B-T}" fill="var(--sup)" opacity=".16"/>`;
     s+=`<text x="${dx-10}" y="${T+40}" text-anchor="end" font-size="17" font-weight="500" fill="var(--sup)">NOT ENOUGH</text>`;
@@ -554,7 +554,7 @@ function side(res,isGame,best){
 function drawCards(res){
   document.getElementById('cards').innerHTML='<div class="cards">'+GENS.slice().sort((a,b)=>a.num-b.num).map(g=>{
     const cap=g.cap(S.hour),idx=S.picks.indexOf(g.id),dis=cap<=0.01;
-    return `<button class="card" style="--sw:var(--c-${g.id})" data-id="${g.id}" aria-pressed="${idx>=0}" ${dis?'disabled':''}>${idx>=0?`<span class="order">${idx+1}</span>`:''}<span class="nm">${PP(g.num)}</span><span class="meta">${money(g.offer())}</span><span class="meta">${dis?'off':r1(cap)+' GW'}</span></button>`;
+    return `<button class="card" style="--sw:var(--c-${g.id})" data-id="${g.id}" aria-pressed="${idx>=0}" ${dis?'disabled':''}>${idx>=0?`<span class="order">${idx+1}</span>`:''}<span class="nm">${PP(g.num)}</span><span class="meta">${money(g.offer())}</span><span class="meta">${dis?'off':mw(cap)+' MW'}</span></button>`;
   }).join('')+'</div>';
   document.getElementById('prog').style.width=Math.min(100,100*res.supplied/res.d)+'%';
   const lo=-20,hi=Math.max(...GENS.map(g=>g.offer()))+10,w=v=>Math.max(4,100*(v-lo)/(hi-lo));
@@ -589,14 +589,14 @@ function drawBook(){
   let html='';
   for(let i=n-1;i>=0;i--){
     const r=rows[i],inn=i<BK.k,isM=cleared&&i===need-1;
-    html+=`<div class="lrow ${inn?'in':'out'}${isM?' marg':''}" style="--sw:var(--c-${r.g.id})"><span class="nm"><i></i>${PP(r.g.num)}${isM?' <span class="flag">sets the price</span>':''}</span><span class="pr">${money(r.offer)}</span><span class="qty"><b style="width:${(100*r.avail/maxQ).toFixed(0)}%"></b><span>${r1(r.avail)}</span></span></div>`;
+    html+=`<div class="lrow ${inn?'in':'out'}${isM?' marg':''}" style="--sw:var(--c-${r.g.id})"><span class="nm"><i></i>${PP(r.g.num)}${isM?' <span class="flag">sets the price</span>':''}</span><span class="pr">${money(r.offer)}</span><span class="qty"><b style="width:${(100*r.avail/maxQ).toFixed(0)}%"></b><span>${mw(r.avail)}</span></span></div>`;
   }
   document.getElementById('bkRows').innerHTML=html;
   const cl=document.getElementById('cline');
   cl.style.top=((n-BK.k)*PITCH+6-3)+'px';
   cl.classList.toggle('ok',cleared);
   cl.setAttribute('aria-valuemax',n);cl.setAttribute('aria-valuenow',BK.k);
-  document.getElementById('bkNeed').textContent=r1(d)+' GW';
+  document.getElementById('bkNeed').textContent=mw(d)+' MW';
   document.getElementById('bkGauge').style.width=Math.min(100,100*got/d)+'%';
   const E=document.getElementById('bkEq'),Sb=document.getElementById('bkSub'),P=document.getElementById('bkPrice');
   P.innerHTML='&nbsp;';
@@ -672,11 +672,11 @@ function bStatic(){
   // bottom-right: demand over the day
   for(const d of [10,20,30,40]){
     s+=`<line x1="${G.L2}" x2="${G.R2}" y1="${gd(d)}" y2="${gd(d)}" stroke="var(--grid)"/>`;
-    s+=`<text x="${G.L2-8}" y="${gd(d)+5}" text-anchor="end" font-size="13" fill="var(--ink-2)">${d}</text>`;
+    s+=`<text x="${G.L2-8}" y="${gd(d)+5}" text-anchor="end" font-size="13" fill="var(--ink-2)">${(d*1000).toLocaleString()}</text>`;
   }
   s+=`<line x1="${G.L2}" y1="${G.Yb}" x2="${G.L2}" y2="${GTOP-22}" stroke="var(--ink)" stroke-width="2" marker-end="url(#ah-b)"/>`;
   s+=`<line x1="${G.L2}" y1="${G.Yb}" x2="${G.R2+14}" y2="${G.Yb}" stroke="var(--ink)" stroke-width="2" marker-end="url(#ah-b)"/>`;
-  s+=`<text x="${G.L2+12}" y="${GTOP-20}" font-size="17"><tspan font-weight="500" fill="var(--ink)">Demand over the day</tspan><tspan font-size="14" fill="var(--ink-2)"> (GW)</tspan></text>`;
+  s+=`<text x="${G.L2+12}" y="${GTOP-20}" font-size="17"><tspan font-weight="500" fill="var(--ink)">Demand over the day</tspan><tspan font-size="14" fill="var(--ink-2)"> (MW)</tspan></text>`;
   [[0,'12AM'],[72,'6AM'],[144,'12PM'],[216,'6PM'],[288,'12AM']].forEach(([i,l])=>s+=`<text x="${tx(i)}" y="${G.Yb+20}" text-anchor="middle" font-size="13" fill="var(--ink-2)">${l}</text>`);
   // bottom-left: the 45° turn
   s+=`<line x1="${gx(G.GW0)}" y1="${G.Yb}" x2="${gx(40)}" y2="${GTOP}" stroke="var(--line)" stroke-width="2.5" stroke-dasharray="2 6" stroke-linecap="round"/>`;
@@ -699,8 +699,8 @@ function bStatic(){
   s+=`<line x1="${G.L1}" y1="${G.B}" x2="${G.L1}" y2="${G.T-20}" stroke="var(--ink)" stroke-width="2" marker-end="url(#ah-b)"/>`;
   s+=`<line x1="${G.L1}" y1="${G.B}" x2="${G.R1+10}" y2="${G.B}" stroke="var(--ink)" stroke-width="2" marker-end="url(#ah-b)"/>`;
   s+=`<text x="${G.L1+12}" y="${G.T-18}" font-size="17"><tspan font-weight="500" fill="var(--ink)">Price</tspan><tspan font-size="14" fill="var(--ink-2)"> ($ per MWh)</tspan></text>`;
-  for(const q of [0,10,20,30,40]) s+=`<text x="${gx(q)}" y="${G.B+20}" text-anchor="middle" font-size="13" fill="var(--ink-2)">${q}</text>`;
-  s+=`<text x="${G.R1+10}" y="${G.B+46}" text-anchor="end" font-size="16"><tspan font-weight="500" fill="var(--ink)">Electricity</tspan><tspan font-size="13" fill="var(--ink-2)"> (GW)</tspan></text>`;
+  for(const q of [0,10,20,30,40]) s+=`<text x="${gx(q)}" y="${G.B+20}" text-anchor="middle" font-size="13" fill="var(--ink-2)">${(q*1000).toLocaleString()}</text>`;
+  s+=`<text x="${G.R1+10}" y="${G.B+46}" text-anchor="end" font-size="16"><tspan font-weight="500" fill="var(--ink)">Electricity</tspan><tspan font-size="13" fill="var(--ink-2)"> (MW)</tspan></text>`;
   // axes: timeline
   s+=`<line x1="${G.L2}" y1="${G.B}" x2="${G.R2+14}" y2="${G.B}" stroke="var(--ink)" stroke-width="2" marker-end="url(#ah-b)"/>`;
   s+=`<line x1="${G.L2}" y1="${G.B}" x2="${G.L2}" y2="${G.T-12}" stroke="var(--line)" stroke-width="1.5"/>`;
@@ -740,11 +740,11 @@ function bDraw(){
   s+=`<line x1="${dx}" x2="${txi}" y1="${yd}" y2="${yd}" stroke="var(--dem)" stroke-width="2.5" stroke-dasharray="7 6"/>`;
   s+=`<circle cx="${dx}" cy="${yd}" r="6" fill="var(--paper)" stroke="var(--dem)" stroke-width="2.5"/>`;
   s+=`<circle cx="${txi}" cy="${yd}" r="9" fill="var(--dem)" stroke="var(--paper)" stroke-width="3"/>`;
-  s+=`<rect x="${(G.R1+G.L2)/2-36}" y="${yd-30}" width="72" height="22" rx="4" fill="var(--dem)"/>`;
-  s+=`<text x="${(G.R1+G.L2)/2}" y="${yd-14}" text-anchor="middle" font-size="14" font-weight="500" fill="#fff">${r1(d)} GW</text>`;
+  s+=`<rect x="${(G.R1+G.L2)/2-46}" y="${yd-30}" width="92" height="22" rx="4" fill="var(--dem)"/>`;
+  s+=`<text x="${(G.R1+G.L2)/2}" y="${yd-14}" text-anchor="middle" font-size="14" font-weight="500" fill="#fff">${mw(d)} MW</text>`;
   document.getElementById('bDyn').innerHTML=s;
   document.getElementById('bClock').textContent=clockStr(bt);
-  document.getElementById('bNums').textContent=`${r1(d)} GW = ${r1(d)} GW`;
+  document.getElementById('bNums').textContent=`${mw(d)} MW = ${mw(d)} MW`;
   document.getElementById('bPrice').innerHTML=`$${p}<small>per MWh</small>`;
   document.getElementById('bT').value=bt;
   drawMini(d);
@@ -756,10 +756,10 @@ function drawMini(d){
   const n=BSTEPS.length;let cum=0,k=n;for(let i=0;i<n;i++){cum+=BSTEPS[i].mw;if(cum>=d-0.001){k=i+1;break}}
   const maxQ=Math.max(...BSTEPS.map(x=>x.mw));let h='';
   for(let i=n-1;i>=0;i--){const st=BSTEPS[i],inn=i<k,isM=i===k-1;
-    h+=`<div class="lrow sm ${inn?'in':'out'}${isM?' marg':''}" style="--sw:var(--c-${st.id})"><span class="nm"><i></i>${PP(i+1)}</span><span class="pr">$${st.o}</span><span class="qty"><b style="width:${(100*st.mw/maxQ).toFixed(0)}%"></b><span>${st.mw}</span></span></div>`}
+    h+=`<div class="lrow sm ${inn?'in':'out'}${isM?' marg':''}" style="--sw:var(--c-${st.id})"><span class="nm"><i></i>${PP(i+1)}</span><span class="pr">$${st.o}</span><span class="qty"><b style="width:${(100*st.mw/maxQ).toFixed(0)}%"></b><span>${mw(st.mw)}</span></span></div>`}
   document.getElementById('mbRows').innerHTML=h;
   document.getElementById('mbLine').style.top=((n-k)*MPITCH+4-3.5)+'px';
-  document.getElementById('mbLbl').textContent=`Demand ${r1(d)} GW → $${BSTEPS[k-1].o}`;
+  document.getElementById('mbLbl').textContent=`${mw(d)} MW → $${BSTEPS[k-1].o}`;
 }
 function bStop(){clearInterval(bTimer);bTimer=null;document.getElementById('bPlay').textContent='Play the day'}
 document.getElementById('bPlay').onclick=()=>{
@@ -769,7 +769,6 @@ document.getElementById('bPlay').onclick=()=>{
   document.getElementById('bPlay').textContent='Pause';
   bTimer=setInterval(()=>{bt=Math.min(N-1,bt+bSpeed);bDraw();if(bt>=N-1)bStop()},70);
 };
-document.getElementById('bSpeed').onclick=e=>{bSpeed=bSpeed===1?3:1;e.currentTarget.textContent=`Speed ${bSpeed}×`};
 document.getElementById('bT').addEventListener('input',e=>{bStop();bt=+e.target.value;bDraw()});
 
 bStatic();bDraw();
