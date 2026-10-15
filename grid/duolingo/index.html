@@ -245,6 +245,9 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(-
 .bolt.hb{width:16px;height:16px;color:var(--gold);vertical-align:-3px}
 .titlerow{display:flex;flex-direction:column;align-items:center;gap:14px;margin-bottom:8px}
 .titlerow h1{margin:0}
+.mread{margin-top:10px;display:flex;align-items:center;gap:6px;font-size:16px;font-weight:600;color:var(--dem);font-variant-numeric:tabular-nums}
+.mread::before{content:"";width:18px;height:0;border-top:3px dashed var(--dem)}
+.lrow.sm{box-sizing:border-box}
 .fine{font-size:12.5px;color:var(--ink-2);margin:0}
 @media (prefers-reduced-motion:reduce){.progress > i{transition:none}}
 .home{display:inline-block;font-size:15px;color:var(--ink-2);text-decoration:none;margin-bottom:16px}.home:hover{color:var(--ink)}
@@ -366,7 +369,8 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(-
         <div class="minibook">
           <div class="eyebrow" style="margin-bottom:6px">Bid stack, live</div>
           <div class="lhead sm"><span>Bid</span><span>Price</span><span><svg class="bolt hb" viewBox="0 0 24 24" aria-label="Power"><use href="#bolt"/></svg></span></div>
-          <div class="ladder mini"><div id="mbRows"></div><div class="mline" id="mbLine"><span id="mbLbl">Demand</span></div></div>
+          <div class="ladder mini"><div id="mbRows"></div><div class="mline" id="mbLine"></div></div>
+          <div class="mread" id="mbLbl"></div>
         </div>
         <div class="svgbox wide"><svg id="bridge" viewBox="0 0 1000 760" role="img" aria-label="Demand moving across the supply steps, with each moment's price traced over the day"><g id="bStatic"></g><g id="bDyn"></g></svg></div>
       </div>
