@@ -219,6 +219,22 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
 .clean .rbar i{background:var(--cat-clean)} .fossil .rbar i{background:var(--cat-fossil)} .mixed .rbar i{background:var(--cat-mixed)}
 .rrow .rp{text-align:right;font-weight:500;color:var(--ink)}
 .rrow.off{opacity:.4}
+.pp{display:inline-flex;align-items:center;gap:4px;font-variant-numeric:tabular-nums}
+.pp .ppi{width:1.15em;height:1.15em;color:var(--sw,var(--ink-2))}
+.pp b{font-weight:600;color:var(--ink)}
+.card .nm{font-size:20px}
+.rank{border:1px solid var(--line);border-radius:4px;background:var(--soft);padding:12px 14px;display:flex;flex-direction:column;gap:6px}
+.rtitle{font:500 16px var(--f);color:var(--ink)}
+.rrow{display:grid;grid-template-columns:48px minmax(0,1fr) 46px;gap:8px;align-items:center;font-size:14px;font-variant-numeric:tabular-nums}
+.rrow .rbar{height:10px;background:var(--paper);border-radius:2px;overflow:hidden}
+.rrow .rbar i{display:block;height:100%;border-radius:2px;background:var(--sw)}
+.rrow .rp{text-align:right;font-weight:500;color:var(--ink)}
+.rrow.off{opacity:.35}
+.trow{display:grid;grid-template-columns:10px 88px minmax(0,1fr);gap:8px;align-items:center;font-size:14px}
+.trow .tn{color:var(--ink);font-weight:500}
+.trow .tw{color:var(--ink-2)}
+.cdot{display:inline-block;width:10px;height:10px;border-radius:50%}
+.trow.clean .cdot{background:var(--cat-clean)} .trow.fossil .cdot{background:var(--cat-fossil)} .trow.mixed .cdot{background:var(--cat-mixed)}
 .fine{font-size:12.5px;color:var(--ink-2);margin:0}
 @media (prefers-reduced-motion:reduce){.progress > i{transition:none}}
 .home{display:inline-block;font-size:15px;color:var(--ink-2);text-decoration:none;margin-bottom:16px}.home:hover{color:var(--ink)}
@@ -226,6 +242,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
 </head>
 <body>
 
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="pp" viewBox="0 0 24 24"><path d="M2 22V12.5l5.5 3.2v-3.2l5.5 3.2v-3.2H15V4.5h1.6V2h2.8v2.5H21V22Z" fill="currentColor"/></symbol></svg>
 <div class="wrap">
   <header>
     <a class="home" href="../../../">← james-li.com</a>
@@ -236,7 +253,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
   <!-- PART 1 -->
   <section class="part" id="p1">
     <div class="parthead">
-      <div><div class="eyebrow">Part 1</div><h2>Supply and demand: a boba shop</h2></div>
+      <div><div class="eyebrow">Part 1</div><h2>A boba shop</h2></div>
     </div>
     <div class="duo">
       <div class="panel"><div class="svgbox"><svg id="boba" viewBox="0 0 520 390" role="img" aria-label="Supply and demand for boba tea"></svg></div></div>
@@ -258,7 +275,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
   <!-- PART 2 -->
   <section class="part" id="p2">
     <div class="parthead">
-      <div><div class="eyebrow">Part 2</div><h2>Now electricity: each step is a power plant</h2></div>
+      <div><div class="eyebrow">Part 2</div><h2>Now electricity</h2></div>
       <div class="seg" role="group" aria-label="Mode">
         <button id="modeAuto" aria-pressed="true">Watch</button>
         <button id="modeGame" aria-pressed="false">You try</button>
@@ -295,6 +312,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
           <div class="sub" id="subB" style="margin-top:8px"></div>
         </div>
         <span class="tag" id="tagB" hidden></span>
+        <aside class="rank" id="rank" aria-label="Price ranking" hidden></aside>
       </div>
     </div>
     <div class="panel" id="bookPanel">
@@ -304,14 +322,13 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
       </div>
       <div class="bookgrid">
         <div class="ladderwrap">
-          <div class="lhead"><span>Supply bid</span><span>Price</span><span>Quantity (GW)</span></div>
+          <div class="lhead"><span>Bid</span><span>Price</span><span>GW</span></div>
           <div class="ladder" id="ladder">
             <div id="bkRows"></div>
             <div class="cline" id="cline" tabindex="0" role="slider" aria-label="Clearing line: bids below it are accepted" aria-valuemin="0">
               <span class="grip">drag ↕</span>
             </div>
           </div>
-          <div class="lfoot">cheapest bids at the bottom</div>
         </div>
         <div class="buyers">
           <div class="bnum" id="bkNeed">31.5 GW</div>
@@ -327,7 +344,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
   <!-- PART 3 -->
   <section class="part" id="p3">
     <div class="parthead">
-      <div><div class="eyebrow">Part 3</div><h2>Every 5 minutes, a new price. Add them up: a whole day.</h2></div>
+      <div><div class="eyebrow">Part 3</div><h2>A whole day of prices</h2></div>
     </div>
     <div class="panel">
       <div class="readrow">
@@ -343,7 +360,6 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
           <div class="eyebrow" style="margin-bottom:6px">Bid stack, live</div>
           <div class="lhead sm"><span>Bid</span><span>Price</span><span>GW</span></div>
           <div class="ladder mini"><div id="mbRows"></div><div class="mline" id="mbLine"><span id="mbLbl">Demand</span></div></div>
-          <div class="lfoot">cheapest at the bottom</div>
         </div>
         <div class="svgbox wide"><svg id="bridge" viewBox="0 0 1000 760" role="img" aria-label="Demand moving across the supply steps, with each moment's price traced over the day"><g id="bStatic"></g><g id="bDyn"></g></svg></div>
       </div>
@@ -352,7 +368,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
         <button class="btn" id="bSpeed">Speed 1×</button>
         <input type="range" id="bT" min="0" max="287" step="1" value="0" aria-label="Time of day">
       </div>
-      <a class="live" href="https://www.caiso.com/todays-outlook" target="_blank" rel="noopener" style="margin-top:14px"><span><span class="eyebrow">See it live</span> on CAISO Today\'s Outlook →</span></a>
+      <a class="live" href="https://www.caiso.com/todays-outlook" target="_blank" rel="noopener" style="margin-top:14px"><span><span class="eyebrow">See it live</span> on CAISO Today's Outlook →</span></a>
     </div>
   </section>
 
@@ -464,6 +480,7 @@ const GENS=[
   {id:'peaker',name:'Power plant 4',short:'Plant 4',num:4,offer:()=>S.gas?200:120,cap:()=>6},
 ];
 const byId=Object.fromEntries(GENS.map(g=>[g.id,g]));
+const PP=n=>`<span class="pp" aria-label="Power plant ${n}"><svg class="ppi" viewBox="0 0 24 24" aria-hidden="true"><use href="#pp"/></svg><b>${n}</b></span>`;
 const demand=h=>BASE[h]*(S.heat?1.15:1)+((S.battery&&h>=10&&h<=15)?5:0);
 const fmtH=h=>h===0?'12 AM':h<12?h+' AM':h===12?'12 PM':(h-12)+' PM';
 function clear(h,order){
@@ -495,7 +512,7 @@ function drawStack(res,isGame){
     const col=`var(--c-${r.g.id})`,w=xs(x+r.avail)-xs(x);
     s+=`<rect x="${xs(x)}" y="${y1}" width="${w}" height="${h}" fill="${col}" opacity=".22"/>`;
     if(r.take>0.001) s+=`<rect x="${xs(x)}" y="${y1}" width="${xs(x+r.take)-xs(x)}" height="${h}" fill="${col}" opacity=".8"/>`;
-    if(w>40) s+=`<text x="${xs(x)+w/2}" y="${r.offer>=0?y1-7:y1+h+15}" text-anchor="middle" font-size="12.5" font-weight="500" fill="var(--ink-2)">${r.g.short}</text>`;
+    if(w>30){const ly=r.offer>=0?y1-22:y1+h+4,cx=xs(x)+w/2;s+=`<use href="#pp" x="${cx-17}" y="${ly}" width="16" height="16" style="color:var(--ink-2)"/><text x="${cx+2}" y="${ly+13}" font-size="13" font-weight="600" fill="var(--ink-2)">${r.g.num}</text>`}
     path+=(first?`M${xs(x)} ${ys(r.offer)}`:` V${ys(r.offer)}`)+` H${xs(x+r.avail)}`;first=false;x+=r.avail;
   });
   if(vis.length){if(!isGame)path+=` V${ys(YMAX)}`;
@@ -521,7 +538,7 @@ function side(res,isGame,best){
   const met=res.rem<=0.01,pr=document.getElementById('price'),E=document.getElementById('eqB'),Sb=document.getElementById('subB'),tag=document.getElementById('tagB');
   document.getElementById('priceLabel').textContent=isGame?'Your price':'Price';
   if(isGame&&!met)pr.innerHTML='?';else if(res.short)pr.innerHTML='$1,000<small>max</small>';else pr.innerHTML=money(res.price)+'<small>per MWh</small>';
-  document.getElementById('setby').innerHTML=res.marg&&met?`set by <b>${res.marg.name}</b>`:'&nbsp;';
+  document.getElementById('setby').innerHTML=res.marg&&met?`set by ${PP(res.marg.num)}`:'&nbsp;';
   tag.hidden=true;
   if(isGame&&!met){E.innerHTML=eqHTML('sho');Sb.className='sub up';Sb.textContent='↑'}
   else if(res.short){E.innerHTML=eqHTML('sho');Sb.className='sub up';Sb.textContent='Not enough power!';tag.hidden=false;tag.className='tag';tag.textContent='Blackout risk'}
@@ -537,10 +554,17 @@ function side(res,isGame,best){
 function drawCards(res){
   document.getElementById('cards').innerHTML='<div class="cards">'+GENS.slice().sort((a,b)=>a.num-b.num).map(g=>{
     const cap=g.cap(S.hour),idx=S.picks.indexOf(g.id),dis=cap<=0.01;
-    return `<button class="card" style="--sw:var(--c-${g.id})" data-id="${g.id}" aria-pressed="${idx>=0}" ${dis?'disabled':''}>${idx>=0?`<span class="order">${idx+1}</span>`:''}<span class="nm">${g.name}</span><span class="meta">${money(g.offer())}</span><span class="meta">${dis?'off':r1(cap)+' GW'}</span></button>`;
+    return `<button class="card" style="--sw:var(--c-${g.id})" data-id="${g.id}" aria-pressed="${idx>=0}" ${dis?'disabled':''}>${idx>=0?`<span class="order">${idx+1}</span>`:''}<span class="nm">${PP(g.num)}</span><span class="meta">${money(g.offer())}</span><span class="meta">${dis?'off':r1(cap)+' GW'}</span></button>`;
   }).join('')+'</div>';
   document.getElementById('prog').style.width=Math.min(100,100*res.supplied/res.d)+'%';
+  const lo=-20,hi=Math.max(...GENS.map(g=>g.offer()))+10,w=v=>Math.max(4,100*(v-lo)/(hi-lo));
+  let r='<div class="rtitle">Price ranking</div>';
+  r+=GENS.slice().sort((a,b)=>a.offer()-b.offer()).map(g=>{const off=g.cap(S.hour)<=0.01;return `<div class="rrow${off?' off':''}" style="--sw:var(--c-${g.id})"><span class="rn">${PP(g.num)}</span><span class="rbar"><i style="width:${w(g.offer()).toFixed(0)}%"></i></span><span class="rp">${money(g.offer())}</span></div>`}).join('');
+  r+='<div class="rtitle" style="margin-top:8px">Why?</div>';
+  r+=TYPES.map(([k,n,why])=>`<div class="trow ${k}"><span class="cdot"></span><span class="tn">${n}</span><span class="tw">${why}</span></div>`).join('');
+  document.getElementById('rank').innerHTML=r;
 }
+const TYPES=[['clean','Solar','free sunshine'],['clean','Wind','free wind'],['clean','Nuclear','tiny fuel cost'],['clean','Geothermal','free earth heat'],['clean','Hydro','free water'],['mixed','Imports','bought from other states'],['fossil','Gas','buys fuel'],['fossil','Gas peaker','buys fuel, runs rarely']];
 document.getElementById('cards').addEventListener('click',e=>{const b=e.target.closest('.card');if(!b||b.disabled)return;const id=b.dataset.id,i=S.picks.indexOf(id);if(i>=0)S.picks.splice(i,1);else S.picks.push(id);render()});
 document.getElementById('reset').onclick=()=>{S.picks=[];render()};
 document.getElementById('presets').innerHTML=[[4,'4 AM'],[12,'Noon'],[19,'7 PM']].map(([h,l])=>`<button class="chip" data-h="${h}">${l}</button>`).join('');
@@ -565,7 +589,7 @@ function drawBook(){
   let html='';
   for(let i=n-1;i>=0;i--){
     const r=rows[i],inn=i<BK.k,isM=cleared&&i===need-1;
-    html+=`<div class="lrow ${inn?'in':'out'}${isM?' marg':''}" style="--sw:var(--c-${r.g.id})"><span class="nm"><i></i>${r.g.name}${isM?' <span class="flag">sets the price</span>':''}</span><span class="pr">${money(r.offer)}</span><span class="qty"><b style="width:${(100*r.avail/maxQ).toFixed(0)}%"></b><span>${r1(r.avail)}</span></span></div>`;
+    html+=`<div class="lrow ${inn?'in':'out'}${isM?' marg':''}" style="--sw:var(--c-${r.g.id})"><span class="nm"><i></i>${PP(r.g.num)}${isM?' <span class="flag">sets the price</span>':''}</span><span class="pr">${money(r.offer)}</span><span class="qty"><b style="width:${(100*r.avail/maxQ).toFixed(0)}%"></b><span>${r1(r.avail)}</span></span></div>`;
   }
   document.getElementById('bkRows').innerHTML=html;
   const cl=document.getElementById('cline');
@@ -615,6 +639,7 @@ function render(){
   const best=clear(S.hour),res=isGame?clear(S.hour,S.picks):best;
   drawStack(res,isGame);side(res,isGame,best);if(isGame)drawCards(res);
   document.getElementById('bookPanel').hidden=isGame;
+  document.getElementById('rank').hidden=!isGame;
   BK.k=0;stopBook();drawBook();
 }
 
@@ -731,7 +756,7 @@ function drawMini(d){
   const n=BSTEPS.length;let cum=0,k=n;for(let i=0;i<n;i++){cum+=BSTEPS[i].mw;if(cum>=d-0.001){k=i+1;break}}
   const maxQ=Math.max(...BSTEPS.map(x=>x.mw));let h='';
   for(let i=n-1;i>=0;i--){const st=BSTEPS[i],inn=i<k,isM=i===k-1;
-    h+=`<div class="lrow sm ${inn?'in':'out'}${isM?' marg':''}" style="--sw:var(--c-${st.id})"><span class="nm"><i></i>${BNAMES[i]}</span><span class="pr">$${st.o}</span><span class="qty"><b style="width:${(100*st.mw/maxQ).toFixed(0)}%"></b><span>${st.mw}</span></span></div>`}
+    h+=`<div class="lrow sm ${inn?'in':'out'}${isM?' marg':''}" style="--sw:var(--c-${st.id})"><span class="nm"><i></i>${PP(i+1)}</span><span class="pr">$${st.o}</span><span class="qty"><b style="width:${(100*st.mw/maxQ).toFixed(0)}%"></b><span>${st.mw}</span></span></div>`}
   document.getElementById('mbRows').innerHTML=h;
   document.getElementById('mbLine').style.top=((n-k)*MPITCH+4-3.5)+'px';
   document.getElementById('mbLbl').textContent=`Demand ${r1(d)} GW → $${BSTEPS[k-1].o}`;
