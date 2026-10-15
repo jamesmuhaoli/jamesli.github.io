@@ -244,6 +244,8 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
 .qb{display:inline-flex;align-items:center;gap:2px;font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums}
 .qb .bolt{width:1em;height:1em;color:var(--gold)}
 .bolt.hb{width:16px;height:16px;color:var(--gold);vertical-align:-3px}
+.titlerow{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
+.titlerow h1{margin:0}
 .fine{font-size:12.5px;color:var(--ink-2);margin:0}
 @media (prefers-reduced-motion:reduce){.progress > i{transition:none}}
 .home{display:inline-block;font-size:15px;color:var(--ink-2);text-decoration:none;margin-bottom:16px}.home:hover{color:var(--ink)}
@@ -255,7 +257,13 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
 <div class="wrap">
   <header>
     <a class="home" href="../../../">← james-li.com</a>
-    <h1>Run the Grid, Run the Market</h1>
+    <div class="titlerow">
+      <h1>Run the Grid, Run the Market</h1>
+      <div class="seg" role="group" aria-label="Words">
+        <button id="wDS" aria-pressed="true">Demand &amp; Supply</button>
+        <button id="wBS" aria-pressed="false">Buy &amp; Sell</button>
+      </div>
+    </div>
   </header>
 
   <!-- PART 1 -->
@@ -744,6 +752,25 @@ document.getElementById('bT').addEventListener('input',e=>{bStop();bt=+e.target.
 
 bStatic();bDraw();
 drawA();render();
+
+/* plain-words switch: show Buy / Sell instead of Demand / Supply on every chart and label */
+let PLAIN=false;
+const SWAP=[[/Demand over the day/g,'Buying over the day'],[/\bDemand\b/g,'Buy'],[/\bSupply\b/g,'Sell'],[/\bdemand\b/g,'buy'],[/\bsupply\b/g,'sell']];
+function swapText(root){
+  if(!PLAIN)return;
+  const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let n;
+  while((n=w.nextNode())){if(n.parentNode&&n.parentNode.closest&&n.parentNode.closest('.seg'))continue;let t=n.nodeValue,u=t;for(const[a,b]of SWAP)u=u.replace(a,b);if(u!==t)n.nodeValue=u}
+}
+new MutationObserver(ms=>{if(!PLAIN)return;for(const m of ms){if(m.type==='childList')m.addedNodes.forEach(x=>swapText(x.nodeType===3?x.parentNode||document.body:x));else if(m.type==='characterData')swapText(m.target.parentNode||document.body)}})
+  .observe(document.body,{childList:true,subtree:true,characterData:true});
+function setWords(plain){
+  PLAIN=plain;
+  document.getElementById('wDS').setAttribute('aria-pressed',!plain);
+  document.getElementById('wBS').setAttribute('aria-pressed',plain);
+  bStatic();bDraw();drawA();render();swapText(document.body);
+}
+document.getElementById('wDS').onclick=()=>setWords(false);
+document.getElementById('wBS').onclick=()=>setWords(true);
 
 })();
 </script>
