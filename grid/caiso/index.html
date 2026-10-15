@@ -196,7 +196,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
 @media (prefers-reduced-motion:reduce){.mline{transition:none}}
 .gamegrid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:16px;margin-top:12px;align-items:start}
 @media (max-width:720px){.gamegrid{grid-template-columns:1fr}}
-#cards{display:flex;flex-direction:column;gap:12px;min-width:0}
+#cards{display:flex;flex-direction:column;gap:12px;min-width:0;margin-top:12px}
 #cards .cards{margin-top:6px}
 .chead{display:flex;align-items:baseline;gap:8px;font:500 15px var(--f);color:var(--ink)}
 .chead small{font-size:13px;color:var(--ink-2)}
@@ -204,12 +204,12 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
 .clean .cdot{background:var(--cat-clean)} .fossil .cdot{background:var(--cat-fossil)} .mixed .cdot{background:var(--cat-mixed)}
 .card.clean{background:color-mix(in srgb,var(--cat-clean) 7%,var(--paper))}
 .card.fossil{background:color-mix(in srgb,var(--cat-fossil) 8%,var(--paper))}
-.rank{border:1px solid var(--line);border-radius:4px;background:var(--soft);padding:14px;display:flex;flex-direction:column;gap:10px}
+.rank{border:1px solid var(--line);border-radius:4px;background:var(--soft);padding:12px 14px;display:flex;flex-direction:column;gap:8px}
 .rtitle{font:500 17px var(--f);color:var(--ink)}
 .rsub{font-size:13px;color:var(--ink-2);margin-top:-8px}
 .rgroup{display:flex;flex-direction:column;gap:5px}
 .rlbl{display:flex;align-items:center;gap:7px;font:500 13px var(--f);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
-.rrow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr) 46px;gap:8px;align-items:center;font-size:14px;font-variant-numeric:tabular-nums}
+.rrow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 44px;gap:8px;align-items:center;font-size:13.5px;font-variant-numeric:tabular-nums}
 .rrow .rn{color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .rrow .rbar{height:10px;background:var(--paper);border-radius:2px;overflow:hidden}
 .rrow .rbar i{display:block;height:100%;border-radius:2px}
@@ -282,7 +282,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
             <div class="progress"><i id="prog" style="width:0%"></i></div>
             <button class="btn" id="reset">Reset</button>
           </div>
-          <div class="gamegrid"><div id="cards"></div><aside class="rank" id="rank" aria-label="Price ranking by type"></aside></div>
+          <div id="cards"></div>
         </div>
       </div>
       <div class="panel stage">
@@ -296,6 +296,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
           <div class="sub" id="subB" style="margin-top:8px"></div>
         </div>
         <span class="tag" id="tagB" hidden></span>
+        <aside class="rank" id="rank" aria-label="Price ranking by type" hidden></aside>
       </div>
     </div>
     <div class="panel" id="bookPanel">
@@ -692,6 +693,7 @@ function render(){
   const best=clear(S.hour),res=isGame?clear(S.hour,S.picks):best;
   drawStack(res,isGame);side(res,isGame,best);if(isGame)drawCards(res);
   document.getElementById('bookPanel').hidden=isGame;
+  document.getElementById('rank').hidden=!isGame;
   BK.k=0;stopBook();drawBook();
 }
 
