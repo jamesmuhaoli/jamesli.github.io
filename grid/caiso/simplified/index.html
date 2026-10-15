@@ -737,7 +737,7 @@ document.getElementById('bPlay').onclick=()=>{
   if(reduce){bt=216;bDraw();return}
   if(bt>=N-1)bt=0;
   document.getElementById('bPlay').textContent='Pause';
-  bTimer=setInterval(()=>{bt=Math.min(N-1,bt+bSpeed);bDraw();if(bt>=N-1)bStop()},70);
+  bTimer=setInterval(()=>{bt=Math.min(N-1,bt+bSpeed);bDraw();if(bt>=N-1)bStop()},150);
 };
 document.getElementById('bT').addEventListener('input',e=>{bStop();bt=+e.target.value;bDraw()});
 
