@@ -237,6 +237,10 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
 .trow.clean .cdot{background:var(--cat-clean)} .trow.fossil .cdot{background:var(--cat-fossil)} .trow.mixed .cdot{background:var(--cat-mixed)}
 .whypanel{margin-top:28px;background:var(--soft);display:flex;flex-direction:column;gap:10px}
 .whygrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px 24px}
+.p1draw{stroke-dasharray:1;stroke-dashoffset:1;animation:p1draw .6s ease-out forwards}
+@keyframes p1draw{to{stroke-dashoffset:0}}
+.btn.sbtn{border-color:var(--sup);color:var(--sup)} .btn.sbtn[aria-pressed="true"]{background:var(--sup);border-color:var(--sup);color:#fff}
+.btn.dbtn{border-color:var(--dem);color:var(--dem)} .btn.dbtn[aria-pressed="true"]{background:var(--dem);border-color:var(--dem);color:#fff}
 .fine{font-size:12.5px;color:var(--ink-2);margin:0}
 @media (prefers-reduced-motion:reduce){.progress > i{transition:none}}
 .home{display:inline-block;font-size:15px;color:var(--ink-2);text-decoration:none;margin-bottom:16px}.home:hover{color:var(--ink)}
@@ -263,11 +267,11 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
           <div class="eqn" id="eqA"></div>
           <div class="sub" id="subA" style="margin-top:8px"></div>
         </div>
-        <div class="ctl">
-          <div class="row"><input type="range" id="pA" aria-label="Price" min="1" max="9.5" step="0.5" value="8"><span class="pval" id="pAV">$8</span></div>
-        </div>
-        <div class="btns">
+        <div class="btns p1btns">
+          <button class="btn sbtn" id="btnS" aria-pressed="false">Supply</button>
+          <button class="btn dbtn" id="btnD" aria-pressed="false">Demand</button>
           <button class="btn solid" id="playA">Find the price</button>
+          <button class="btn" id="clearA">Clear</button>
         </div>
       </div>
     </div>
@@ -402,68 +406,42 @@ const A={L:66,R:470,T:56,B:322,QMAX:100,PMAX:10,hot:false};
 const ax=q=>A.L+(q/A.QMAX)*(A.R-A.L), ay=p=>A.B-(p/A.PMAX)*(A.B-A.T);
 const qs=p=>10*p, qd=p=>Math.max(0,Math.min(100,(A.hot?130:100)-10*p));
 const peA=()=>A.hot?6.5:5;
-function drawA(p){
-  const pe=peA(), eq=Math.abs(p-pe)<0.01;
+const P1={s:false,d:false,eq:false,fresh:''};
+function drawA(){
+  const pe=5,qe=50;
   let s=axes('a',A.L,A.R,A.T,A.B,'Price','($ per cup)','Cups','(per day)');
   for(const t of [2,4,6,8,10]){s+=`<line x1="${A.L}" x2="${A.R}" y1="${ay(t)}" y2="${ay(t)}" stroke="var(--grid)"/>`;
-    if(Math.abs(ay(t)-ay(p))>16) s+=`<text x="${A.L-10}" y="${ay(t)+5}" text-anchor="end" font-size="14" fill="var(--ink-2)">$${t}</text>`}
-  for(const t of [20,40,60,80,100]) if(!eq||Math.abs(ax(t)-ax(qs(pe)))>22) s+=`<text x="${ax(t)}" y="${A.B+22}" text-anchor="middle" font-size="14" fill="var(--ink-2)">${t}</text>`;
-  // supply
-  s+=`<line x1="${ax(0)}" y1="${ay(0)}" x2="${ax(100)}" y2="${ay(10)}" stroke="var(--sup)" stroke-width="5" stroke-linecap="round"/>`;
-  s+=`<text x="${ax(100)}" y="${ay(10)-12}" text-anchor="end" font-size="20" font-weight="500" fill="var(--sup)">Supply</text>`;
-  // demand (normal, and shifted)
-  if(A.hot){
-    s+=`<line x1="${ax(0)}" y1="${ay(10)}" x2="${ax(100)}" y2="${ay(0)}" stroke="var(--dem)" stroke-width="3" stroke-dasharray="7 6" opacity=".45"/>`;
-    s+=`<line x1="${ax(30)}" y1="${ay(10)}" x2="${ax(100)}" y2="${ay(3)}" stroke="var(--dem)" stroke-width="5" stroke-linecap="round"/>`;
-    s+=`<text x="${ax(100)}" y="${ay(3)-12}" text-anchor="end" font-size="20" font-weight="500" fill="var(--dem)">Demand</text>`;
-    s+=`<path d="M${ax(52)} ${ay(5.8)} L${ax(64)} ${ay(5.8)}" stroke="var(--dem)" stroke-width="3" marker-end="url(#ah-a)" opacity=".8"/>`;
-  } else {
-    s+=`<line x1="${ax(0)}" y1="${ay(10)}" x2="${ax(100)}" y2="${ay(0)}" stroke="var(--dem)" stroke-width="5" stroke-linecap="round"/>`;
-    s+=`<text x="${ax(100)}" y="${ay(0)-12}" text-anchor="end" font-size="20" font-weight="500" fill="var(--dem)">Demand</text>`;
+    if(!(P1.eq&&t===4||P1.eq&&t===6)) s+=`<text x="${A.L-10}" y="${ay(t)+5}" text-anchor="end" font-size="14" fill="var(--ink-2)">$${t}</text>`}
+  for(const t of [20,40,60,80,100]) if(!(P1.eq&&(t===40||t===60))) s+=`<text x="${ax(t)}" y="${A.B+22}" text-anchor="middle" font-size="14" fill="var(--ink-2)">${t}</text>`;
+  const grow=k=>P1.fresh===k&&!reduce?' pathLength="1" class="p1draw"':'';
+  if(P1.s){
+    s+=`<line${grow('s')} x1="${ax(0)}" y1="${ay(0)}" x2="${ax(100)}" y2="${ay(10)}" stroke="var(--sup)" stroke-width="5" stroke-linecap="round"/>`;
+    s+=`<text x="${ax(100)}" y="${ay(10)-12}" text-anchor="end" font-size="20" font-weight="600" fill="var(--sup)">Supply</text>`;
   }
-  if(eq){
-    const q=qs(pe),x=ax(q),y=ay(pe);
-    s+=`<line x1="${A.L}" x2="${x}" y1="${y}" y2="${y}" stroke="var(--ink)" stroke-width="1.8" stroke-dasharray="5 5"/>`;
-    s+=`<line x1="${x}" x2="${x}" y1="${y}" y2="${A.B}" stroke="var(--ink)" stroke-width="1.8" stroke-dasharray="5 5"/>`;
-    s+=`<circle cx="${x}" cy="${y}" r="10" fill="var(--gain)" stroke="var(--paper)" stroke-width="3"/>`;
-    s+=`<text x="${A.L-10}" y="${y+6}" text-anchor="end" font-size="16" font-weight="500" fill="var(--gain)">${cash(pe)}</text>`;
-    s+=`<text x="${x}" y="${A.B+22}" text-anchor="middle" font-size="16" font-weight="500" fill="var(--gain)">${q}</text>`;
-  } else {
-    const d=qd(p),u=qs(p),y=ay(p),sur=u>d,col=sur?'var(--sup)':'var(--dem)';
-    const a=Math.min(d,u),b=Math.max(d,u);
-    s+=`<line x1="${A.L}" x2="${A.R}" y1="${y}" y2="${y}" stroke="var(--ink)" stroke-width="1.8" stroke-dasharray="5 5"/>`;
-    s+=`<rect x="${ax(a)}" y="${y-9}" width="${ax(b)-ax(a)}" height="18" rx="4" fill="${col}" opacity=".25"/>`;
-    s+=`<circle cx="${ax(d)}" cy="${y}" r="8" fill="var(--dem)" stroke="var(--paper)" stroke-width="2"/>`;
-    s+=`<circle cx="${ax(u)}" cy="${y}" r="8" fill="var(--sup)" stroke="var(--paper)" stroke-width="2"/>`;
-    const mid=Math.max(A.L+80,Math.min(A.R-80,(ax(a)+ax(b))/2)), ly=y<A.T+40?y+32:y-18;
-    s+=`<text x="${mid}" y="${ly}" text-anchor="middle" font-size="17" font-weight="500" fill="${col}">${sur?`${b-a} too much`:`${b-a} too few`}</text>`;
-    s+=`<text x="${A.L-10}" y="${y+6}" text-anchor="end" font-size="16" font-weight="500" fill="var(--ink)">${cash(p)}</text>`;
-    // big direction arrow
-    const ax0=A.L+22, dy=sur?34:-34;
-    s+=`<line x1="${ax0}" y1="${y+(sur?8:-8)}" x2="${ax0}" y2="${y+dy}" stroke="${col}" stroke-width="4" marker-end="url(#ah-a)"/>`;
+  if(P1.d){
+    s+=`<line${grow('d')} x1="${ax(0)}" y1="${ay(10)}" x2="${ax(100)}" y2="${ay(0)}" stroke="var(--dem)" stroke-width="5" stroke-linecap="round"/>`;
+    s+=`<text x="${ax(100)}" y="${ay(0)-12}" text-anchor="end" font-size="20" font-weight="600" fill="var(--dem)">Demand</text>`;
+  }
+  if(P1.eq){
+    const x=ax(qe),y=ay(pe);
+    s+=`<line x1="${A.L}" x2="${x}" y1="${y}" y2="${y}" stroke="var(--gain)" stroke-width="3" stroke-dasharray="6 5"/>`;
+    s+=`<line x1="${x}" x2="${x}" y1="${y}" y2="${A.B}" stroke="var(--gain)" stroke-width="3" stroke-dasharray="6 5"/>`;
+    s+=`<circle cx="${x}" cy="${y}" r="11" fill="var(--gain)" stroke="var(--paper)" stroke-width="3"/>`;
+    s+=`<text x="${x+18}" y="${y+10}" font-size="30" font-weight="600" fill="var(--gain)">✓</text>`;
+    s+=`<text x="${A.L-10}" y="${y+6}" text-anchor="end" font-size="17" font-weight="600" fill="var(--gain)">$5</text>`;
+    s+=`<text x="${x}" y="${A.B+22}" text-anchor="middle" font-size="17" font-weight="600" fill="var(--gain)">50</text>`;
   }
   document.getElementById('boba').innerHTML=s;
-  const E=document.getElementById('eqA'),Sb=document.getElementById('subA');
-  if(eq){E.innerHTML=eqHTML('eq');Sb.className='sub ok';Sb.textContent='✓'}
-  else if(qs(p)>qd(p)){E.innerHTML=eqHTML('sur');Sb.className='sub down';Sb.textContent='↓'}
-  else{E.innerHTML=eqHTML('sho');Sb.className='sub up';Sb.textContent='↑'}
-  document.getElementById('pAV').textContent=cash(p);
+  document.getElementById('eqA').innerHTML=P1.eq?eqHTML('eq'):'';
+  const Sb=document.getElementById('subA');Sb.className='sub ok';Sb.textContent=P1.eq?'✓':'';
+  document.getElementById('btnS').setAttribute('aria-pressed',P1.s);
+  document.getElementById('btnD').setAttribute('aria-pressed',P1.d);
+  P1.fresh='';
 }
-function animate(input,frames,draw,btn){
-  if(reduce){input.value=frames[frames.length-1];draw(+input.value);return}
-  btn.disabled=true;let i=0,from=+input.value,t0=null;const dur=820;
-  function step(ts){
-    if(t0===null)t0=ts;const k=Math.min(1,(ts-t0)/dur),e=k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2;
-    const v=Math.round((from+(frames[i]-from)*e)*2)/2;input.value=v;draw(v);
-    if(k<1)return requestAnimationFrame(step);
-    from=frames[i];i++;t0=null;
-    if(i<frames.length)setTimeout(()=>requestAnimationFrame(step),180);else btn.disabled=false;
-  }
-  requestAnimationFrame(step);
-}
-const pA=document.getElementById('pA');
-pA.addEventListener('input',()=>drawA(+pA.value));
-document.getElementById('playA').onclick=e=>{const pe=peA();animate(pA,[9,pe-3.5,pe+2,pe-1,pe],drawA,e.currentTarget)};
+document.getElementById('btnS').onclick=()=>{P1.s=!P1.s;if(!P1.s)P1.eq=false;P1.fresh=P1.s?'s':'';drawA()};
+document.getElementById('btnD').onclick=()=>{P1.d=!P1.d;if(!P1.d)P1.eq=false;P1.fresh=P1.d?'d':'';drawA()};
+document.getElementById('playA').onclick=()=>{P1.s=true;P1.d=true;P1.eq=true;drawA()};
+document.getElementById('clearA').onclick=()=>{P1.s=P1.d=P1.eq=false;drawA()};
 
 
 /* ================= PART 2: electricity ================= */
@@ -776,7 +754,7 @@ document.getElementById('bPlay').onclick=()=>{
 document.getElementById('bT').addEventListener('input',e=>{bStop();bt=+e.target.value;bDraw()});
 
 bStatic();bDraw();
-drawA(+pA.value);render();
+drawA();render();
 
 })();
 </script>
