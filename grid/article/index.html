@@ -1,0 +1,899 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Run the Grid: an interactive intro to supply, demand and California's electricity market for high school students.">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-JY8E367EKL"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-JY8E367EKL');</script>
+<title>Run the Grid</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500;600;800;900&display=swap">
+<style>
+/* Layout: a textbook figure page. Big charts, big equations, very few words. Blue = demand, red = supply everywhere. */
+:root{
+  --bg:#ECEFF2; --paper:#FFFFFF; --ink:#15171A; --ink-2:#596170; --grid:#E3E7EB; --line:#C8CFD7; --soft:#F4F6F8;
+  --dem:#1D5AB6; --sup:#C3352B; --gain:#23874A;
+  --c-solar:#E3AE16; --c-wind:#2E9C94; --c-nuclear:#8566CC; --c-geo:#A5674A; --c-hydro:#2D78C8;
+  --c-battery:#3E9F5E; --c-imports:#8794A2; --c-cc:#DB7434; --c-peaker:#B5303A;
+  --f:"Libre Franklin",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F1216; --paper:#171B21; --ink:#ECEFF3; --ink-2:#A3ACB8; --grid:#252B33; --line:#343C47; --soft:#1E242C;
+  --dem:#5E9DF0; --sup:#F06A5F; --gain:#5BBE7A;
+  --c-solar:#F2C33A; --c-wind:#45B8AF; --c-nuclear:#A189E3; --c-geo:#C6876A; --c-hydro:#4E98E6;
+  --c-battery:#5BBE7A; --c-imports:#9AA6B3; --c-cc:#EC8A4C; --c-peaker:#DE5560; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F1216; --paper:#171B21; --ink:#ECEFF3; --ink-2:#A3ACB8; --grid:#252B33; --line:#343C47; --soft:#1E242C;
+  --dem:#5E9DF0; --sup:#F06A5F; --gain:#5BBE7A;
+  --c-solar:#F2C33A; --c-wind:#45B8AF; --c-nuclear:#A189E3; --c-geo:#C6876A; --c-hydro:#4E98E6;
+  --c-battery:#5BBE7A; --c-imports:#9AA6B3; --c-cc:#EC8A4C; --c-peaker:#DE5560; color-scheme:dark}
+
+body{background:var(--bg);color:var(--ink);font-family:var(--f);font-size:16px;line-height:1.5}
+.wrap{max-width:1140px;margin:0 auto;padding-block:24px 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:32px}
+h1{font:900 clamp(38px,7vw,64px)/1 var(--f);margin:0;letter-spacing:-.025em}
+.lede{margin:8px 0 0;color:var(--ink-2);font-size:19px}
+.part{display:flex;flex-direction:column;gap:14px}
+.parthead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px;border-top:3px solid var(--ink);padding-top:12px}
+.eyebrow{font:700 13px var(--f);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2)}
+h2{font:900 clamp(26px,4vw,36px)/1.1 var(--f);margin:2px 0 0;letter-spacing:-.015em;text-wrap:balance}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:18px;min-width:0}
+.svgbox{overflow-x:auto}
+svg{display:block;width:100%;height:auto}
+svg text{font-family:var(--f)}
+
+.duo{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:18px;align-items:stretch}
+@media (max-width:860px){.duo{grid-template-columns:1fr}}
+.stage{display:flex;flex-direction:column;gap:18px;justify-content:center}
+.eqn{font:900 clamp(34px,4.6vw,52px)/1.05 var(--f);letter-spacing:-.02em;display:flex;flex-wrap:wrap;gap:.25em;align-items:baseline}
+.eqn .D{color:var(--dem)} .eqn .S{color:var(--sup)} .eqn .op{color:var(--ink)}
+.sub{font:800 clamp(20px,2.4vw,26px)/1.2 var(--f);color:var(--ink-2);font-variant-numeric:tabular-nums}
+.sub.up{color:var(--dem)} .sub.down{color:var(--sup)} .sub.ok{color:var(--gain)}
+.ctl{display:flex;flex-direction:column;gap:8px}
+.ctl .row{display:flex;align-items:center;gap:12px}
+.ctl input[type=range]{flex:1;min-width:0;accent-color:var(--ink);height:28px}
+.pval{font:900 28px var(--f);font-variant-numeric:tabular-nums;min-width:3.6ch;text-align:right}
+.btns{display:flex;flex-wrap:wrap;gap:8px}
+.btn{font:700 15px var(--f);padding:10px 16px;border-radius:6px;border:2px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer}
+.btn.solid{background:var(--ink);color:var(--paper)}
+.btn[aria-pressed="true"]{background:var(--sup);border-color:var(--sup);color:#fff}
+.btn:disabled{opacity:.5;cursor:default}
+button:focus-visible,input:focus-visible{outline:3px solid var(--dem);outline-offset:2px}
+
+.seg{display:inline-flex;border:2px solid var(--ink);border-radius:6px;overflow:hidden}
+.seg button{font:700 15px var(--f);padding:9px 16px;background:transparent;color:var(--ink);border:0;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.controls{display:flex;flex-wrap:wrap;gap:14px 28px;align-items:center}
+.hourbox{flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:6px}
+.hourtop{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.clock{font:900 32px/1 var(--f);font-variant-numeric:tabular-nums;min-width:4.4ch}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{font:600 14px var(--f);padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:var(--soft);color:var(--ink);cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.hourbox input{width:100%;accent-color:var(--ink)}
+.price{font:900 64px/.95 var(--f);font-variant-numeric:tabular-nums;letter-spacing:-.025em}
+.price small{font:600 16px var(--f);color:var(--ink-2);margin-left:4px;letter-spacing:0}
+.setby{font-size:15px;color:var(--ink-2)} .setby b{color:var(--ink)}
+.tag{display:inline-block;font:800 14px var(--f);letter-spacing:.06em;text-transform:uppercase;padding:5px 10px;border-radius:4px;color:#fff;background:var(--sup);align-self:flex-start}
+.tag.cool{background:var(--dem)} .tag.ok{background:var(--gain)}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-top:10px}
+.card{position:relative;text-align:left;font:inherit;color:var(--ink);background:var(--soft);border:2px solid var(--line);border-radius:6px;padding:9px 10px 9px 17px;cursor:pointer;display:flex;flex-direction:column;gap:0;min-width:0}
+.card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:8px;border-radius:5px 0 0 5px;background:var(--sw)}
+.card .nm{font-weight:800;font-size:15px}
+.card .meta{font-size:14px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.card[aria-pressed="true"]{border-color:var(--ink);background:var(--paper)}
+.card:disabled{opacity:.4;cursor:not-allowed}
+.card .order{position:absolute;top:8px;right:8px;width:24px;height:24px;border-radius:50%;background:var(--ink);color:var(--paper);font:800 13px/24px var(--f);text-align:center}
+.bar{display:flex;align-items:center;gap:10px;margin-top:6px}
+.progress{flex:1;height:14px;border-radius:7px;background:var(--soft);border:1px solid var(--line);overflow:hidden}
+.progress > i{display:block;height:100%;background:var(--dem);transition:width .25s}
+.daytop{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-bottom:6px}
+.dayread{font:900 34px/1 var(--f);font-variant-numeric:tabular-nums}
+.dayread span{color:var(--ink-2);font-weight:700;font-size:22px}
+.readrow{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:14px 28px;margin-bottom:8px}
+.clock.big{font-size:44px;min-width:5.6ch}
+.readeq{flex:1 1 260px;min-width:0}
+.eqn.small{font-size:clamp(26px,3.4vw,38px)}
+.svgbox.wide svg{min-width:720px}
+.playbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:8px}
+.playbar input{flex:1 1 200px;min-width:0;accent-color:var(--ink);height:28px}
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;font:900 clamp(24px,3.6vw,40px)/1.1 var(--f);letter-spacing:-.015em}
+.flow b{color:var(--ink-2);font-weight:600}
+.flow .S{color:var(--sup)}
+.duo.even{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr)}
+@media (max-width:860px){.duo.even{grid-template-columns:1fr}}
+.figcap h3{font:800 19px var(--f);margin:0 0 4px}
+.legend4{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13.5px;color:var(--ink-2);margin-bottom:4px}
+.legend4 span{display:inline-flex;align-items:center;gap:6px}
+.legend4 i{display:inline-block;width:18px;height:2.5px}
+.legend4 i.dash{height:0;border-top:2.5px dashed}
+.draw{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1s ease-out forwards;animation-delay:var(--d,0s)}
+.fadein{opacity:0;animation:fade .6s ease-out forwards;animation-delay:var(--d,0s)}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes fade{to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.draw{animation:none;stroke-dashoffset:0}.fadein{animation:none;opacity:1}}
+.live{display:flex;flex-direction:column;gap:2px;padding:12px 14px;border:2px solid var(--ink);border-radius:6px;color:var(--ink);text-decoration:none;background:var(--soft)}
+.live:hover{background:var(--paper)}
+.live b{font:900 20px var(--f);color:var(--dem)}
+.live span:not(.eyebrow){font-size:14px;color:var(--ink-2)}
+.live code{font-size:12.5px;color:var(--ink-2);user-select:all}
+.fhead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px}
+.fbottom{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:14px;margin-top:10px}
+.bookgrid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:22px;align-items:start}
+@media (max-width:760px){.bookgrid{grid-template-columns:1fr}}
+.lhead,.lrow{display:grid;grid-template-columns:minmax(0,1fr) 92px minmax(0,1.3fr);gap:12px;align-items:center;padding:0 14px}
+.lhead{font:800 13px var(--f);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);background:var(--soft);border:1px solid var(--line);border-radius:6px;padding-block:10px;margin-bottom:8px}
+.lhead span:nth-child(2),.lrow .pr{text-align:center}
+.ladder{position:relative;touch-action:none;user-select:none;cursor:ns-resize;padding-block:6px}
+#bkRows{display:flex;flex-direction:column;gap:6px}
+.lrow{height:40px;border:1px solid var(--line);border-radius:6px;background:var(--paper);font-variant-numeric:tabular-nums;transition:opacity .25s,background .25s}
+.lrow .nm{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:var(--ink-2);min-width:0;white-space:nowrap;overflow:hidden}
+.lrow .nm i{flex:none;width:10px;height:18px;border-radius:2px;background:var(--sw)}
+.lrow .pr{font:900 19px var(--f);color:var(--sup)}
+.lrow .qty{position:relative;height:26px;display:flex;align-items:center}
+.lrow .qty b{position:absolute;right:0;top:0;bottom:0;border-radius:4px;background:var(--sup);opacity:.28}
+.lrow .qty span{position:relative;font:800 16px var(--f);padding-left:4px}
+.lrow.out{opacity:.4}
+.lrow.in{background:var(--soft)}
+.lrow.in .qty b{opacity:.6}
+.lrow.marg{outline:3px solid var(--gain);outline-offset:-2px}
+.lrow .flag{font:800 10.5px var(--f);letter-spacing:.06em;text-transform:uppercase;color:#fff;background:var(--gain);padding:2px 6px;border-radius:3px}
+.cline{position:absolute;left:-6px;right:-6px;height:0;border-top:3px dashed var(--c-solar);transition:top .2s}
+.cline.ok{border-top-color:var(--gain)}
+.cline .grip{position:absolute;right:10px;top:-15px;font:800 12px var(--f);letter-spacing:.04em;background:var(--c-solar);color:#15171A;padding:4px 9px;border-radius:999px;cursor:grab}
+.cline.ok .grip{background:var(--gain);color:#fff}
+.cline:focus-visible{outline:3px solid var(--dem);outline-offset:4px}
+.lfoot{font-size:13px;color:var(--ink-2);text-align:center;margin-top:4px}
+.buyers{border:2px solid var(--dem);border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:4px}
+.buyers .eyebrow{color:var(--dem)}
+.bnum{font:900 44px/1 var(--f);color:var(--dem);font-variant-numeric:tabular-nums}
+.bsub{font-size:15px;font-weight:600;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.gauge{height:16px;border-radius:8px;background:var(--soft);border:1px solid var(--line);overflow:hidden;margin-top:10px}
+.gauge i{display:block;height:100%;width:0;background:var(--dem);transition:width .25s}
+.bprice{margin-top:10px;font:900 clamp(28px,3.4vw,40px)/1.1 var(--f);color:var(--gain);min-height:1.2em;font-variant-numeric:tabular-nums}
+@media (prefers-reduced-motion:reduce){.gauge i,.lrow,.cline{transition:none}}
+.p3grid{display:grid;grid-template-columns:240px minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:900px){.p3grid{grid-template-columns:1fr}.minibook{max-width:360px}}
+.lhead.sm,.lrow.sm{grid-template-columns:minmax(0,1fr) 54px 46px;gap:6px;padding:0 8px}
+.lhead.sm{font-size:11px;padding-block:6px;margin-bottom:6px}
+.ladder.mini{cursor:default;padding-block:4px}
+.ladder.mini #mbRows{display:flex;flex-direction:column;gap:4px}
+.lrow.sm{height:24px;border-radius:4px}
+.lrow.sm .nm{font-size:12px;gap:6px}
+.lrow.sm .nm i{width:8px;height:14px}
+
+.lrow.sm .pr{font-size:14px}
+.lrow.sm .qty{height:16px}
+.lrow.sm .qty span{font-size:12.5px}
+.mline{position:absolute;left:-4px;right:-4px;height:0;border-top:3px dashed var(--dem);transition:top .15s}
+.mline span{position:absolute;left:8px;top:-13px;font:800 11.5px var(--f);background:var(--dem);color:#fff;padding:3px 8px;border-radius:999px;white-space:nowrap;font-variant-numeric:tabular-nums}
+@media (prefers-reduced-motion:reduce){.mline{transition:none}}
+.fine{font-size:12.5px;color:var(--ink-2);margin:0}
+@media (prefers-reduced-motion:reduce){.progress > i{transition:none}}
+.home{display:inline-block;font-size:14px;font-weight:600;color:var(--ink-2);text-decoration:none;margin-bottom:10px}.home:hover{color:var(--ink)}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <a class="home" href="../../">← james-li.com</a>
+    <h1>Run the Grid</h1>
+    <p class="lede">How does a market pick a price?</p>
+  </header>
+
+  <!-- PART 1 -->
+  <section class="part">
+    <div class="parthead">
+      <div><div class="eyebrow">Part 1</div><h2>Supply and demand: a boba shop</h2></div>
+    </div>
+    <div class="duo">
+      <div class="panel"><div class="svgbox"><svg id="boba" viewBox="0 0 520 390" role="img" aria-label="Supply and demand for boba tea"></svg></div></div>
+      <div class="panel stage">
+        <div>
+          <div class="eqn" id="eqA"></div>
+          <div class="sub" id="subA" style="margin-top:8px"></div>
+        </div>
+        <div class="ctl">
+          <label class="eyebrow" for="pA">Pick a price</label>
+          <div class="row"><input type="range" id="pA" min="1" max="9.5" step="0.5" value="8"><span class="pval" id="pAV">$8</span></div>
+        </div>
+        <div class="btns">
+          <button class="btn solid" id="playA">Find the price</button>
+          <button class="btn" id="hotA" aria-pressed="false">Hot day!</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PART 2 -->
+  <section class="part">
+    <div class="parthead">
+      <div><div class="eyebrow">Part 2</div><h2>Now electricity: each step is a power plant</h2></div>
+      <div class="seg" role="group" aria-label="Mode">
+        <button id="modeAuto" aria-pressed="true">Watch</button>
+        <button id="modeGame" aria-pressed="false">You try</button>
+      </div>
+    </div>
+    <div class="panel controls">
+      <div class="hourbox">
+        <div class="hourtop">
+          <span class="clock" id="clock">7 PM</span>
+          <div class="chips" id="presets"></div>
+        </div>
+        <input type="range" id="hour" min="0" max="23" step="1" value="19" aria-label="Hour of day">
+      </div>
+      <div class="chips" id="scen"></div>
+    </div>
+    <div class="duo">
+      <div class="panel">
+        <div class="svgbox"><svg id="stack" viewBox="0 0 720 410" role="img" aria-label="Electricity supply steps and demand"></svg></div>
+        <div id="gameArea" hidden>
+          <div class="bar">
+            <div class="progress"><i id="prog" style="width:0%"></i></div>
+            <button class="btn" id="reset">Reset</button>
+          </div>
+          <div class="cards" id="cards"></div>
+        </div>
+      </div>
+      <div class="panel stage">
+        <div>
+          <div class="eyebrow" id="priceLabel">Price</div>
+          <div class="price" id="price"></div>
+          <div class="setby" id="setby"></div>
+        </div>
+        <div>
+          <div class="eqn" id="eqB"></div>
+          <div class="sub" id="subB" style="margin-top:8px"></div>
+        </div>
+        <span class="tag" id="tagB" hidden></span>
+      </div>
+    </div>
+    <div class="panel" id="bookPanel">
+      <div class="fhead">
+        <div class="figcap"><h3>The bid stack</h3></div>
+        <button class="btn solid" id="bookGo">Clear it for me</button>
+      </div>
+      <div class="bookgrid">
+        <div class="ladderwrap">
+          <div class="lhead"><span>Supply bid</span><span>Price</span><span>Quantity (GW)</span></div>
+          <div class="ladder" id="ladder">
+            <div id="bkRows"></div>
+            <div class="cline" id="cline" tabindex="0" role="slider" aria-label="Clearing line: bids below it are accepted" aria-valuemin="0">
+              <span class="grip">drag ↕</span>
+            </div>
+          </div>
+          <div class="lfoot">cheapest bids at the bottom</div>
+        </div>
+        <div class="buyers">
+          <div class="eyebrow">Demand to meet</div>
+          <div class="bnum" id="bkNeed">31.5 GW</div>
+          <div class="gauge"><i id="bkGauge"></i></div>
+          <div class="bsub" id="bkGot">Accepted: 0 GW</div>
+          <div class="eqn small" id="bkEq" style="margin-top:14px"></div>
+          <div class="sub" id="bkSub"></div>
+          <div class="bprice" id="bkPrice"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PART 3 -->
+  <section class="part">
+    <div class="parthead">
+      <div><div class="eyebrow">Part 3</div><h2>Every 5 minutes, a new price. Add them up: a whole day.</h2></div>
+    </div>
+    <div class="panel">
+      <div class="readrow">
+        <div><div class="eyebrow">Time</div><div class="clock big" id="bClock">12:00 AM</div></div>
+        <div class="readeq">
+          <div class="eqn small"><span class="D">Demand</span><span class="op">=</span><span class="S">Supply</span></div>
+          <div class="sub ok" id="bNums">15.5 GW = 15.5 GW</div>
+        </div>
+        <div><div class="eyebrow">Price</div><div class="price" id="bPrice">$35</div></div>
+      </div>
+      <div class="p3grid">
+        <div class="minibook">
+          <div class="eyebrow" style="margin-bottom:6px">Bid stack, live</div>
+          <div class="lhead sm"><span>Bid</span><span>Price</span><span>GW</span></div>
+          <div class="ladder mini"><div id="mbRows"></div><div class="mline" id="mbLine"><span id="mbLbl">Demand</span></div></div>
+          <div class="lfoot">cheapest at the bottom</div>
+        </div>
+        <div class="svgbox wide"><svg id="bridge" viewBox="0 0 1000 760" role="img" aria-label="Demand moving across the supply steps, with each moment's price traced over the day"><g id="bStatic"></g><g id="bDyn"></g></svg></div>
+      </div>
+      <div class="playbar">
+        <button class="btn solid" id="bPlay">Play the day</button>
+        <button class="btn" id="bSpeed">Speed 1×</button>
+        <input type="range" id="bT" min="0" max="287" step="1" value="0" aria-label="Time of day">
+      </div>
+      <a class="live" href="https://www.caiso.com/todays-outlook" target="_blank" rel="noopener" style="margin-top:14px">
+        <span class="eyebrow">See it live</span>
+        <b>CAISO Today's Outlook →</b>
+        <span>California's real demand curve today, next to the forecast</span>
+        <code>caiso.com/todays-outlook</code>
+      </a>
+    </div>
+  </section>
+
+  <!-- PART 4 -->
+  <section class="part">
+    <div class="parthead">
+      <div><div class="eyebrow">Part 4</div><h2>Forecasting: guess tomorrow's demand</h2></div>
+    </div>
+    <div class="flow" aria-label="Clues, then math, then forecast">
+      <span>Clues</span><b>→</b><span>Math</span><b>→</b><span class="S">Forecast</span>
+    </div>
+    <div class="duo even">
+      <div class="panel">
+        <div class="figcap"><h3>1. Clues move together</h3></div>
+        <div class="svgbox"><svg id="clues" viewBox="0 0 560 410" role="img" aria-label="Sunlight, temperature and demand over a day"></svg></div>
+      </div>
+      <div class="panel">
+        <div class="figcap"><h3>2a. A straight line: hotter day → more demand</h3></div>
+        <div class="svgbox"><svg id="scat" viewBox="0 0 470 380" role="img" aria-label="Scatter of daily temperature and peak demand with a best-fit straight line"></svg></div>
+        <div class="eqn small" id="fitEq" style="margin-top:6px"></div>
+        <div class="sub" id="fitSub"></div>
+      </div>
+    </div>
+    <div class="duo even">
+      <div class="panel">
+        <div class="figcap"><h3>2b. What if everyone gets home at once?</h3></div>
+        <div class="svgbox"><svg id="curve" viewBox="0 0 560 380" role="img" aria-label="Demand from noon to 7 PM with a straight-line fit or a curved fit"></svg></div>
+      </div>
+      <div class="panel stage">
+        <div>
+          <div class="eyebrow">Which math fits better?</div>
+          <div class="seg" role="group" aria-label="Model" style="margin-top:6px">
+            <button id="cDots" aria-pressed="true">Dots only</button>
+            <button id="cLine" aria-pressed="false">Straight line</button>
+            <button id="cCurve" aria-pressed="false">Curve</button>
+          </div>
+        </div>
+        <div>
+          <div class="eqn small" id="cEq"></div>
+          <div class="sub" id="cSub" style="margin-top:6px"></div>
+        </div>
+        <div id="cMiss" hidden>
+          <div class="eyebrow">Average miss</div>
+          <svg id="cBars" viewBox="0 0 320 96" role="img" aria-label="Average miss of each model"></svg>
+        </div>
+      </div>
+    </div>
+    <p class="fine">Made-up numbers for teaching.</p>
+  </section>
+</div>
+
+<script>
+(function(){
+const reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+const r1=x=>Math.round(x*10)/10;
+const money=p=>(p<0?'−$':'$')+Math.abs(Math.round(p));
+const cash=p=>'$'+(p%1?p.toFixed(2):p);
+
+function axes(id,L,R,T,B,yName,yUnit,xName,xUnit){
+  return `<defs><marker id="ah-${id}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--ink)"/></marker></defs>
+  <line x1="${L}" y1="${B}" x2="${L}" y2="${T-16}" stroke="var(--ink)" stroke-width="2" marker-end="url(#ah-${id})"/>
+  <line x1="${L}" y1="${B}" x2="${R+14}" y2="${B}" stroke="var(--ink)" stroke-width="2" marker-end="url(#ah-${id})"/>
+  <text x="${L+12}" y="${T-14}" font-size="17"><tspan font-weight="800" fill="var(--ink)">${yName}</tspan><tspan font-size="14" fill="var(--ink-2)"> ${yUnit}</tspan></text>
+  <text x="${R+14}" y="${B+46}" text-anchor="end" font-size="17"><tspan font-weight="800" fill="var(--ink)">${xName}</tspan><tspan font-size="14" fill="var(--ink-2)"> ${xUnit}</tspan></text>`;
+}
+function eqHTML(kind){
+  if(kind==='eq') return `<span class="D">Demand</span><span class="op">=</span><span class="S">Supply</span>`;
+  if(kind==='sur') return `<span class="S">Supply</span><span class="op">&gt;</span><span class="D">Demand</span>`;
+  return `<span class="D">Demand</span><span class="op">&gt;</span><span class="S">Supply</span>`;
+}
+
+/* ================= PART 1: boba ================= */
+const A={L:66,R:470,T:56,B:322,QMAX:100,PMAX:10,hot:false};
+const ax=q=>A.L+(q/A.QMAX)*(A.R-A.L), ay=p=>A.B-(p/A.PMAX)*(A.B-A.T);
+const qs=p=>10*p, qd=p=>Math.max(0,Math.min(100,(A.hot?130:100)-10*p));
+const peA=()=>A.hot?6.5:5;
+function drawA(p){
+  const pe=peA(), eq=Math.abs(p-pe)<0.01;
+  let s=axes('a',A.L,A.R,A.T,A.B,'Price','($ per cup)','Cups','(per day)');
+  for(const t of [2,4,6,8,10]){s+=`<line x1="${A.L}" x2="${A.R}" y1="${ay(t)}" y2="${ay(t)}" stroke="var(--grid)"/>`;
+    if(Math.abs(ay(t)-ay(p))>16) s+=`<text x="${A.L-10}" y="${ay(t)+5}" text-anchor="end" font-size="14" fill="var(--ink-2)">$${t}</text>`}
+  for(const t of [20,40,60,80,100]) if(!eq||Math.abs(ax(t)-ax(qs(pe)))>22) s+=`<text x="${ax(t)}" y="${A.B+22}" text-anchor="middle" font-size="14" fill="var(--ink-2)">${t}</text>`;
+  // supply
+  s+=`<line x1="${ax(0)}" y1="${ay(0)}" x2="${ax(100)}" y2="${ay(10)}" stroke="var(--sup)" stroke-width="5" stroke-linecap="round"/>`;
+  s+=`<text x="${ax(100)}" y="${ay(10)-12}" text-anchor="end" font-size="20" font-weight="900" fill="var(--sup)">Supply</text>`;
+  // demand (normal, and shifted)
+  if(A.hot){
+    s+=`<line x1="${ax(0)}" y1="${ay(10)}" x2="${ax(100)}" y2="${ay(0)}" stroke="var(--dem)" stroke-width="3" stroke-dasharray="7 6" opacity=".45"/>`;
+    s+=`<line x1="${ax(30)}" y1="${ay(10)}" x2="${ax(100)}" y2="${ay(3)}" stroke="var(--dem)" stroke-width="5" stroke-linecap="round"/>`;
+    s+=`<text x="${ax(100)}" y="${ay(3)-12}" text-anchor="end" font-size="20" font-weight="900" fill="var(--dem)">Demand</text>`;
+    s+=`<path d="M${ax(52)} ${ay(5.8)} L${ax(64)} ${ay(5.8)}" stroke="var(--dem)" stroke-width="3" marker-end="url(#ah-a)" opacity=".8"/>`;
+  } else {
+    s+=`<line x1="${ax(0)}" y1="${ay(10)}" x2="${ax(100)}" y2="${ay(0)}" stroke="var(--dem)" stroke-width="5" stroke-linecap="round"/>`;
+    s+=`<text x="${ax(100)}" y="${ay(0)-12}" text-anchor="end" font-size="20" font-weight="900" fill="var(--dem)">Demand</text>`;
+  }
+  if(eq){
+    const q=qs(pe),x=ax(q),y=ay(pe);
+    s+=`<line x1="${A.L}" x2="${x}" y1="${y}" y2="${y}" stroke="var(--ink)" stroke-width="1.8" stroke-dasharray="5 5"/>`;
+    s+=`<line x1="${x}" x2="${x}" y1="${y}" y2="${A.B}" stroke="var(--ink)" stroke-width="1.8" stroke-dasharray="5 5"/>`;
+    s+=`<circle cx="${x}" cy="${y}" r="10" fill="var(--gain)" stroke="var(--paper)" stroke-width="3"/>`;
+    s+=`<text x="${A.L-10}" y="${y+6}" text-anchor="end" font-size="16" font-weight="900" fill="var(--gain)">${cash(pe)}</text>`;
+    s+=`<text x="${x}" y="${A.B+22}" text-anchor="middle" font-size="16" font-weight="900" fill="var(--gain)">${q}</text>`;
+  } else {
+    const d=qd(p),u=qs(p),y=ay(p),sur=u>d,col=sur?'var(--sup)':'var(--dem)';
+    const a=Math.min(d,u),b=Math.max(d,u);
+    s+=`<line x1="${A.L}" x2="${A.R}" y1="${y}" y2="${y}" stroke="var(--ink)" stroke-width="1.8" stroke-dasharray="5 5"/>`;
+    s+=`<rect x="${ax(a)}" y="${y-9}" width="${ax(b)-ax(a)}" height="18" rx="4" fill="${col}" opacity=".25"/>`;
+    s+=`<circle cx="${ax(d)}" cy="${y}" r="8" fill="var(--dem)" stroke="var(--paper)" stroke-width="2"/>`;
+    s+=`<circle cx="${ax(u)}" cy="${y}" r="8" fill="var(--sup)" stroke="var(--paper)" stroke-width="2"/>`;
+    const mid=Math.max(A.L+80,Math.min(A.R-80,(ax(a)+ax(b))/2)), ly=y<A.T+40?y+32:y-18;
+    s+=`<text x="${mid}" y="${ly}" text-anchor="middle" font-size="17" font-weight="900" fill="${col}">${sur?`${b-a} extra cups`:`${b-a} cups short`}</text>`;
+    s+=`<text x="${A.L-10}" y="${y+6}" text-anchor="end" font-size="16" font-weight="900" fill="var(--ink)">${cash(p)}</text>`;
+    // big direction arrow
+    const ax0=A.L+22, dy=sur?34:-34;
+    s+=`<line x1="${ax0}" y1="${y+(sur?8:-8)}" x2="${ax0}" y2="${y+dy}" stroke="${col}" stroke-width="4" marker-end="url(#ah-a)"/>`;
+  }
+  document.getElementById('boba').innerHTML=s;
+  const E=document.getElementById('eqA'),Sb=document.getElementById('subA');
+  if(eq){E.innerHTML=eqHTML('eq');Sb.className='sub ok';Sb.textContent=`${qs(pe)} cups = ${qs(pe)} cups ✓`}
+  else if(qs(p)>qd(p)){E.innerHTML=eqHTML('sur');Sb.className='sub down';Sb.textContent='Price goes down ↓'}
+  else{E.innerHTML=eqHTML('sho');Sb.className='sub up';Sb.textContent='Price goes up ↑'}
+  document.getElementById('pAV').textContent=cash(p);
+}
+function animate(input,frames,draw,btn){
+  if(reduce){input.value=frames[frames.length-1];draw(+input.value);return}
+  btn.disabled=true;let i=0,from=+input.value,t0=null;const dur=650;
+  function step(ts){
+    if(t0===null)t0=ts;const k=Math.min(1,(ts-t0)/dur),e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;
+    const v=Math.round((from+(frames[i]-from)*e)*2)/2;input.value=v;draw(v);
+    if(k<1)return requestAnimationFrame(step);
+    from=frames[i];i++;t0=null;
+    if(i<frames.length)setTimeout(()=>requestAnimationFrame(step),260);else btn.disabled=false;
+  }
+  requestAnimationFrame(step);
+}
+const pA=document.getElementById('pA');
+pA.addEventListener('input',()=>drawA(+pA.value));
+document.getElementById('playA').onclick=e=>{const pe=peA();animate(pA,[9,pe-3.5,pe+2,pe-1,pe],drawA,e.currentTarget)};
+document.getElementById('hotA').onclick=e=>{A.hot=!A.hot;e.currentTarget.setAttribute('aria-pressed',A.hot);drawA(+pA.value)};
+
+
+/* ================= PART 2: electricity ================= */
+const BASE=[22,21,20.5,20,20,21,22.5,23.5,23,22.5,22,22,22,22,22.5,23.5,25.5,28.5,31,31.5,30.5,28.5,26,24];
+const S={hour:19,heat:false,cloudy:false,battery:false,gas:false,mode:'auto',picks:[]};
+const solar=h=>(h<6||h>19)?0:22*Math.pow(Math.max(0,Math.sin(Math.PI*(h-6)/13)),1.3)*(S.cloudy?0.45:1);
+const wind=h=>3+Math.cos(2*Math.PI*h/24);
+const GENS=[
+  {id:'solar',name:'Solar',short:'Solar',offer:()=>-10,cap:solar},
+  {id:'wind',name:'Wind',short:'Wind',offer:()=>-5,cap:wind},
+  {id:'nuclear',name:'Nuclear',short:'Nuke',offer:()=>0,cap:()=>2},
+  {id:'geo',name:'Geothermal',short:'Geo',offer:()=>5,cap:()=>1},
+  {id:'hydro',name:'Hydro',short:'Hydro',offer:()=>15,cap:()=>4},
+  {id:'battery',name:'Battery',short:'Battery',offer:()=>35,cap:h=>(S.battery&&h>=17&&h<=21)?6:0},
+  {id:'imports',name:'Other states',short:'Imports',offer:()=>40,cap:()=>6},
+  {id:'cc',name:'Gas plant',short:'Gas',offer:()=>S.gas?90:45,cap:()=>12},
+  {id:'peaker',name:'Backup gas',short:'Backup gas',offer:()=>S.gas?200:120,cap:()=>6},
+];
+const byId=Object.fromEntries(GENS.map(g=>[g.id,g]));
+const demand=h=>BASE[h]*(S.heat?1.15:1)+((S.battery&&h>=10&&h<=15)?5:0);
+const fmtH=h=>h===0?'12 AM':h<12?h+' AM':h===12?'12 PM':(h-12)+' PM';
+function clear(h,order){
+  const d=demand(h);
+  const list=order?order.map(id=>byId[id]):GENS.slice().sort((a,b)=>a.offer()-b.offer());
+  let rem=d,rows=[],price=null,marg=null;
+  for(const g of list){
+    const avail=g.cap(h);if(avail<=0.01&&!order)continue;
+    const take=Math.max(0,Math.min(avail,rem));rem-=take;
+    rows.push({g,avail,take,offer:g.offer()});
+    if(take>0.001){if(order){if(price===null||g.offer()>price){price=g.offer();marg=g}}else{price=g.offer();marg=g}}
+  }
+  const short=rem>0.01;if(short&&!order){price=1000;marg=null}
+  return {d,rows,price,marg,short,rem,supplied:d-Math.max(rem,0)};
+}
+const XMAX=45,YMIN=-30,YMAX=220,L=70,R=680,T=54,B=350;
+const xs=v=>L+(v/XMAX)*(R-L),ys=v=>B-((v-YMIN)/(YMAX-YMIN))*(B-T);
+function drawStack(res,isGame){
+  const met=res.rem<=0.01, showEq=met&&!res.short&&res.price!==null;
+  let s=axes('stk',L,R,T,B,'Price','($ per MWh)','Electricity','(GW)');
+  for(const t of [0,50,100,150,200]){
+    s+=`<line x1="${L}" x2="${R}" y1="${ys(t)}" y2="${ys(t)}" stroke="${t===0?'var(--line)':'var(--grid)'}" stroke-width="${t===0?2:1}"/>`;
+    if(!(showEq&&Math.abs(ys(t)-ys(res.price))<16)) s+=`<text x="${L-10}" y="${ys(t)+5}" text-anchor="end" font-size="14" fill="var(--ink-2)">$${t}</text>`;
+  }
+  for(let t=0;t<=XMAX;t+=10) if(!(showEq&&Math.abs(xs(t)-xs(res.d))<24)) s+=`<text x="${xs(t)}" y="${B+22}" text-anchor="middle" font-size="14" fill="var(--ink-2)">${t}</text>`;
+  let x=0,path='',first=true;const vis=res.rows.filter(r=>r.avail>0.01);
+  vis.forEach(r=>{
+    const top=ys(Math.max(r.offer,0)),bot=ys(Math.min(r.offer,0));let y1=top,h=bot-top;if(h<5){y1=ys(0)-5;h=5}
+    const col=`var(--c-${r.g.id})`,w=xs(x+r.avail)-xs(x);
+    s+=`<rect x="${xs(x)}" y="${y1}" width="${w}" height="${h}" fill="${col}" opacity=".22"/>`;
+    if(r.take>0.001) s+=`<rect x="${xs(x)}" y="${y1}" width="${xs(x+r.take)-xs(x)}" height="${h}" fill="${col}" opacity=".8"/>`;
+    if(w>40) s+=`<text x="${xs(x)+w/2}" y="${r.offer>=0?y1-7:y1+h+15}" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink-2)">${r.g.short}</text>`;
+    path+=(first?`M${xs(x)} ${ys(r.offer)}`:` V${ys(r.offer)}`)+` H${xs(x+r.avail)}`;first=false;x+=r.avail;
+  });
+  if(vis.length){if(!isGame)path+=` V${ys(YMAX)}`;
+    s+=`<path d="${path}" fill="none" stroke="var(--sup)" stroke-width="4" stroke-linejoin="round"/>`;
+    s+=`<text x="${xs(Math.min(x,XMAX))+8}" y="${isGame?ys(vis[vis.length-1].offer)+6:ys(YMAX)+18}" font-size="18" font-weight="900" fill="var(--sup)">Supply</text>`}
+  const dx=xs(Math.min(res.d,XMAX));
+  s+=`<line x1="${dx}" x2="${dx}" y1="${T}" y2="${B}" stroke="var(--dem)" stroke-width="4"/>`;
+  s+=`<text x="${dx-10}" y="${T+16}" text-anchor="end" font-size="18" font-weight="900" fill="var(--dem)">Demand</text>`;
+  if(isGame&&!met){
+    s+=`<text x="${dx-10}" y="${T+38}" text-anchor="end" font-size="15" font-weight="700" fill="var(--ink-2)">${r1(res.rem)} GW to go</text>`;
+  } else if(res.short){
+    s+=`<rect x="${xs(res.supplied)}" y="${T}" width="${dx-xs(res.supplied)}" height="${B-T}" fill="var(--sup)" opacity=".16"/>`;
+    s+=`<text x="${dx-10}" y="${T+40}" text-anchor="end" font-size="17" font-weight="900" fill="var(--sup)">NOT ENOUGH</text>`;
+  } else if(showEq){
+    const y=ys(res.price);
+    s+=`<line x1="${L}" x2="${dx}" y1="${y}" y2="${y}" stroke="var(--ink)" stroke-width="1.8" stroke-dasharray="5 5"/>`;
+    s+=`<circle cx="${dx}" cy="${y}" r="10" fill="var(--gain)" stroke="var(--paper)" stroke-width="3"/>`;
+    s+=`<text x="${L-10}" y="${y+6}" text-anchor="end" font-size="16" font-weight="900" fill="var(--gain)">${money(res.price)}</text>`;
+  }
+  document.getElementById('stack').innerHTML=s;
+}
+function side(res,isGame,best){
+  const met=res.rem<=0.01,pr=document.getElementById('price'),E=document.getElementById('eqB'),Sb=document.getElementById('subB'),tag=document.getElementById('tagB');
+  document.getElementById('priceLabel').textContent=isGame?'Your price':'Price';
+  if(isGame&&!met)pr.innerHTML='?';else if(res.short)pr.innerHTML='$1,000<small>max</small>';else pr.innerHTML=money(res.price)+'<small>per MWh</small>';
+  document.getElementById('setby').innerHTML=res.marg&&met?`set by <b>${res.marg.name}</b>`:'&nbsp;';
+  tag.hidden=true;
+  if(isGame&&!met){E.innerHTML=eqHTML('sho');Sb.className='sub up';Sb.textContent=res.rows.length?`need ${r1(res.rem)} GW more`:'tap plants below →'}
+  else if(res.short){E.innerHTML=eqHTML('sho');Sb.className='sub up';Sb.textContent='Not enough power!';tag.hidden=false;tag.className='tag';tag.textContent='Blackout risk'}
+  else{
+    E.innerHTML=eqHTML('eq');Sb.className='sub ok';Sb.textContent=`${r1(res.d)} GW = ${r1(res.d)} GW ✓`;
+    if(isGame){tag.hidden=false;
+      if(res.price<=best.price){tag.className='tag ok';tag.textContent='Cheapest possible!'}
+      else{tag.className='tag';tag.textContent=`${money(res.price-best.price)} too expensive`}}
+    else if(res.price<0){tag.hidden=false;tag.className='tag cool';tag.textContent='Negative price!'}
+    else if(res.marg&&res.marg.id==='peaker'){tag.hidden=false;tag.className='tag';tag.textContent='Price spike'}
+  }
+}
+function drawCards(res){
+  document.getElementById('cards').innerHTML=GENS.map(g=>{
+    const cap=g.cap(S.hour),idx=S.picks.indexOf(g.id),dis=cap<=0.01;
+    return `<button class="card" style="--sw:var(--c-${g.id})" data-id="${g.id}" aria-pressed="${idx>=0}" ${dis?'disabled':''}>${idx>=0?`<span class="order">${idx+1}</span>`:''}<span class="nm">${g.name}</span><span class="meta">${money(g.offer())}</span><span class="meta">${dis?'off':r1(cap)+' GW'}</span></button>`;
+  }).join('');
+  document.getElementById('prog').style.width=Math.min(100,100*res.supplied/res.d)+'%';
+}
+document.getElementById('cards').addEventListener('click',e=>{const b=e.target.closest('.card');if(!b||b.disabled)return;const id=b.dataset.id,i=S.picks.indexOf(id);if(i>=0)S.picks.splice(i,1);else S.picks.push(id);render()});
+document.getElementById('reset').onclick=()=>{S.picks=[];render()};
+document.getElementById('presets').innerHTML=[[4,'4 AM'],[12,'Noon'],[19,'7 PM']].map(([h,l])=>`<button class="chip" data-h="${h}">${l}</button>`).join('');
+document.getElementById('presets').addEventListener('click',e=>{const b=e.target.closest('[data-h]');if(b)setHour(+b.dataset.h)});
+document.getElementById('scen').innerHTML=[['heat','Heat wave'],['cloudy','Cloudy'],['battery','Batteries'],['gas','Gas costs more']].map(([k,l])=>`<button class="chip" data-k="${k}" aria-pressed="false">${l}</button>`).join('');
+document.getElementById('scen').addEventListener('click',e=>{const b=e.target.closest('[data-k]');if(!b)return;S[b.dataset.k]=!S[b.dataset.k];S.picks=S.picks.filter(id=>byId[id].cap(S.hour)>0.01);render()});
+const hr=document.getElementById('hour');hr.addEventListener('input',()=>setHour(+hr.value));
+function setHour(h){S.hour=h;S.picks=[];hr.value=h;render()}
+function setMode(m){S.mode=m;S.picks=[];render()}
+document.getElementById('modeAuto').onclick=()=>setMode('auto');
+document.getElementById('modeGame').onclick=()=>setMode('game');
+/* bid stack: supply bids as a ladder, drag the dashed line up until demand is met */
+const BK={k:0};let bookTimer=null;
+const PITCH=46;
+const bookRows=()=>clear(S.hour).rows.filter(r=>r.avail>0.01);
+function stopBook(){clearInterval(bookTimer);bookTimer=null;document.getElementById('bookGo').disabled=false}
+function drawBook(){
+  const res=clear(S.hour),rows=bookRows(),n=rows.length,d=res.d;
+  BK.k=Math.max(0,Math.min(n,BK.k));
+  let cum=0,need=null;for(let i=0;i<n;i++){cum+=rows[i].avail;if(need===null&&cum>=d-0.01)need=i+1}
+  let got=0;for(let i=0;i<BK.k;i++)got+=rows[i].avail;
+  const cleared=need!==null&&BK.k===need;
+  const maxQ=Math.max(...rows.map(r=>r.avail));
+  let html='';
+  for(let i=n-1;i>=0;i--){
+    const r=rows[i],inn=i<BK.k,isM=cleared&&i===need-1;
+    html+=`<div class="lrow ${inn?'in':'out'}${isM?' marg':''}" style="--sw:var(--c-${r.g.id})"><span class="nm"><i></i>${r.g.name}${isM?' <span class="flag">sets the price</span>':''}</span><span class="pr">${money(r.offer)}</span><span class="qty"><b style="width:${(100*r.avail/maxQ).toFixed(0)}%"></b><span>${r1(r.avail)}</span></span></div>`;
+  }
+  document.getElementById('bkRows').innerHTML=html;
+  const cl=document.getElementById('cline');
+  cl.style.top=((n-BK.k)*PITCH+6-3)+'px';
+  cl.classList.toggle('ok',cleared);
+  cl.setAttribute('aria-valuemax',n);cl.setAttribute('aria-valuenow',BK.k);
+  document.getElementById('bkNeed').textContent=r1(d)+' GW';
+  document.getElementById('bkGauge').style.width=Math.min(100,100*got/d)+'%';
+  document.getElementById('bkGot').textContent=`Accepted: ${r1(got)} GW`;
+  const E=document.getElementById('bkEq'),Sb=document.getElementById('bkSub'),P=document.getElementById('bkPrice');
+  P.innerHTML='&nbsp;';
+  if(got<d-0.01){
+    E.innerHTML=eqHTML('sho');Sb.className='sub up';
+    Sb.textContent=BK.k>=n?'Not enough bids!':(BK.k===0?'drag the line up ↑':`need ${r1(d-got)} GW more ↑`);
+  } else if(cleared){
+    E.innerHTML=eqHTML('eq');Sb.className='sub ok';Sb.textContent=`${r1(d)} GW = ${r1(d)} GW ✓`;
+    P.textContent=`Price = ${money(rows[need-1].offer)}`;
+  } else {
+    E.innerHTML=eqHTML('sur');Sb.className='sub down';Sb.textContent='too much, move it down ↓';
+  }
+}
+(function(){
+  const lad=document.getElementById('ladder'),cl=document.getElementById('cline');
+  let drag=false;
+  const setFromY=y=>{const n=bookRows().length,top=lad.getBoundingClientRect().top+6;const k=n-Math.round((y-top)/PITCH);if(k!==BK.k){BK.k=k;drawBook()}};
+  lad.addEventListener('pointerdown',e=>{stopBook();drag=true;lad.setPointerCapture(e.pointerId);setFromY(e.clientY)});
+  lad.addEventListener('pointermove',e=>{if(drag)setFromY(e.clientY)});
+  lad.addEventListener('pointerup',()=>drag=false);
+  lad.addEventListener('pointercancel',()=>drag=false);
+  cl.addEventListener('keydown',e=>{if(e.key==='ArrowUp'){BK.k++;drawBook();e.preventDefault()}else if(e.key==='ArrowDown'){BK.k--;drawBook();e.preventDefault()}});
+})();
+document.getElementById('bookGo').onclick=e=>{
+  stopBook();
+  const rows=bookRows(),d=clear(S.hour).d;let cum=0,need=rows.length;for(let i=0;i<rows.length;i++){cum+=rows[i].avail;if(cum>=d-0.01){need=i+1;break}}
+  if(reduce){BK.k=need;drawBook();return}
+  BK.k=0;drawBook();e.currentTarget.disabled=true;
+  bookTimer=setInterval(()=>{BK.k++;drawBook();if(BK.k>=need)stopBook()},450);
+};
+
+function render(){
+  const isGame=S.mode==='game';
+  document.getElementById('modeAuto').setAttribute('aria-pressed',!isGame);
+  document.getElementById('modeGame').setAttribute('aria-pressed',isGame);
+  document.getElementById('gameArea').hidden=!isGame;
+  document.getElementById('clock').textContent=fmtH(S.hour);
+  document.querySelectorAll('#presets .chip').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.h===S.hour));
+  document.querySelectorAll('#scen .chip').forEach(b=>b.setAttribute('aria-pressed',!!S[b.dataset.k]));
+  const best=clear(S.hour),res=isGame?clear(S.hour,S.picks):best;
+  drawStack(res,isGame);side(res,isGame,best);if(isGame)drawCards(res);
+  document.getElementById('bookPanel').hidden=isGame;
+  BK.k=0;stopBook();drawBook();
+}
+
+/* ================= PART 3: supply & demand every 5 minutes → a day of prices ================= */
+// A hot summer day. Supply has many small gas steps, so price climbs as demand climbs.
+const BSTEPS=[
+  {id:'nuclear',n:'Nuclear',mw:2,o:5},{id:'wind',n:'Wind',mw:3,o:8},{id:'hydro',n:'Hydro',mw:4,o:20},{id:'geo',n:'',mw:1,o:25},
+  {id:'imports',n:'Other states',mw:6,o:35},
+  {id:'cc',n:'',mw:2.5,o:45},{id:'cc',n:'',mw:2.5,o:52},{id:'cc',n:'Gas plants',mw:2.5,o:60},{id:'cc',n:'',mw:2.5,o:70},{id:'cc',n:'',mw:2.5,o:82},{id:'cc',n:'',mw:2.5,o:96},
+  {id:'peaker',n:'',mw:2,o:120},{id:'peaker',n:'Backup',mw:2,o:150},{id:'peaker',n:'',mw:2,o:180}];
+const HOURLY=[19,17.5,16.5,15.8,15.5,16,17.5,19.5,21.5,23.5,25.5,27.5,29,30.5,31.8,33,34.2,35.3,35.5,34.5,32.5,29,25,21.5,19];
+const N=288; // 5-minute intervals
+const bDem=[],bPr=[];
+for(let i=0;i<N;i++){
+  const h=i/12,a=Math.floor(h),f=h-a;
+  const base=HOURLY[a]*(1-f)+HOURLY[a+1]*f;
+  const wiggle=0.35*Math.sin(i*0.9)+0.25*Math.sin(i*2.3+1)+0.15*Math.sin(i*5.1+2);
+  const d=base+wiggle; bDem.push(d);
+  let c=0,p=BSTEPS[0].o; for(const s of BSTEPS){p=s.o;c+=s.mw;if(c>=d)break} bPr.push(p);
+}
+const G={T:58,B:340,PMAX:200, L1:76,R1:430,QMAX:40, L2:500,R2:968, Yb:690, GW0:10};
+const gy=p=>G.B-(p/G.PMAX)*(G.B-G.T), gx=q=>G.L1+(q/G.QMAX)*(G.R1-G.L1), tx=i=>G.L2+(i/N)*(G.R2-G.L2);
+const KPX=(G.R1-G.L1)/G.QMAX, gd=d=>G.Yb-(d-G.GW0)*KPX, GTOP=gd(40); // bottom chart uses the same px-per-GW as the stack, so a 45° line can turn it
+function bStatic(){
+  let s=`<defs><marker id="ah-b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--ink)"/></marker></defs>`;
+  // day bands across both timelines
+  [[0,6,'Night'],[6,12,'Morning'],[12,17,'Afternoon'],[17,22,'Evening'],[22,24,'Night']].forEach(([a,b,n],i)=>{
+    s+=`<rect x="${tx(a*12)}" y="${G.T-12}" width="${tx(b*12)-tx(a*12)}" height="${G.Yb-G.T+12}" fill="${i%2?'var(--soft)':'transparent'}"/>`;
+    s+=`<text x="${(tx(a*12)+tx(b*12))/2}" y="${G.Yb+46}" text-anchor="middle" font-size="15" font-weight="800" fill="var(--ink)">${n}</text>`});
+  // bottom-right: demand over the day
+  for(const d of [10,20,30,40]){
+    s+=`<line x1="${G.L2}" x2="${G.R2}" y1="${gd(d)}" y2="${gd(d)}" stroke="var(--grid)"/>`;
+    s+=`<text x="${G.L2-8}" y="${gd(d)+5}" text-anchor="end" font-size="13" fill="var(--ink-2)">${d}</text>`;
+  }
+  s+=`<line x1="${G.L2}" y1="${G.Yb}" x2="${G.L2}" y2="${GTOP-22}" stroke="var(--ink)" stroke-width="2" marker-end="url(#ah-b)"/>`;
+  s+=`<line x1="${G.L2}" y1="${G.Yb}" x2="${G.R2+14}" y2="${G.Yb}" stroke="var(--ink)" stroke-width="2" marker-end="url(#ah-b)"/>`;
+  s+=`<text x="${G.L2+12}" y="${GTOP-20}" font-size="17"><tspan font-weight="800" fill="var(--ink)">Demand over the day</tspan><tspan font-size="14" fill="var(--ink-2)"> (GW)</tspan></text>`;
+  [[0,'12AM'],[72,'6AM'],[144,'12PM'],[216,'6PM'],[288,'12AM']].forEach(([i,l])=>s+=`<text x="${tx(i)}" y="${G.Yb+20}" text-anchor="middle" font-size="13" fill="var(--ink-2)">${l}</text>`);
+  // bottom-left: the 45° turn
+  s+=`<line x1="${gx(G.GW0)}" y1="${G.Yb}" x2="${gx(40)}" y2="${GTOP}" stroke="var(--line)" stroke-width="2.5" stroke-dasharray="2 6" stroke-linecap="round"/>`;
+  s+=`<text x="${gx(G.GW0)+30}" y="${G.Yb-8}" font-size="13" font-weight="700" fill="var(--ink-2)">45°</text>`;
+  for(const t of [0,50,100,150,200]){
+    s+=`<line x1="${G.L1}" x2="${G.R2}" y1="${gy(t)}" y2="${gy(t)}" stroke="var(--grid)"/>`;
+    s+=`<text x="${G.L1-10}" y="${gy(t)+5}" text-anchor="end" font-size="14" fill="var(--ink-2)">$${t}</text>`;
+  }
+  // supply blocks (faint) + staircase
+  let c=0,path='';
+  BSTEPS.forEach((b,i)=>{
+    s+=`<rect x="${gx(c)}" y="${gy(b.o)}" width="${gx(c+b.mw)-gx(c)}" height="${G.B-gy(b.o)}" fill="var(--c-${b.id})" opacity=".18"/>`;
+    if(b.n) s+=`<text x="${(gx(c)+gx(c+b.mw))/2}" y="${gy(b.o)-8}" text-anchor="middle" font-size="12" font-weight="700" fill="var(--ink-2)">${b.n}</text>`;
+    path+=(i?` V${gy(b.o)}`:`M${gx(0)} ${gy(b.o)}`)+` H${gx(c+b.mw)}`; c+=b.mw;
+  });
+  path+=` V${gy(G.PMAX)}`;
+  s+=`<path d="${path}" fill="none" stroke="var(--sup)" stroke-width="4" stroke-linejoin="round"/>`;
+  s+=`<text x="${gx(c)+8}" y="${gy(G.PMAX)+16}" font-size="18" font-weight="900" fill="var(--sup)">Supply</text>`;
+  // axes: left chart
+  s+=`<line x1="${G.L1}" y1="${G.B}" x2="${G.L1}" y2="${G.T-20}" stroke="var(--ink)" stroke-width="2" marker-end="url(#ah-b)"/>`;
+  s+=`<line x1="${G.L1}" y1="${G.B}" x2="${G.R1+10}" y2="${G.B}" stroke="var(--ink)" stroke-width="2" marker-end="url(#ah-b)"/>`;
+  s+=`<text x="${G.L1+12}" y="${G.T-18}" font-size="17"><tspan font-weight="800" fill="var(--ink)">Price</tspan><tspan font-size="14" fill="var(--ink-2)"> ($ per MWh)</tspan></text>`;
+  for(const q of [0,10,20,30,40]) s+=`<text x="${gx(q)}" y="${G.B+20}" text-anchor="middle" font-size="13" fill="var(--ink-2)">${q}</text>`;
+  s+=`<text x="${G.R1+10}" y="${G.B+46}" text-anchor="end" font-size="16"><tspan font-weight="800" fill="var(--ink)">Electricity</tspan><tspan font-size="13" fill="var(--ink-2)"> (GW)</tspan></text>`;
+  // axes: timeline
+  s+=`<line x1="${G.L2}" y1="${G.B}" x2="${G.R2+14}" y2="${G.B}" stroke="var(--ink)" stroke-width="2" marker-end="url(#ah-b)"/>`;
+  s+=`<line x1="${G.L2}" y1="${G.B}" x2="${G.L2}" y2="${G.T-12}" stroke="var(--line)" stroke-width="1.5"/>`;
+  s+=`<text x="${G.L2+8}" y="${G.T-18}" font-size="17" font-weight="800" fill="var(--ink)">Price over the day</text>`;
+  [[0,'12AM'],[72,'6AM'],[144,'12PM'],[216,'6PM'],[288,'12AM']].forEach(([i,l])=>s+=`<text x="${tx(i)}" y="${G.B+20}" text-anchor="middle" font-size="13" fill="var(--ink-2)">${l}</text>`);
+  document.getElementById('bStatic').innerHTML=s;
+}
+let bt=0,bTimer=null,bSpeed=1;
+const clockStr=i=>{const m=i*5,h=Math.floor(m/60)%24,mm=String(m%60).padStart(2,'0');return `${h%12===0?12:h%12}:${mm} ${h<12?'AM':'PM'}`};
+function bDraw(){
+  const d=bDem[bt],p=bPr[bt];
+  let s='',c=0;
+  for(const b of BSTEPS){ const take=Math.max(0,Math.min(b.mw,d-c)); if(take>0) s+=`<rect x="${gx(c)}" y="${gy(b.o)}" width="${gx(c+take)-gx(c)}" height="${G.B-gy(b.o)}" fill="var(--c-${b.id})" opacity=".75"/>`; c+=b.mw }
+  const dx=gx(d),py=gy(p),txi=tx(bt+.5);
+  s+=`<line x1="${dx}" x2="${dx}" y1="${G.T-4}" y2="${G.B}" stroke="var(--dem)" stroke-width="4"/>`;
+  s+=`<text x="${dx-8}" y="${G.T+12}" text-anchor="end" font-size="17" font-weight="900" fill="var(--dem)">Demand</text>`;
+  // price trace so far (5-minute steps)
+  let tr=`M${tx(0)} ${gy(bPr[0])}`;
+  for(let i=1;i<=bt;i++) tr+=` H${tx(i)} V${gy(bPr[i])}`;
+  tr+=` H${tx(bt+1)}`;
+  s+=`<path d="${tr} V${G.B} H${tx(0)} Z" fill="var(--sup)" opacity=".1"/>`;
+  s+=`<path d="${tr}" fill="none" stroke="var(--sup)" stroke-width="3" stroke-linejoin="round"/>`;
+  // the bridge: the cleared price carried across to the timeline
+  s+=`<line x1="${dx}" x2="${txi}" y1="${py}" y2="${py}" stroke="var(--gain)" stroke-width="2.5" stroke-dasharray="7 6"/>`;
+  s+=`<circle cx="${dx}" cy="${py}" r="10" fill="var(--gain)" stroke="var(--paper)" stroke-width="3"/>`;
+  s+=`<circle cx="${txi}" cy="${py}" r="9" fill="var(--sup)" stroke="var(--paper)" stroke-width="3"/>`;
+  s+=`<rect x="${(G.R1+G.L2)/2-30}" y="${py-30}" width="60" height="22" rx="4" fill="var(--gain)"/>`;
+  s+=`<text x="${(G.R1+G.L2)/2}" y="${py-14}" text-anchor="middle" font-size="14" font-weight="900" fill="#fff">$${p}</text>`;
+  s+=`<line x1="${txi}" x2="${txi}" y1="${py}" y2="${G.Yb}" stroke="var(--ink)" stroke-width="1.2" stroke-dasharray="3 4" opacity=".45"/>`;
+  // demand trace over the day (bottom-right)
+  let dt='';for(let i=0;i<=bt;i++)dt+=(i?' L':'M')+tx(i+.5)+' '+gd(bDem[i]);
+  s+=`<path d="${dt} L${tx(bt+.5)} ${G.Yb} L${tx(.5)} ${G.Yb} Z" fill="var(--dem)" opacity=".1"/>`;
+  s+=`<path d="${dt}" fill="none" stroke="var(--dem)" stroke-width="3" stroke-linejoin="round"/>`;
+  // the second bridge: demand drops down, turns at the 45° line, and lands on the demand curve
+  const yd=gd(d);
+  s+=`<line x1="${dx}" x2="${dx}" y1="${G.B}" y2="${yd}" stroke="var(--dem)" stroke-width="2.5" stroke-dasharray="7 6"/>`;
+  s+=`<line x1="${dx}" x2="${txi}" y1="${yd}" y2="${yd}" stroke="var(--dem)" stroke-width="2.5" stroke-dasharray="7 6"/>`;
+  s+=`<circle cx="${dx}" cy="${yd}" r="6" fill="var(--paper)" stroke="var(--dem)" stroke-width="2.5"/>`;
+  s+=`<circle cx="${txi}" cy="${yd}" r="9" fill="var(--dem)" stroke="var(--paper)" stroke-width="3"/>`;
+  s+=`<rect x="${(G.R1+G.L2)/2-36}" y="${yd-30}" width="72" height="22" rx="4" fill="var(--dem)"/>`;
+  s+=`<text x="${(G.R1+G.L2)/2}" y="${yd-14}" text-anchor="middle" font-size="14" font-weight="900" fill="#fff">${r1(d)} GW</text>`;
+  document.getElementById('bDyn').innerHTML=s;
+  document.getElementById('bClock').textContent=clockStr(bt);
+  document.getElementById('bNums').textContent=`${r1(d)} GW = ${r1(d)} GW`;
+  document.getElementById('bPrice').innerHTML=`$${p}<small>per MWh</small>`;
+  document.getElementById('bT').value=bt;
+  drawMini(d);
+}
+
+const BNAMES=(()=>{let g=0,b=0;return BSTEPS.map(st=>st.id==='cc'?'Gas '+(++g):st.id==='peaker'?'Backup '+(++b):({nuclear:'Nuclear',wind:'Wind',hydro:'Hydro',geo:'Geothermal',imports:'Other states'})[st.id])})();
+const MPITCH=28;
+function drawMini(d){
+  const n=BSTEPS.length;let cum=0,k=n;for(let i=0;i<n;i++){cum+=BSTEPS[i].mw;if(cum>=d-0.001){k=i+1;break}}
+  const maxQ=Math.max(...BSTEPS.map(x=>x.mw));let h='';
+  for(let i=n-1;i>=0;i--){const st=BSTEPS[i],inn=i<k,isM=i===k-1;
+    h+=`<div class="lrow sm ${inn?'in':'out'}${isM?' marg':''}" style="--sw:var(--c-${st.id})"><span class="nm"><i></i>${BNAMES[i]}</span><span class="pr">$${st.o}</span><span class="qty"><b style="width:${(100*st.mw/maxQ).toFixed(0)}%"></b><span>${st.mw}</span></span></div>`}
+  document.getElementById('mbRows').innerHTML=h;
+  document.getElementById('mbLine').style.top=((n-k)*MPITCH+4-3.5)+'px';
+  document.getElementById('mbLbl').textContent=`Demand ${r1(d)} GW → $${BSTEPS[k-1].o}`;
+}
+function bStop(){clearInterval(bTimer);bTimer=null;document.getElementById('bPlay').textContent='Play the day'}
+document.getElementById('bPlay').onclick=()=>{
+  if(bTimer){bStop();return}
+  if(reduce){bt=216;bDraw();return}
+  if(bt>=N-1)bt=0;
+  document.getElementById('bPlay').textContent='Pause';
+  bTimer=setInterval(()=>{bt=Math.min(N-1,bt+bSpeed);bDraw();if(bt>=N-1)bStop()},70);
+};
+document.getElementById('bSpeed').onclick=e=>{bSpeed=bSpeed===1?3:1;e.currentTarget.textContent=`Speed ${bSpeed}×`};
+document.getElementById('bT').addEventListener('input',e=>{bStop();bt=+e.target.value;bDraw()});
+
+/* ================= PART 4: forecasting ================= */
+const AH=id=>`<defs><marker id="ah-${id}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--ink)"/></marker></defs>`;
+const sunAt=h=>Math.max(0,Math.sin(Math.PI*(h-6)/14));
+const tempAt=h=>87+15*Math.cos(2*Math.PI*(h-16)/24);
+const demAt=h=>{const a=Math.floor(h),f=h-a;return HOURLY[Math.min(24,a)]*(1-f)+HOURLY[Math.min(24,a+1)]*f};
+const fmt12=h=>{h=Math.round(h)%24;return (h%12===0?12:h%12)+(h<12?' AM':' PM')};
+
+// 1. clues strips with a moving sun
+const C={L:118,R:545};
+const cx4=h=>C.L+(h/24)*(C.R-C.L);
+const STRIPS=[
+  {name:'Sunlight',unit:'(% of max)',top:96,bot:160,f:h=>sunAt(h)*100,lo:0,hi:100,col:'var(--c-solar)',peak:13,fmt:v=>Math.round(v)+'%'},
+  {name:'Temperature',unit:'(°F)',top:192,bot:256,f:tempAt,lo:70,hi:105,col:'var(--sup)',peak:16,fmt:v=>Math.round(v)+'°F'},
+  {name:'Demand',unit:'(GW)',top:288,bot:352,f:demAt,lo:14,hi:37,col:'var(--dem)',peak:18,fmt:v=>r1(v)+' GW'}];
+function drawClues(h){
+  let s='';
+  const hz=70, arcY=t=>hz-52*sunAt(t);
+  s+=`<line x1="${C.L}" x2="${C.R}" y1="${hz}" y2="${hz}" stroke="var(--line)" stroke-width="2"/>`;
+  let arc='';for(let t=6;t<=20.01;t+=.25)arc+=(t===6?'M':' L')+cx4(t)+' '+arcY(t);
+  s+=`<path d="${arc}" fill="none" stroke="var(--c-solar)" stroke-width="2" stroke-dasharray="3 5" opacity=".7"/>`;
+  s+=`<text x="12" y="${hz-26}" font-size="16" font-weight="800" fill="var(--ink)">Sky</text>`;
+  if(sunAt(h)>0) s+=`<circle cx="${cx4(h)}" cy="${arcY(h)}" r="13" fill="var(--c-solar)"/><circle cx="${cx4(h)}" cy="${arcY(h)}" r="20" fill="var(--c-solar)" opacity=".25"/>`;
+  else s+=`<circle cx="${cx4(h)}" cy="${hz-34}" r="11" fill="var(--ink-2)"/><circle cx="${cx4(h)+5}" cy="${hz-38}" r="10" fill="var(--paper)"/>`;
+  for(const st of STRIPS){
+    const y=v=>st.bot-((v-st.lo)/(st.hi-st.lo))*(st.bot-st.top);
+    s+=`<line x1="${C.L}" x2="${C.R}" y1="${st.bot}" y2="${st.bot}" stroke="var(--line)"/>`;
+    s+=`<text x="12" y="${st.top+24}" font-size="16" font-weight="800" fill="var(--ink)">${st.name}</text><text x="12" y="${st.top+42}" font-size="13" fill="var(--ink-2)">${st.unit}</text>`;
+    let d='',area=`M${cx4(0)} ${st.bot}`;
+    for(let t=0;t<=24.01;t+=.25){d+=(t===0?'M':' L')+cx4(t)+' '+y(st.f(t));area+=` L${cx4(t)} ${y(st.f(t))}`}
+    s+=`<path d="${area} L${cx4(24)} ${st.bot} Z" fill="${st.col}" opacity=".12"/><path d="${d}" fill="none" stroke="${st.col}" stroke-width="3.5"/>`;
+    s+=`<line x1="${cx4(st.peak)}" x2="${cx4(st.peak)}" y1="${st.top-6}" y2="${st.bot}" stroke="${st.col}" stroke-width="1.5" stroke-dasharray="3 3"/>`;
+    s+=`<text x="${cx4(st.peak)+5}" y="${st.top+2}" font-size="12.5" font-weight="800" fill="${st.col}">peak ${fmt12(st.peak)}</text>`;
+    s+=`<circle cx="${cx4(h)}" cy="${y(st.f(h))}" r="6.5" fill="${st.col}" stroke="var(--paper)" stroke-width="2"/>`;
+    const lx=cx4(h)>C.R-70?cx4(h)-10:cx4(h)+10;
+    s+=`<text x="${lx}" y="${y(st.f(h))-10}" text-anchor="${cx4(h)>C.R-70?'end':'start'}" font-size="13" font-weight="800" fill="var(--ink)">${st.fmt(st.f(h))}</text>`;
+  }
+  s+=`<line x1="${cx4(h)}" x2="${cx4(h)}" y1="${hz}" y2="352" stroke="var(--ink)" stroke-width="1.2" opacity=".45"/>`;
+  [0,6,12,18,24].forEach(t=>s+=`<text x="${cx4(t)}" y="374" text-anchor="middle" font-size="13" fill="var(--ink-2)">${fmt12(t).replace(' ','')}</text>`);
+  s+=`<text x="${C.R}" y="400" text-anchor="end" font-size="15" font-weight="800" fill="var(--ink)">Time of day</text>`;
+  document.getElementById('clues').innerHTML=s;
+}
+let clueH=16,clueT0=null;
+function clueLoop(ts){if(clueT0===null)clueT0=ts;clueH=((ts-clueT0)/12000*24+4)%24;drawClues(clueH);requestAnimationFrame(clueLoop)}
+
+// 2. scatter + least-squares line
+const rnd=i=>{const x=Math.sin(i*12.9898+78.233)*43758.5453;return x-Math.floor(x)};
+const PTS=[];for(let i=0;i<34;i++){const t=78+28*rnd(i);PTS.push([t,10+0.25*t+(rnd(i+200)-.5)*2.4])}
+const mx=PTS.reduce((a,p)=>a+p[0],0)/PTS.length,my=PTS.reduce((a,p)=>a+p[1],0)/PTS.length;
+const slope=PTS.reduce((a,p)=>a+(p[0]-mx)*(p[1]-my),0)/PTS.reduce((a,p)=>a+(p[0]-mx)**2,0),icpt=my-slope*mx;
+function drawScat(){
+  const L=66,R=440,T=56,B=316,X0=75,X1=110,Y0=28,Y1=40;
+  const sx=t=>L+(t-X0)/(X1-X0)*(R-L),sy=d=>B-(d-Y0)/(Y1-Y0)*(B-T);
+  let s=axes('sc',L,R,T,B,'Peak demand','(GW)','Hottest temp','(°F)');
+  for(const t of [80,90,100,110]){s+=`<line x1="${sx(t)}" x2="${sx(t)}" y1="${T}" y2="${B}" stroke="var(--grid)"/><text x="${sx(t)}" y="${B+22}" text-anchor="middle" font-size="13" fill="var(--ink-2)">${t}°</text>`}
+  for(const d of [30,35,40]){s+=`<line x1="${L}" x2="${R}" y1="${sy(d)}" y2="${sy(d)}" stroke="var(--grid)"/><text x="${L-10}" y="${sy(d)+5}" text-anchor="end" font-size="13" fill="var(--ink-2)">${d}</text>`}
+  PTS.forEach(([t,d],i)=>s+=`<circle class="fadein" style="--d:${(i*0.03).toFixed(2)}s" cx="${sx(t)}" cy="${sy(d)}" r="5.5" fill="var(--dem)" opacity=".7"/>`);
+  s+=`<line class="draw" pathLength="1" style="--d:1.1s" x1="${sx(76)}" y1="${sy(icpt+slope*76)}" x2="${sx(109)}" y2="${sy(icpt+slope*109)}" stroke="var(--sup)" stroke-width="4" stroke-linecap="round"/>`;
+  s+=`<text x="${sx(76)}" y="${sy(37.6)}" font-size="13" font-weight="700" fill="var(--ink-2)">each dot = one summer day</text>`;
+  // slope triangle: rise over run
+  const f=t=>icpt+slope*t, x1=sx(86),x2=sx(96),y1=sy(f(86)),y2=sy(f(96));
+  s+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y1}" stroke="var(--sup)" stroke-width="3"/>`;
+  s+=`<line x1="${x2}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="var(--dem)" stroke-width="3"/>`;
+  s+=`<text x="${(x1+x2)/2}" y="${y1+20}" text-anchor="middle" font-size="14" font-weight="900" fill="var(--sup)">+10°F</text>`;
+  s+=`<text x="${x2+8}" y="${(y1+y2)/2+5}" font-size="14" font-weight="900" fill="var(--dem)">+${(slope*10).toFixed(1)} GW</text>`;
+  s+=`<circle cx="${sx(102)}" cy="${sy(35.5)}" r="9" fill="none" stroke="var(--ink)" stroke-width="2.5"/>`;
+  s+=`<text x="${sx(102)+12}" y="${sy(35.5)+22}" font-size="13" font-weight="800" fill="var(--ink)">today</text>`;
+  document.getElementById('scat').innerHTML=s;
+  document.getElementById('fitEq').innerHTML=`<span class="D">y</span><span class="op">=</span><span class="op">${slope.toFixed(2)}</span><span class="S">x</span><span class="op">+ ${icpt.toFixed(0)}</span>`;
+  const fs=document.getElementById('fitSub');fs.className='sub';
+  fs.innerHTML=`<span style="color:var(--dem)">y</span> = demand, <span style="color:var(--sup)">x</span> = temperature<br>slope = rise ÷ run = ${(slope*10).toFixed(1)} ÷ 10 = ${slope.toFixed(2)}`;
+}
+
+// 2b. noon → 7 PM: a straight line vs a curve
+const CPTS=[];for(let i=0;i<=28;i++){const t=i*0.25;CPTS.push([t,22+0.28*t*t+(rnd(i+500)-.5)*0.9])}
+function solve3(A,b){ // Gaussian elimination for the normal equations
+  const M=A.map((r,i)=>[...r,b[i]]);
+  for(let c=0;c<3;c++){let p=c;for(let r=c+1;r<3;r++)if(Math.abs(M[r][c])>Math.abs(M[p][c]))p=r;[M[c],M[p]]=[M[p],M[c]];
+    for(let r=0;r<3;r++)if(r!==c){const k=M[r][c]/M[c][c];for(let j=c;j<4;j++)M[r][j]-=k*M[c][j]}}
+  return M.map((r,i)=>r[3]/r[i]);
+}
+const cLin=(()=>{const n=CPTS.length,mx=CPTS.reduce((a,p)=>a+p[0],0)/n,my=CPTS.reduce((a,p)=>a+p[1],0)/n;
+  const m=CPTS.reduce((a,p)=>a+(p[0]-mx)*(p[1]-my),0)/CPTS.reduce((a,p)=>a+(p[0]-mx)**2,0);return {m,b:my-m*mx}})();
+const cQuad=(()=>{const S=k=>CPTS.reduce((a,p)=>a+p[0]**k,0),Sy=k=>CPTS.reduce((a,p)=>a+p[1]*p[0]**k,0);
+  const [c,b,a]=solve3([[S(0),S(1),S(2)],[S(1),S(2),S(3)],[S(2),S(3),S(4)]],[Sy(0),Sy(1),Sy(2)]);return {a,b,c}})();
+const fLin=t=>cLin.m*t+cLin.b, fQuad=t=>cQuad.a*t*t+cQuad.b*t+cQuad.c;
+const miss=f=>CPTS.reduce((a,p)=>a+Math.abs(p[1]-f(p[0])),0)/CPTS.length;
+const MISS={line:miss(fLin),curve:miss(fQuad)};
+let cMode='dots';
+function drawCurve(anim){
+  const L=66,R=530,T=56,B=316,Y0=20,Y1=38;
+  const sx=t=>L+(t/7)*(R-L),sy=d=>B-(d-Y0)/(Y1-Y0)*(B-T);
+  let s=axes('cv',L,R,T,B,'Demand','(GW)','Time','(hours after noon)');
+  for(const d of [20,25,30,35]){s+=`<line x1="${L}" x2="${R}" y1="${sy(d)}" y2="${sy(d)}" stroke="var(--grid)"/><text x="${L-10}" y="${sy(d)+5}" text-anchor="end" font-size="13" fill="var(--ink-2)">${d}</text>`}
+  s+=`<text x="${sx(0)}" y="${B+22}" text-anchor="middle" font-size="14" font-weight="800" fill="var(--ink)">Noon</text>`;
+  s+=`<text x="${sx(7)}" y="${B+22}" text-anchor="end" font-size="14" font-weight="800" fill="var(--ink)">Evening</text>`;
+  if(cMode!=='dots'){
+    const f=cMode==='line'?fLin:fQuad, col=cMode==='line'?'var(--c-cc)':'var(--sup)';
+    CPTS.forEach(([t,d])=>s+=`<line x1="${sx(t)}" x2="${sx(t)}" y1="${sy(d)}" y2="${sy(f(t))}" stroke="${col}" stroke-width="2" opacity=".55"/>`);
+    let p='';for(let t=0;t<=7.001;t+=.1)p+=(t?' L':'M')+sx(t)+' '+sy(f(t));
+    s+=`<path d="${p}" pathLength="1" fill="none" stroke="${col}" stroke-width="4.5" stroke-linecap="round"${anim?' class="draw"':''}/>`;
+  }
+  CPTS.forEach(([t,d])=>s+=`<circle cx="${sx(t)}" cy="${sy(d)}" r="5.5" fill="var(--dem)"/>`);
+  s+=`<text x="${sx(.2)}" y="${sy(36.4)}" font-size="13" font-weight="700" fill="var(--ink-2)">each dot = 15 minutes</text>`;
+  document.getElementById('curve').innerHTML=s;
+  // equation + misses
+  const E=document.getElementById('cEq'),Sb=document.getElementById('cSub');
+  const sg=(v,d)=>(v<0?'− ':'+ ')+Math.abs(v).toFixed(d);
+  Sb.className='sub';
+  if(cMode==='dots'){
+    E.innerHTML=`<span class="D">y</span><span class="op">= ?</span>`;Sb.innerHTML='&nbsp;';
+  } else if(cMode==='line'){
+    E.innerHTML=`<span class="D">y</span><span class="op">=</span><span class="op">m</span><span class="S">x</span><span class="op">+ b</span>`;
+    Sb.innerHTML=`y = ${cLin.m.toFixed(1)}x ${sg(cLin.b,1)}`;
+  } else {
+    E.innerHTML=`<span class="D">y</span><span class="op">=</span><span class="op">a</span><span class="S">x²</span><span class="op">+ b</span><span class="S">x</span><span class="op">+ c</span>`;
+    Sb.innerHTML=`y = ${cQuad.a.toFixed(2)}x² ${sg(cQuad.b,2)}x ${sg(cQuad.c,1)}`;
+  }
+  document.getElementById('cMiss').hidden=cMode==='dots';
+  document.getElementById('cDots').setAttribute('aria-pressed',cMode==='dots');
+  const mxm=Math.max(MISS.line,MISS.curve);
+  const bar=(y,k,lbl,c)=>`<text x="0" y="${y+17}" font-size="15" font-weight="800" fill="var(--ink)">${lbl}</text><rect x="110" y="${y}" width="${150*MISS[k]/mxm}" height="24" rx="3" fill="${c}" opacity="${cMode===k?1:.35}"/><text x="${118+150*MISS[k]/mxm}" y="${y+17}" font-size="15" font-weight="900" fill="var(--ink)">${MISS[k].toFixed(2)} GW</text>`;
+  document.getElementById('cBars').innerHTML=bar(8,'line','Line','var(--c-cc)')+bar(54,'curve','Curve','var(--sup)');
+  document.getElementById('cLine').setAttribute('aria-pressed',cMode==='line');
+  document.getElementById('cCurve').setAttribute('aria-pressed',cMode==='curve');
+}
+document.getElementById('cDots').onclick=()=>{cMode='dots';drawCurve(false)};
+document.getElementById('cLine').onclick=()=>{cMode='line';drawCurve(true)};
+document.getElementById('cCurve').onclick=()=>{cMode='curve';drawCurve(true)};
+
+drawScat();drawCurve(false);
+if(reduce)drawClues(16);else requestAnimationFrame(clueLoop);
+bStatic();bDraw();
+drawA(+pA.value);render();
+})();
+</script>
+
+</body>
+</html>
