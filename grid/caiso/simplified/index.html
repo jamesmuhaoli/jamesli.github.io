@@ -379,6 +379,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
 const reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
 const r1=x=>Math.round(x*10)/10;
 const mw=x=>(Math.round(x*100)*10).toLocaleString();
+const n2=x=>String(Math.round(x*10)/10); // Part 2 shows power in small whole numbers
 const money=p=>(p<0?'−$':'$')+Math.abs(Math.round(p));
 const cash=p=>'$'+(p%1?p.toFixed(2):p);
 
@@ -439,7 +440,7 @@ document.getElementById('clearA').onclick=()=>{P1.s=P1.d=P1.eq=false;drawA()};
 
 
 /* ================= PART 2: electricity ================= */
-const BASE=[22,21,20.5,20,20,21,22.5,23.5,23,22.5,22,22,22,22,22.5,23.5,25.5,28.5,31,31.5,30.5,28.5,26,24];
+const BASE=[22,21,20.5,20,20,21,22.5,23.5,23,22.5,22,22,22,22,22.5,23.5,25.5,28.5,31,30,30.5,28.5,26,24];
 const S={hour:19,heat:false,cloudy:false,battery:false,gas:false,mode:'auto',picks:[]};
 const solar=h=>(h<6||h>19)?0:22*Math.pow(Math.max(0,Math.sin(Math.PI*(h-6)/13)),1.3)*(S.cloudy?0.45:1);
 const wind=h=>3+Math.cos(2*Math.PI*h/24);
@@ -451,8 +452,9 @@ const GENS=[ // five plants for the 7 PM market; the cheapest four already cover
   {id:'imports',name:'Power plant 5',short:'Plant 5',num:5,offer:()=>160,cap:()=>6},
 ];
 const byId=Object.fromEntries(GENS.map(g=>[g.id,g]));
-const BOLT=v=>`<span class="qb">+${mw(v)}<svg class="bolt" viewBox="0 0 24 24" aria-hidden="true"><use href="#bolt"/></svg></span>`;
+const BOLT=v=>`<span class="qb">+${n2(v)}<svg class="bolt" viewBox="0 0 24 24" aria-hidden="true"><use href="#bolt"/></svg></span>`;
 const BQ=v=>`<span class="qb">${mw(v)}<svg class="bolt" viewBox="0 0 24 24" aria-hidden="true"><use href="#bolt"/></svg></span>`;
+const BQ2=v=>`<span class="qb">${n2(v)}<svg class="bolt" viewBox="0 0 24 24" aria-hidden="true"><use href="#bolt"/></svg></span>`;
 const SB=(x,y,z,c)=>`<use href="#bolt" x="${x}" y="${y}" width="${z}" height="${z}" style="color:${c||'var(--gold)'}"/>`;
 const PP=n=>`<span class="pp" aria-label="Power plant ${n}"><svg class="ppi" viewBox="0 0 24 24" aria-hidden="true"><use href="#pp"/></svg><b>${n}</b></span>`;
 const demand=h=>BASE[h]*(S.heat?1.15:1)+((S.battery&&h>=10&&h<=15)?5:0);
@@ -479,7 +481,7 @@ function drawStack(res,isGame){
     s+=`<line x1="${L}" x2="${R}" y1="${ys(t)}" y2="${ys(t)}" stroke="${t===0?'var(--line)':'var(--grid)'}" stroke-width="${t===0?2:1}"/>`;
     if(!(showEq&&Math.abs(ys(t)-ys(res.price))<16)) s+=`<text x="${L-10}" y="${ys(t)+5}" text-anchor="end" font-size="14" fill="var(--ink-2)">$${t}</text>`;
   }
-  for(let t=0;t<=XMAX;t+=10) if(!(showEq&&Math.abs(xs(t)-xs(res.d))<24)) s+=`<text x="${xs(t)}" y="${B+22}" text-anchor="middle" font-size="14" fill="var(--ink-2)">${(t*1000).toLocaleString()}</text>`;
+  for(let t=0;t<=XMAX;t+=10) if(!(showEq&&Math.abs(xs(t)-xs(res.d))<24)) s+=`<text x="${xs(t)}" y="${B+22}" text-anchor="middle" font-size="14" fill="var(--ink-2)">${t}</text>`;
   s+=`<defs><clipPath id="stkclip"><rect x="${L}" y="${T-30}" width="${R-L}" height="${B-T+60}"/></clipPath></defs><g clip-path="url(#stkclip)">`;
   let x=0,path='',first=true;const vis=res.rows.filter(r=>r.avail>0.01);
   vis.forEach(r=>{
@@ -498,7 +500,7 @@ function drawStack(res,isGame){
   s+=`<line x1="${dx}" x2="${dx}" y1="${T}" y2="${B}" stroke="var(--dem)" stroke-width="4"/>`;
   s+=`<text x="${dx-10}" y="${T+16}" text-anchor="end" font-size="18" font-weight="500" fill="var(--dem)">Demand</text>`;
   if(isGame&&!met){
-    s+=`<text x="${dx-62}" y="${T+38}" text-anchor="end" font-size="15" font-weight="500" fill="var(--ink-2)">${mw(res.rem)}</text>`+SB(dx-60,T+25,16)+`<text x="${dx-42}" y="${T+38}" font-size="15" font-weight="500" fill="var(--ink-2)">to go</text>`;
+    s+=`<text x="${dx-62}" y="${T+38}" text-anchor="end" font-size="15" font-weight="500" fill="var(--ink-2)">${n2(res.rem)}</text>`+SB(dx-60,T+25,16)+`<text x="${dx-42}" y="${T+38}" font-size="15" font-weight="500" fill="var(--ink-2)">to go</text>`;
   } else if(res.short){
     s+=`<rect x="${xs(res.supplied)}" y="${T}" width="${dx-xs(res.supplied)}" height="${B-T}" fill="var(--sup)" opacity=".16"/>`;
     s+=`<text x="${dx-10}" y="${T+40}" text-anchor="end" font-size="17" font-weight="500" fill="var(--sup)">NOT ENOUGH</text>`;
@@ -567,7 +569,7 @@ function drawBook(){
   cl.style.top=((n-BK.k)*PITCH+6-3)+'px';
   cl.classList.toggle('ok',cleared);
   cl.setAttribute('aria-valuemax',n);cl.setAttribute('aria-valuenow',BK.k);
-  document.getElementById('bkNeed').innerHTML=BQ(d);
+  document.getElementById('bkNeed').innerHTML=BQ2(d);
   document.getElementById('bkGauge').style.width=Math.min(100,100*got/d)+'%';
   const E=document.getElementById('bkEq'),Sb=document.getElementById('bkSub'),P=document.getElementById('bkPrice');
   P.innerHTML='&nbsp;';
