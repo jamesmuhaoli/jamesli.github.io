@@ -405,7 +405,7 @@ function drawA(p){
   let s=axes('a',A.L,A.R,A.T,A.B,'Price','($ per cup)','Cups','(per day)');
   for(const t of [2,4,6,8,10]){s+=`<line x1="${A.L}" x2="${A.R}" y1="${ay(t)}" y2="${ay(t)}" stroke="var(--grid)"/>`;
     if(Math.abs(ay(t)-ay(p))>16) s+=`<text x="${A.L-10}" y="${ay(t)+5}" text-anchor="end" font-size="14" fill="var(--ink-2)">$${t}</text>`}
-  for(const t of [20,40,60,80,100]) if(!eq||Math.abs(ax(t)-ax(qs(pe)))>22) s+=`<text x="${ax(t)}" y="${A.B+22}" text-anchor="middle" font-size="14" fill="var(--ink-2)">${(t*1000).toLocaleString()}</text>`;
+  for(const t of [20,40,60,80,100]) if(!eq||Math.abs(ax(t)-ax(qs(pe)))>22) s+=`<text x="${ax(t)}" y="${A.B+22}" text-anchor="middle" font-size="14" fill="var(--ink-2)">${t}</text>`;
   // supply
   s+=`<line x1="${ax(0)}" y1="${ay(0)}" x2="${ax(100)}" y2="${ay(10)}" stroke="var(--sup)" stroke-width="5" stroke-linecap="round"/>`;
   s+=`<text x="${ax(100)}" y="${ay(10)-12}" text-anchor="end" font-size="20" font-weight="500" fill="var(--sup)">Supply</text>`;
@@ -496,16 +496,17 @@ function clear(h,order){
   const short=rem>0.01;if(short&&!order){price=1000;marg=null}
   return {d,rows,price,marg,short,rem,supplied:d-Math.max(rem,0)};
 }
-const XMAX=45,YMIN=-30,YMAX=220,L=70,R=680,T=54,B=350;
+const XMAX=40,YMIN=-15,YMAX=132,L=78,R=680,T=54,B=350;
 const xs=v=>L+(v/XMAX)*(R-L),ys=v=>B-((v-YMIN)/(YMAX-YMIN))*(B-T);
 function drawStack(res,isGame){
   const met=res.rem<=0.01, showEq=met&&!res.short&&res.price!==null;
   let s=axes('stk',L,R,T,B,'Price','($ per MWh)','Electricity','(MW)');
-  for(const t of [0,50,100,150,200]){
+  for(const t of [0,40,80,120]){
     s+=`<line x1="${L}" x2="${R}" y1="${ys(t)}" y2="${ys(t)}" stroke="${t===0?'var(--line)':'var(--grid)'}" stroke-width="${t===0?2:1}"/>`;
     if(!(showEq&&Math.abs(ys(t)-ys(res.price))<16)) s+=`<text x="${L-10}" y="${ys(t)+5}" text-anchor="end" font-size="14" fill="var(--ink-2)">$${t}</text>`;
   }
-  for(let t=0;t<=XMAX;t+=10) if(!(showEq&&Math.abs(xs(t)-xs(res.d))<24)) s+=`<text x="${xs(t)}" y="${B+22}" text-anchor="middle" font-size="14" fill="var(--ink-2)">${t}</text>`;
+  for(let t=0;t<=XMAX;t+=10) if(!(showEq&&Math.abs(xs(t)-xs(res.d))<24)) s+=`<text x="${xs(t)}" y="${B+22}" text-anchor="middle" font-size="14" fill="var(--ink-2)">${(t*1000).toLocaleString()}</text>`;
+  s+=`<defs><clipPath id="stkclip"><rect x="${L}" y="${T-30}" width="${R-L}" height="${B-T+60}"/></clipPath></defs><g clip-path="url(#stkclip)">`;
   let x=0,path='',first=true;const vis=res.rows.filter(r=>r.avail>0.01);
   vis.forEach(r=>{
     const top=ys(Math.max(r.offer,0)),bot=ys(Math.min(r.offer,0));let y1=top,h=bot-top;if(h<5){y1=ys(0)-5;h=5}
@@ -516,8 +517,9 @@ function drawStack(res,isGame){
     path+=(first?`M${xs(x)} ${ys(r.offer)}`:` V${ys(r.offer)}`)+` H${xs(x+r.avail)}`;first=false;x+=r.avail;
   });
   if(vis.length){if(!isGame)path+=` V${ys(YMAX)}`;
-    s+=`<path d="${path}" fill="none" stroke="var(--sup)" stroke-width="4" stroke-linejoin="round"/>`;
-    s+=`<text x="${xs(Math.min(x,XMAX))+8}" y="${isGame?ys(vis[vis.length-1].offer)+6:ys(YMAX)+18}" font-size="18" font-weight="500" fill="var(--sup)">Supply</text>`}
+    s+=`<path d="${path}" fill="none" stroke="var(--sup)" stroke-width="4" stroke-linejoin="round"/>`;}
+  s+='</g>';
+  if(vis.length){const over=x>XMAX-2.5;s+=`<text x="${over?R-6:xs(x)+8}" y="${isGame?ys(vis[vis.length-1].offer)-10:ys(YMAX)+18}" text-anchor="${over?'end':'start'}" font-size="18" font-weight="500" fill="var(--sup)">Supply</text>`}
   const dx=xs(Math.min(res.d,XMAX));
   s+=`<line x1="${dx}" x2="${dx}" y1="${T}" y2="${B}" stroke="var(--dem)" stroke-width="4"/>`;
   s+=`<text x="${dx-10}" y="${T+16}" text-anchor="end" font-size="18" font-weight="500" fill="var(--dem)">Demand</text>`;
