@@ -286,15 +286,6 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
         <button id="modeGame" aria-pressed="false">You try</button>
       </div>
     </div>
-    <div class="panel controls">
-      <div class="hourbox">
-        <div class="hourtop">
-          <span class="clock" id="clock">7 PM</span>
-          <div class="chips" id="presets"></div>
-        </div>
-        <input type="range" id="hour" min="0" max="23" step="1" value="19" aria-label="Hour of day">
-      </div>
-    </div>
     <div class="duo">
       <div class="panel">
         <div class="svgbox"><svg id="stack" viewBox="0 0 720 410" role="img" aria-label="Electricity supply steps and demand"></svg></div>
@@ -548,10 +539,6 @@ function drawCards(res){
 const TYPES=[['clean','Solar','free sunshine'],['clean','Wind','free wind'],['clean','Nuclear','tiny fuel cost'],['clean','Geothermal','free earth heat'],['clean','Hydro','free water'],['mixed','Imports','bought from other states'],['fossil','Gas','buys fuel'],['fossil','Gas peaker','buys fuel, runs rarely']];
 document.getElementById('cards').addEventListener('click',e=>{const b=e.target.closest('.card');if(!b||b.disabled)return;const id=b.dataset.id,i=S.picks.indexOf(id);if(i>=0)S.picks.splice(i,1);else S.picks.push(id);render()});
 document.getElementById('reset').onclick=()=>{S.picks=[];render()};
-document.getElementById('presets').innerHTML=[[4,'4 AM'],[12,'Noon'],[19,'7 PM']].map(([h,l])=>`<button class="chip" data-h="${h}">${l}</button>`).join('');
-document.getElementById('presets').addEventListener('click',e=>{const b=e.target.closest('[data-h]');if(b)setHour(+b.dataset.h)});
-const hr=document.getElementById('hour');hr.addEventListener('input',()=>setHour(+hr.value));
-function setHour(h){S.hour=h;S.picks=[];hr.value=h;render()}
 function setMode(m){S.mode=m;S.picks=[];render()}
 document.getElementById('modeAuto').onclick=()=>setMode('auto');
 document.getElementById('modeGame').onclick=()=>setMode('game');
@@ -614,8 +601,6 @@ function render(){
   document.getElementById('modeAuto').setAttribute('aria-pressed',!isGame);
   document.getElementById('modeGame').setAttribute('aria-pressed',isGame);
   document.getElementById('gameArea').hidden=!isGame;
-  document.getElementById('clock').textContent=fmtH(S.hour);
-  document.querySelectorAll('#presets .chip').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.h===S.hour));
   document.querySelectorAll('#scen .chip').forEach(b=>b.setAttribute('aria-pressed',!!S[b.dataset.k]));
   const best=clear(S.hour),res=isGame?clear(S.hour,S.picks):best;
   drawStack(res,isGame);side(res,isGame,best);if(isGame)drawCards(res);
