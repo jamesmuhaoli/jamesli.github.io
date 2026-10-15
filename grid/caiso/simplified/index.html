@@ -243,6 +243,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
 .btn.dbtn{border-color:var(--dem);color:var(--dem)} .btn.dbtn[aria-pressed="true"]{background:var(--dem);border-color:var(--dem);color:#fff}
 .qb{display:inline-flex;align-items:center;gap:2px;font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums}
 .qb .bolt{width:1em;height:1em;color:var(--gold)}
+.bolt.hb{width:16px;height:16px;color:var(--gold);vertical-align:-3px}
 .fine{font-size:12.5px;color:var(--ink-2);margin:0}
 @media (prefers-reduced-motion:reduce){.progress > i{transition:none}}
 .home{display:inline-block;font-size:15px;color:var(--ink-2);text-decoration:none;margin-bottom:16px}.home:hover{color:var(--ink)}
@@ -320,7 +321,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
       </div>
       <div class="bookgrid">
         <div class="ladderwrap">
-          <div class="lhead"><span>Bid</span><span>Price</span><span>Power</span></div>
+          <div class="lhead"><span>Bid</span><span>Price</span><span><svg class="bolt hb" viewBox="0 0 24 24" aria-label="Power"><use href="#bolt"/></svg></span></div>
           <div class="ladder" id="ladder">
             <div id="bkRows"></div>
             <div class="cline" id="cline" tabindex="0" role="slider" aria-label="Clearing line: bids below it are accepted" aria-valuemin="0">
@@ -329,7 +330,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
           </div>
         </div>
         <div class="buyers">
-          <div class="bnum" id="bkNeed">31,500 MW</div>
+          <div class="bnum" id="bkNeed"></div>
           <div class="gauge"><i id="bkGauge"></i></div>
           <div class="eqn small" id="bkEq" style="margin-top:14px"></div>
           <div class="sub" id="bkSub"></div>
@@ -350,14 +351,14 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
         <div><div class="eyebrow">Time</div><div class="clock big" id="bClock">12:00 AM</div></div>
         <div class="readeq">
           <div class="eqn small"><span class="D">Demand</span><span class="op">=</span><span class="S">Supply</span></div>
-          <div class="sub ok" id="bNums">15,500 MW = 15,500 MW</div>
+          <div class="sub ok" id="bNums"></div>
         </div>
         <div><div class="eyebrow">Price</div><div class="price" id="bPrice">$35</div></div>
       </div>
       <div class="p3grid">
         <div class="minibook">
           <div class="eyebrow" style="margin-bottom:6px">Bid stack, live</div>
-          <div class="lhead sm"><span>Bid</span><span>Price</span><span>MW</span></div>
+          <div class="lhead sm"><span>Bid</span><span>Price</span><span><svg class="bolt hb" viewBox="0 0 24 24" aria-label="Power"><use href="#bolt"/></svg></span></div>
           <div class="ladder mini"><div id="mbRows"></div><div class="mline" id="mbLine"><span id="mbLbl">Demand</span></div></div>
         </div>
         <div class="svgbox wide"><svg id="bridge" viewBox="0 0 1000 760" role="img" aria-label="Demand moving across the supply steps, with each moment's price traced over the day"><g id="bStatic"></g><g id="bDyn"></g></svg></div>
@@ -451,6 +452,8 @@ const GENS=[ // five plants for the 7 PM market; the cheapest four already cover
 ];
 const byId=Object.fromEntries(GENS.map(g=>[g.id,g]));
 const BOLT=v=>`<span class="qb">+${mw(v)}<svg class="bolt" viewBox="0 0 24 24" aria-hidden="true"><use href="#bolt"/></svg></span>`;
+const BQ=v=>`<span class="qb">${mw(v)}<svg class="bolt" viewBox="0 0 24 24" aria-hidden="true"><use href="#bolt"/></svg></span>`;
+const SB=(x,y,z,c)=>`<use href="#bolt" x="${x}" y="${y}" width="${z}" height="${z}" style="color:${c||'var(--gold)'}"/>`;
 const PP=n=>`<span class="pp" aria-label="Power plant ${n}"><svg class="ppi" viewBox="0 0 24 24" aria-hidden="true"><use href="#pp"/></svg><b>${n}</b></span>`;
 const demand=h=>BASE[h]*(S.heat?1.15:1)+((S.battery&&h>=10&&h<=15)?5:0);
 const fmtH=h=>h===0?'12 AM':h<12?h+' AM':h===12?'12 PM':(h-12)+' PM';
@@ -471,7 +474,7 @@ const XMAX=40,YMIN=-12,YMAX=172,L=78,R=680,T=54,B=350;
 const xs=v=>L+(v/XMAX)*(R-L),ys=v=>B-((v-YMIN)/(YMAX-YMIN))*(B-T);
 function drawStack(res,isGame){
   const met=res.rem<=0.01, showEq=met&&!res.short&&res.price!==null;
-  let s=axes('stk',L,R,T,B,'Price','($ per MWh)','Electricity','(MW)');
+  let s=axes('stk',L,R,T,B,'Price','($ per MWh)','Electricity','');s+=SB(R+16,B+30,18);
   for(const t of [0,40,80,120,160]){
     s+=`<line x1="${L}" x2="${R}" y1="${ys(t)}" y2="${ys(t)}" stroke="${t===0?'var(--line)':'var(--grid)'}" stroke-width="${t===0?2:1}"/>`;
     if(!(showEq&&Math.abs(ys(t)-ys(res.price))<16)) s+=`<text x="${L-10}" y="${ys(t)+5}" text-anchor="end" font-size="14" fill="var(--ink-2)">$${t}</text>`;
@@ -495,7 +498,7 @@ function drawStack(res,isGame){
   s+=`<line x1="${dx}" x2="${dx}" y1="${T}" y2="${B}" stroke="var(--dem)" stroke-width="4"/>`;
   s+=`<text x="${dx-10}" y="${T+16}" text-anchor="end" font-size="18" font-weight="500" fill="var(--dem)">Demand</text>`;
   if(isGame&&!met){
-    s+=`<text x="${dx-10}" y="${T+38}" text-anchor="end" font-size="15" font-weight="500" fill="var(--ink-2)">${mw(res.rem)} MW to go</text>`;
+    s+=`<text x="${dx-62}" y="${T+38}" text-anchor="end" font-size="15" font-weight="500" fill="var(--ink-2)">${mw(res.rem)}</text>`+SB(dx-60,T+25,16)+`<text x="${dx-42}" y="${T+38}" font-size="15" font-weight="500" fill="var(--ink-2)">to go</text>`;
   } else if(res.short){
     s+=`<rect x="${xs(res.supplied)}" y="${T}" width="${dx-xs(res.supplied)}" height="${B-T}" fill="var(--sup)" opacity=".16"/>`;
     s+=`<text x="${dx-10}" y="${T+40}" text-anchor="end" font-size="17" font-weight="500" fill="var(--sup)">NOT ENOUGH</text>`;
@@ -564,7 +567,7 @@ function drawBook(){
   cl.style.top=((n-BK.k)*PITCH+6-3)+'px';
   cl.classList.toggle('ok',cleared);
   cl.setAttribute('aria-valuemax',n);cl.setAttribute('aria-valuenow',BK.k);
-  document.getElementById('bkNeed').textContent=mw(d)+' MW';
+  document.getElementById('bkNeed').innerHTML=BQ(d);
   document.getElementById('bkGauge').style.width=Math.min(100,100*got/d)+'%';
   const E=document.getElementById('bkEq'),Sb=document.getElementById('bkSub'),P=document.getElementById('bkPrice');
   P.innerHTML='&nbsp;';
@@ -643,7 +646,7 @@ function bStatic(){
   }
   s+=`<line x1="${G.L2}" y1="${G.Yb}" x2="${G.L2}" y2="${GTOP-22}" stroke="var(--ink)" stroke-width="2" marker-end="url(#ah-b)"/>`;
   s+=`<line x1="${G.L2}" y1="${G.Yb}" x2="${G.R2+14}" y2="${G.Yb}" stroke="var(--ink)" stroke-width="2" marker-end="url(#ah-b)"/>`;
-  s+=`<text x="${G.L2+12}" y="${GTOP-20}" font-size="17"><tspan font-weight="500" fill="var(--ink)">Demand over the day</tspan><tspan font-size="14" fill="var(--ink-2)"> (MW)</tspan></text>`;
+  s+=`<text x="${G.L2+12}" y="${GTOP-20}" font-size="17"><tspan font-weight="500" fill="var(--ink)">Demand over the day</tspan></text>`+SB(G.L2+186,GTOP-34,18);
   [[0,'12AM'],[72,'6AM'],[144,'12PM'],[216,'6PM'],[288,'12AM']].forEach(([i,l])=>s+=`<text x="${tx(i)}" y="${G.Yb+20}" text-anchor="middle" font-size="13" fill="var(--ink-2)">${l}</text>`);
   // bottom-left: the 45° turn
   s+=`<line x1="${gx(G.GW0)}" y1="${G.Yb}" x2="${gx(40)}" y2="${GTOP}" stroke="var(--line)" stroke-width="2.5" stroke-dasharray="2 6" stroke-linecap="round"/>`;
@@ -667,7 +670,7 @@ function bStatic(){
   s+=`<line x1="${G.L1}" y1="${G.B}" x2="${G.R1+10}" y2="${G.B}" stroke="var(--ink)" stroke-width="2" marker-end="url(#ah-b)"/>`;
   s+=`<text x="${G.L1+12}" y="${G.T-18}" font-size="17"><tspan font-weight="500" fill="var(--ink)">Price</tspan><tspan font-size="14" fill="var(--ink-2)"> ($ per MWh)</tspan></text>`;
   for(const q of [0,10,20,30,40]) s+=`<text x="${gx(q)}" y="${G.B+20}" text-anchor="middle" font-size="13" fill="var(--ink-2)">${(q*1000).toLocaleString()}</text>`;
-  s+=`<text x="${G.R1+10}" y="${G.B+46}" text-anchor="end" font-size="16"><tspan font-weight="500" fill="var(--ink)">Electricity</tspan><tspan font-size="13" fill="var(--ink-2)"> (MW)</tspan></text>`;
+  s+=`<text x="${G.R1+10}" y="${G.B+46}" text-anchor="end" font-size="16"><tspan font-weight="500" fill="var(--ink)">Electricity</tspan></text>`+SB(G.R1+12,G.B+32,17);
   // axes: timeline
   s+=`<line x1="${G.L2}" y1="${G.B}" x2="${G.R2+14}" y2="${G.B}" stroke="var(--ink)" stroke-width="2" marker-end="url(#ah-b)"/>`;
   s+=`<line x1="${G.L2}" y1="${G.B}" x2="${G.L2}" y2="${G.T-12}" stroke="var(--line)" stroke-width="1.5"/>`;
@@ -708,10 +711,10 @@ function bDraw(){
   s+=`<circle cx="${dx}" cy="${yd}" r="6" fill="var(--paper)" stroke="var(--dem)" stroke-width="2.5"/>`;
   s+=`<circle cx="${txi}" cy="${yd}" r="9" fill="var(--dem)" stroke="var(--paper)" stroke-width="3"/>`;
   s+=`<rect x="${(G.R1+G.L2)/2-46}" y="${yd-30}" width="92" height="22" rx="4" fill="var(--dem)"/>`;
-  s+=`<text x="${(G.R1+G.L2)/2}" y="${yd-14}" text-anchor="middle" font-size="14" font-weight="500" fill="#fff">${mw(d)} MW</text>`;
+  s+=`<text x="${(G.R1+G.L2)/2-9}" y="${yd-14}" text-anchor="middle" font-size="14" font-weight="500" fill="#fff">${mw(d)}</text>`+SB((G.R1+G.L2)/2+16,yd-26,14,'#fff');
   document.getElementById('bDyn').innerHTML=s;
   document.getElementById('bClock').textContent=clockStr(bt);
-  document.getElementById('bNums').textContent=`${mw(d)} MW = ${mw(d)} MW`;
+  document.getElementById('bNums').innerHTML=`${BQ(d)} = ${BQ(d)}`;
   document.getElementById('bPrice').innerHTML=`$${p}<small>per MWh</small>`;
   document.getElementById('bT').value=bt;
   drawMini(d);
@@ -726,7 +729,7 @@ function drawMini(d){
     h+=`<div class="lrow sm ${inn?'in':'out'}${isM?' marg':''}" style="--sw:var(--c-${st.id})"><span class="nm"><i></i>${PP(i+1)}</span><span class="pr">$${st.o}</span><span class="qty"><b style="width:${(100*st.mw/maxQ).toFixed(0)}%"></b><span>${mw(st.mw)}</span></span></div>`}
   document.getElementById('mbRows').innerHTML=h;
   document.getElementById('mbLine').style.top=((n-k)*MPITCH+4-3.5)+'px';
-  document.getElementById('mbLbl').textContent=`${mw(d)} MW → $${BSTEPS[k-1].o}`;
+  document.getElementById('mbLbl').innerHTML=`${BQ(d)} → $${BSTEPS[k-1].o}`;
 }
 function bStop(){clearInterval(bTimer);bTimer=null;document.getElementById('bPlay').textContent='Play the day'}
 document.getElementById('bPlay').onclick=()=>{
