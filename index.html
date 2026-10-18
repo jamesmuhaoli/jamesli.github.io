@@ -1,156 +1,64 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>James (Muhao) Li — Economics, Math &amp; Data Science</title>
-  <meta name="description" content="James (Muhao) Li — analyst trained in electricity markets. Research in monetary economics and labor markets; photography on the side.">
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-JY8E367EKL"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-JY8E367EKL');
-  </script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unplugged</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#FFF8EC;--ink:#2B2A33;--soft:#8A8794;--plug:#FFC83D;--plug-dk:#E0A800;--cord:#2B2A33;--wall:#FFFFFF;--line:#E9E1D2;--z:#7C6CF2}
+  @media (prefers-color-scheme:dark){:root{--bg:#17161C;--ink:#F4F2EC;--soft:#A19EAD;--wall:#24232B;--line:#34323D;--cord:#F4F2EC}}
+  html,body{height:100%}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;display:grid;place-items:center;text-align:center;padding:24px max(16px,env(safe-area-inset-left,0px));box-sizing:border-box}
+  main{display:flex;flex-direction:column;align-items:center;gap:6px;max-width:520px}
+  svg{width:min(360px,86vw);height:auto;overflow:visible}
+  h1{font-weight:900;font-size:clamp(40px,9vw,64px);margin:8px 0 0;letter-spacing:-.02em}
+  p{margin:0;font-weight:700;font-size:clamp(17px,3.6vw,20px);color:var(--soft)}
+  .plug{animation:snooze 3.2s ease-in-out infinite;transform-origin:150px 150px}
+  @keyframes snooze{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(5px) rotate(2deg)}}
+  .z{font:900 26px "Nunito",sans-serif;fill:var(--z);opacity:0;animation:z 3.6s ease-out infinite}
+  .z.b{animation-delay:1.2s;font-size:20px}.z.c{animation-delay:2.4s;font-size:15px}
+  @keyframes z{0%{opacity:0;transform:translate(0,0)}20%{opacity:1}100%{opacity:0;transform:translate(26px,-46px)}}
+  .spark{animation:spark 2.4s steps(1) infinite;opacity:0}
+  @keyframes spark{0%,88%{opacity:0}90%,96%{opacity:1}}
+  @media (prefers-reduced-motion:reduce){.plug,.z,.spark{animation:none}.z{opacity:1}}
+</style>
 </head>
 <body>
-  <div class="page">
-    <header class="topbar">
-      <div class="wrap">
-        <a class="brand" href="index.html">James Li<span>.</span></a>
-        <nav class="nav" aria-label="Primary">
-          <a href="index.html" aria-current="page">Home</a>
-          <a href="courses.html">Courses</a>
-          <a href="photography.html">Photography</a>
-        </nav>
-      </div>
-    </header>
-
-    <main>
-      <div class="wrap">
-
-        <!-- Hero -->
-        <section class="hero" style="margin-top:0">
-          <p class="eyebrow">Economics · Mathematics · Data Science</p>
-          <h1>James (Muhao) Li</h1>
-          <p class="sub">Analyst trained in electricity markets.</p>
-          <p class="lede">I analyze and forecast power markets, energy commodities and the macro conditions behind them, with training in economics, mathematics and data science from the University of Wisconsin–Madison. I also work in monetary economics and data engineering. I am currently an associate on the market design and analysis team at the California ISO.</p>
-          <p class="meta">
-            <span><i class="fa-solid fa-location-dot"></i>Los Angeles, CA</span>
-            <span><i class="fa-solid fa-graduation-cap"></i>University of Wisconsin–Madison</span>
-          </p>
-          <div class="btn-row">
-            <a class="btn primary" href="mailto:muhao0225@gmail.com"><i class="fa-solid fa-envelope"></i>Get in touch</a>
-            <a class="btn ghost" href="https://www.linkedin.com/in/james-muhao-li" target="_blank" rel="noopener"><i class="fa-brands fa-linkedin"></i>LinkedIn</a>
-            <a class="btn ghost" href="https://github.com/jamesmuhaoli" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i>GitHub</a>
-          </div>
-        </section>
-
-        <!-- Featured research -->
-        <section>
-          <div class="card featured">
-            <div>
-              <span class="tag">Currently working on</span>
-              <h3>Fiscal Stabilizer and the Phillips Curve</h3>
-              <p>Research draft on how fiscal stabilizers shape the relationship between labor market slack and inflation.</p>
-              <p class="note"><i class="fa-regular fa-envelope" style="margin-right:.4rem"></i>The draft is access-controlled. Send a quick request from your email address and I'll approve it.</p>
-            </div>
-            <a class="btn primary" href="https://drive.google.com/file/d/1BVjFmG8W7nuujn3wy_kf4xmBzlrldjD7/view?usp=drive_link" target="_blank" rel="noopener"><i class="fa-solid fa-file-pdf"></i>Read the draft</a>
-          </div>
-        </section>
-
-        <!-- Teaching -->
-        <section>
-          <div class="card featured">
-            <div>
-              <span class="tag">Teaching</span>
-              <h3>Run the Grid</h3>
-              <p>An interactive intro to supply, demand and electricity markets for high school students: from a boba shop to clearing California's power market every 5 minutes, then forecasting tomorrow's demand.</p>
-            </div>
-            <a class="btn primary" href="grid/"><i class="fa-solid fa-bolt"></i>Open Run the Grid</a>
-          </div>
-        </section>
-
-        <!-- Experience -->
-        <section>
-          <div class="section-head"><h2>Experience</h2></div>
-          <div>
-            <div class="card">
-              <span class="tag">Leadership</span>
-              <h3 style="margin-top:.5rem">College Fed Challenge — Senior Lead, Energy Team</h3>
-              <p>Led the energy team in the Federal Reserve Challenge, analyzing and forecasting energy commodities, inflation and the broader economy.</p>
-              <ul class="chips"><li>Money markets</li><li>Cross-commodities</li><li>GDP &amp; labor</li><li>Credit delinquency</li><li>Inflation</li><li>SOFR &amp; repo rates</li></ul>
-            </div>
-          </div>
-        </section>
-
-        <!-- Skills -->
-        <section>
-          <div class="section-head"><h2>Skills</h2></div>
-          <div class="card">
-            <div class="grid-2" style="gap:1.5rem">
-              <div><h3>Forecasting &amp; econometrics</h3><p>Time series, panel data, causal inference.</p></div>
-              <div><h3>Market design &amp; optimization</h3><p>Auction theory, mechanism design, dynamic optimization, electricity market modeling.</p></div>
-              <div><h3>Data engineering</h3><p>Pipelines with Spark, Docker, gRPC and Cassandra; SQL and Parquet/Arrow.</p></div>
-              <div><h3>Tools</h3><ul class="chips" style="margin-top:.5rem"><li>Python</li><li>R</li><li>SQL</li><li>Stata</li><li>Matlab</li><li>Tableau</li></ul></div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Focus areas -->
-        <section>
-          <div class="section-head"><h2>What I work on</h2><a href="courses.html">Coursework →</a></div>
-          <div class="grid-3">
-            <div class="card">
-              <h3><i class="fa-solid fa-landmark"></i>Monetary &amp; macro</h3>
-              <p>Phillips curves, search-and-matching labor markets, fiscal and monetary policy.</p>
-              <ul class="chips"><li>New Keynesian</li><li>Search &amp; matching</li><li>Forecasting</li></ul>
-            </div>
-            <div class="card">
-              <h3><i class="fa-solid fa-bolt"></i>Energy markets</h3>
-              <p>Electricity market design and price analysis across US grid operators.</p>
-              <ul class="chips"><li>Market design</li><li>Nodal pricing</li><li>Auctions</li><li>Forecasting</li></ul>
-            </div>
-            <div class="card">
-              <h3><i class="fa-solid fa-database"></i>Data engineering</h3>
-              <p>Reliable pipelines and analysis, from raw economic data to a finished model.</p>
-              <ul class="chips"><li>Python</li><li>R</li><li>SQL</li><li>Stata</li><li>Spark</li><li>Docker</li></ul>
-            </div>
-          </div>
-        </section>
-
-        <!-- Photography teaser -->
-        <section>
-          <div class="section-head"><h2>Behind the lens</h2><a href="photography.html">All photography →</a></div>
-          <div class="strip">
-            <a href="photography.html" aria-label="Mendota Lake at dusk"><img src="assets/home-1.jpg" alt="Sailboat on Lake Mendota at dusk" loading="lazy"></a>
-            <a href="photography.html" aria-label="San Diego flower fields"><img src="assets/home-2.jpg" alt="Ranunculus flowers in San Diego" loading="lazy"></a>
-            <a href="photography.html" aria-label="Pasadena jacaranda"><img src="assets/home-3.jpg" alt="Jacaranda blossoms in Pasadena" loading="lazy"></a>
-          </div>
-        </section>
-
-        <!-- Contact -->
-        <section>
-          <h2>Contact</h2>
-          <div class="contact">
-            <a href="mailto:muhao0225@gmail.com"><i class="fa-solid fa-envelope"></i>muhao0225@gmail.com</a>
-            <a href="https://www.linkedin.com/in/james-muhao-li" target="_blank" rel="noopener"><i class="fa-brands fa-linkedin"></i>LinkedIn</a>
-            <a href="https://github.com/jamesmuhaoli" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i>GitHub</a>
-          </div>
-        </section>
-
-      </div>
-    </main>
-
-    <footer class="bottombar">© 2026 James Li — All Rights Reserved<span class="credit">AI-native site · designed with <a href="https://claude.ai" target="_blank" rel="noopener">Claude</a>, by Anthropic</span></footer>
-  </div>
+<main>
+  <svg viewBox="0 0 360 230" role="img" aria-label="A sleepy plug lying next to a wall outlet">
+    <!-- outlet -->
+    <rect x="270" y="58" width="74" height="104" rx="16" fill="var(--wall)" stroke="var(--line)" stroke-width="4"/>
+    <rect x="296" y="86" width="7" height="20" rx="3" fill="var(--soft)"/>
+    <rect x="312" y="86" width="7" height="20" rx="3" fill="var(--soft)"/>
+    <path d="M300 124 q7.5 9 15 0" fill="none" stroke="var(--soft)" stroke-width="5" stroke-linecap="round"/>
+    <!-- cord -->
+    <path d="M20 200 C 60 150, 70 230, 110 190 S 150 170, 150 172" fill="none" stroke="var(--cord)" stroke-width="7" stroke-linecap="round"/>
+    <!-- plug -->
+    <g class="plug">
+      <rect x="168" y="130" width="8" height="26" rx="3" fill="var(--soft)" transform="rotate(-8 172 143)"/>
+      <rect x="168" y="160" width="8" height="26" rx="3" fill="var(--soft)" transform="rotate(-8 172 173)"/>
+      <rect x="100" y="120" width="76" height="76" rx="22" fill="var(--plug)" stroke="var(--plug-dk)" stroke-width="4"/>
+      <!-- sleepy eyes -->
+      <path d="M118 152 q8 7 16 0" fill="none" stroke="var(--ink)" stroke-width="4.5" stroke-linecap="round"/>
+      <path d="M144 152 q8 7 16 0" fill="none" stroke="var(--ink)" stroke-width="4.5" stroke-linecap="round"/>
+      <!-- cheeks -->
+      <circle cx="115" cy="166" r="6" fill="#FF8FA3" opacity=".7"/>
+      <circle cx="163" cy="166" r="6" fill="#FF8FA3" opacity=".7"/>
+      <!-- little mouth -->
+      <ellipse cx="139" cy="174" rx="5" ry="4" fill="var(--ink)"/>
+    </g>
+    <!-- tiny spark between plug and outlet -->
+    <path class="spark" d="M222 120 l-8 14 h9 l-6 14 16-20 h-9 l6-8z" fill="var(--plug)"/>
+    <!-- zzz -->
+    <text class="z" x="150" y="108">Z</text>
+    <text class="z b" x="150" y="108">Z</text>
+    <text class="z c" x="150" y="108">z</text>
+  </svg>
+  <h1>Unplugged.</h1>
+  <p>Recharging for a bit. Back soon.</p>
+</main>
 </body>
 </html>
