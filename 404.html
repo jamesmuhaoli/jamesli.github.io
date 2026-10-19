@@ -3,32 +3,72 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>404 · Cat on duty</title>
+<title>Unplugged</title>
 <meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;900&display=swap" rel="stylesheet">
 <style>
-  :root{--bg:#FFF8EC;--ink:#2B2A33;--soft:#8A8794;--card:#FFFFFF;--line:#E9E1D2}
-  @media (prefers-color-scheme:dark){:root{--bg:#17161C;--ink:#F4F2EC;--soft:#A19EAD;--card:#24232B;--line:#34323D}}
+  :root{--bg:#FFF8EC;--ink:#2B2A33;--soft:#8A8794;--cat:#F2A65A;--cat-dk:#D9853B;--belly:#FFE3C4;--wall:#FFFFFF;--line:#E9E1D2;--plug:#2B2A33;--pink:#FF8FA3}
+  @media (prefers-color-scheme:dark){:root{--bg:#17161C;--ink:#F4F2EC;--soft:#A19EAD;--wall:#24232B;--line:#34323D;--plug:#F4F2EC}}
   html,body{height:100%}
   body{margin:0;background:var(--bg);color:var(--ink);font-family:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;display:grid;place-items:center;text-align:center;padding:24px max(16px,env(safe-area-inset-left,0px));box-sizing:border-box}
-  main{display:flex;flex-direction:column;align-items:center;gap:10px;max-width:560px}
-  .gif{background:var(--card);border:2px solid var(--line);border-radius:20px;padding:14px;max-width:100%;box-sizing:border-box}
-  .gif img{display:block;width:min(340px,80vw);height:auto;border-radius:12px}
-  h1{font-weight:900;font-size:clamp(30px,7vw,48px);line-height:1.1;margin:10px 0 0;letter-spacing:-.02em;text-wrap:balance}
+  main{display:flex;flex-direction:column;align-items:center;gap:8px;max-width:560px}
+  svg{width:min(380px,88vw);height:auto;overflow:visible}
+  h1{font-weight:900;font-size:clamp(30px,7vw,48px);line-height:1.1;margin:6px 0 0;letter-spacing:-.02em;text-wrap:balance}
   p{margin:0;font-weight:700;font-size:clamp(17px,3.6vw,20px);color:var(--soft);text-wrap:balance}
-  .credit{font-size:12px;font-weight:700;color:var(--soft);text-decoration:none;opacity:.8}
-  .credit:hover{text-decoration:underline}
+  .tail{transform-origin:118px 178px;animation:swish 1.6s ease-in-out infinite}
+  @keyframes swish{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(10deg)}}
+  .lids{transform-origin:150px 104px;animation:blink 4s infinite}
+  @keyframes blink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+  .cord{animation:dangle 2.2s ease-in-out infinite;transform-origin:160px 128px}
+  @keyframes dangle{0%,100%{transform:rotate(0)}50%{transform:rotate(-4deg)}}
+  @media (prefers-reduced-motion:reduce){.tail,.lids,.cord{animation:none}}
 </style>
 </head>
 <body>
 <main>
-  <div class="gif">
-    <img src="https://media.giphy.com/media/NFZPr107J8OMK1ZGiP/giphy.gif" alt="A cat next to a 404 error">
-  </div>
-  <a class="credit" href="https://giphy.com/gifs/cat-404-error-NFZPr107J8OMK1ZGiP" target="_blank" rel="noopener">GIF via GIPHY · @thedaideker</a>
-  <h1>404: website not found.</h1>
-  <p>The cat is looking into it. Please do not disturb the cat.</p>
+  <svg viewBox="0 0 380 250" role="img" aria-label="A smug orange cat holding an unplugged power cord in its mouth, next to an empty wall outlet">
+    <!-- outlet -->
+    <rect x="292" y="70" width="70" height="98" rx="16" fill="var(--wall)" stroke="var(--line)" stroke-width="4"/>
+    <rect x="316" y="96" width="7" height="19" rx="3" fill="var(--soft)"/>
+    <rect x="331" y="96" width="7" height="19" rx="3" fill="var(--soft)"/>
+    <path d="M320 132 q7 8 14 0" fill="none" stroke="var(--soft)" stroke-width="5" stroke-linecap="round"/>
+    <!-- floor -->
+    <line x1="20" y1="228" x2="360" y2="228" stroke="var(--line)" stroke-width="4" stroke-linecap="round"/>
+    <!-- tail -->
+    <path class="tail" d="M118 200 C 70 210, 52 170, 74 146" fill="none" stroke="var(--cat)" stroke-width="16" stroke-linecap="round"/>
+    <!-- body -->
+    <ellipse cx="152" cy="190" rx="54" ry="40" fill="var(--cat)"/>
+    <ellipse cx="160" cy="198" rx="28" ry="24" fill="var(--belly)"/>
+    <ellipse cx="132" cy="226" rx="16" ry="8" fill="var(--cat-dk)"/>
+    <ellipse cx="176" cy="226" rx="16" ry="8" fill="var(--cat-dk)"/>
+    <!-- head -->
+    <path d="M110 78 L120 40 L138 66 Z" fill="var(--cat)"/>
+    <path d="M190 78 L180 40 L162 66 Z" fill="var(--cat)"/>
+    <path d="M118 70 L122 52 L132 66 Z" fill="var(--pink)" opacity=".7"/>
+    <path d="M182 70 L178 52 L168 66 Z" fill="var(--pink)" opacity=".7"/>
+    <ellipse cx="150" cy="100" rx="46" ry="40" fill="var(--cat)"/>
+    <path d="M136 66 l4 12 M150 63 v13 M164 66 l-4 12" stroke="var(--cat-dk)" stroke-width="4" stroke-linecap="round"/>
+    <!-- smug half-closed eyes -->
+    <g class="lids">
+      <path d="M122 98 q10 -6 20 0" fill="none" stroke="var(--ink)" stroke-width="5" stroke-linecap="round"/>
+      <path d="M158 98 q10 -6 20 0" fill="none" stroke="var(--ink)" stroke-width="5" stroke-linecap="round"/>
+      <path d="M124 100 h16 M160 100 h16" stroke="var(--ink)" stroke-width="2.5" stroke-linecap="round" opacity=".5"/>
+    </g>
+    <!-- nose + whiskers -->
+    <path d="M146 110 h8 l-4 5 z" fill="var(--pink)"/>
+    <path d="M110 112 h-24 M112 120 l-22 6 M190 112 h24 M188 120 l22 6" stroke="var(--ink)" stroke-width="2.5" stroke-linecap="round" opacity=".55"/>
+    <!-- the stolen plug, in its mouth, cord trailing to the floor -->
+    <g class="cord">
+      <path d="M168 124 C 230 120, 240 190, 280 210 S 330 226, 352 222" fill="none" stroke="var(--plug)" stroke-width="6" stroke-linecap="round"/>
+      <rect x="152" y="114" width="26" height="20" rx="6" fill="var(--plug)"/>
+      <rect x="140" y="117" width="14" height="5" rx="2" fill="var(--soft)"/>
+      <rect x="140" y="126" width="14" height="5" rx="2" fill="var(--soft)"/>
+    </g>
+    <path d="M140 124 q4 4 8 0" fill="none" stroke="var(--ink)" stroke-width="2.5" stroke-linecap="round" opacity=".6"/>
+  </svg>
+  <h1>Sorry, my cat unplugged the website.</h1>
+  <p>She says she has no regrets. It'll be back after her nap.</p>
 </main>
 </body>
 </html>
