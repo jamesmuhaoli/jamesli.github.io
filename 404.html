@@ -8,57 +8,67 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;900&display=swap" rel="stylesheet">
 <style>
-  :root{--bg:#FFF8EC;--ink:#2B2A33;--soft:#8A8794;--plug:#FFC83D;--plug-dk:#E0A800;--cord:#2B2A33;--wall:#FFFFFF;--line:#E9E1D2;--z:#7C6CF2}
-  @media (prefers-color-scheme:dark){:root{--bg:#17161C;--ink:#F4F2EC;--soft:#A19EAD;--wall:#24232B;--line:#34323D;--cord:#F4F2EC}}
+  :root{--bg:#FFF8EC;--ink:#2B2A33;--soft:#8A8794;--cat:#F2A65A;--cat-dk:#D9853B;--belly:#FFE3C4;--wall:#FFFFFF;--line:#E9E1D2;--plug:#2B2A33;--pink:#FF8FA3}
+  @media (prefers-color-scheme:dark){:root{--bg:#17161C;--ink:#F4F2EC;--soft:#A19EAD;--wall:#24232B;--line:#34323D;--plug:#F4F2EC}}
   html,body{height:100%}
   body{margin:0;background:var(--bg);color:var(--ink);font-family:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;display:grid;place-items:center;text-align:center;padding:24px max(16px,env(safe-area-inset-left,0px));box-sizing:border-box}
-  main{display:flex;flex-direction:column;align-items:center;gap:6px;max-width:520px}
-  svg{width:min(360px,86vw);height:auto;overflow:visible}
-  h1{font-weight:900;font-size:clamp(40px,9vw,64px);margin:8px 0 0;letter-spacing:-.02em}
-  p{margin:0;font-weight:700;font-size:clamp(17px,3.6vw,20px);color:var(--soft)}
-  .plug{animation:snooze 3.2s ease-in-out infinite;transform-origin:150px 150px}
-  @keyframes snooze{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(5px) rotate(2deg)}}
-  .z{font:900 26px "Nunito",sans-serif;fill:var(--z);opacity:0;animation:z 3.6s ease-out infinite}
-  .z.b{animation-delay:1.2s;font-size:20px}.z.c{animation-delay:2.4s;font-size:15px}
-  @keyframes z{0%{opacity:0;transform:translate(0,0)}20%{opacity:1}100%{opacity:0;transform:translate(26px,-46px)}}
-  .spark{animation:spark 2.4s steps(1) infinite;opacity:0}
-  @keyframes spark{0%,88%{opacity:0}90%,96%{opacity:1}}
-  @media (prefers-reduced-motion:reduce){.plug,.z,.spark{animation:none}.z{opacity:1}}
+  main{display:flex;flex-direction:column;align-items:center;gap:8px;max-width:560px}
+  svg{width:min(380px,88vw);height:auto;overflow:visible}
+  h1{font-weight:900;font-size:clamp(30px,7vw,48px);line-height:1.1;margin:6px 0 0;letter-spacing:-.02em;text-wrap:balance}
+  p{margin:0;font-weight:700;font-size:clamp(17px,3.6vw,20px);color:var(--soft);text-wrap:balance}
+  .tail{transform-origin:118px 178px;animation:swish 1.6s ease-in-out infinite}
+  @keyframes swish{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(10deg)}}
+  .lids{transform-origin:150px 104px;animation:blink 4s infinite}
+  @keyframes blink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+  .cord{animation:dangle 2.2s ease-in-out infinite;transform-origin:160px 128px}
+  @keyframes dangle{0%,100%{transform:rotate(0)}50%{transform:rotate(-4deg)}}
+  @media (prefers-reduced-motion:reduce){.tail,.lids,.cord{animation:none}}
 </style>
 </head>
 <body>
 <main>
-  <svg viewBox="0 0 360 230" role="img" aria-label="A sleepy plug lying next to a wall outlet">
+  <svg viewBox="0 0 380 250" role="img" aria-label="A smug orange cat holding an unplugged power cord in its mouth, next to an empty wall outlet">
     <!-- outlet -->
-    <rect x="270" y="58" width="74" height="104" rx="16" fill="var(--wall)" stroke="var(--line)" stroke-width="4"/>
-    <rect x="296" y="86" width="7" height="20" rx="3" fill="var(--soft)"/>
-    <rect x="312" y="86" width="7" height="20" rx="3" fill="var(--soft)"/>
-    <path d="M300 124 q7.5 9 15 0" fill="none" stroke="var(--soft)" stroke-width="5" stroke-linecap="round"/>
-    <!-- cord -->
-    <path d="M20 200 C 60 150, 70 230, 110 190 S 150 170, 150 172" fill="none" stroke="var(--cord)" stroke-width="7" stroke-linecap="round"/>
-    <!-- plug -->
-    <g class="plug">
-      <rect x="168" y="130" width="8" height="26" rx="3" fill="var(--soft)" transform="rotate(-8 172 143)"/>
-      <rect x="168" y="160" width="8" height="26" rx="3" fill="var(--soft)" transform="rotate(-8 172 173)"/>
-      <rect x="100" y="120" width="76" height="76" rx="22" fill="var(--plug)" stroke="var(--plug-dk)" stroke-width="4"/>
-      <!-- sleepy eyes -->
-      <path d="M118 152 q8 7 16 0" fill="none" stroke="var(--ink)" stroke-width="4.5" stroke-linecap="round"/>
-      <path d="M144 152 q8 7 16 0" fill="none" stroke="var(--ink)" stroke-width="4.5" stroke-linecap="round"/>
-      <!-- cheeks -->
-      <circle cx="115" cy="166" r="6" fill="#FF8FA3" opacity=".7"/>
-      <circle cx="163" cy="166" r="6" fill="#FF8FA3" opacity=".7"/>
-      <!-- little mouth -->
-      <ellipse cx="139" cy="174" rx="5" ry="4" fill="var(--ink)"/>
+    <rect x="292" y="70" width="70" height="98" rx="16" fill="var(--wall)" stroke="var(--line)" stroke-width="4"/>
+    <rect x="316" y="96" width="7" height="19" rx="3" fill="var(--soft)"/>
+    <rect x="331" y="96" width="7" height="19" rx="3" fill="var(--soft)"/>
+    <path d="M320 132 q7 8 14 0" fill="none" stroke="var(--soft)" stroke-width="5" stroke-linecap="round"/>
+    <!-- floor -->
+    <line x1="20" y1="228" x2="360" y2="228" stroke="var(--line)" stroke-width="4" stroke-linecap="round"/>
+    <!-- tail -->
+    <path class="tail" d="M118 200 C 70 210, 52 170, 74 146" fill="none" stroke="var(--cat)" stroke-width="16" stroke-linecap="round"/>
+    <!-- body -->
+    <ellipse cx="152" cy="190" rx="54" ry="40" fill="var(--cat)"/>
+    <ellipse cx="160" cy="198" rx="28" ry="24" fill="var(--belly)"/>
+    <ellipse cx="132" cy="226" rx="16" ry="8" fill="var(--cat-dk)"/>
+    <ellipse cx="176" cy="226" rx="16" ry="8" fill="var(--cat-dk)"/>
+    <!-- head -->
+    <path d="M110 78 L120 40 L138 66 Z" fill="var(--cat)"/>
+    <path d="M190 78 L180 40 L162 66 Z" fill="var(--cat)"/>
+    <path d="M118 70 L122 52 L132 66 Z" fill="var(--pink)" opacity=".7"/>
+    <path d="M182 70 L178 52 L168 66 Z" fill="var(--pink)" opacity=".7"/>
+    <ellipse cx="150" cy="100" rx="46" ry="40" fill="var(--cat)"/>
+    <path d="M136 66 l4 12 M150 63 v13 M164 66 l-4 12" stroke="var(--cat-dk)" stroke-width="4" stroke-linecap="round"/>
+    <!-- smug half-closed eyes -->
+    <g class="lids">
+      <path d="M122 98 q10 -6 20 0" fill="none" stroke="var(--ink)" stroke-width="5" stroke-linecap="round"/>
+      <path d="M158 98 q10 -6 20 0" fill="none" stroke="var(--ink)" stroke-width="5" stroke-linecap="round"/>
+      <path d="M124 100 h16 M160 100 h16" stroke="var(--ink)" stroke-width="2.5" stroke-linecap="round" opacity=".5"/>
     </g>
-    <!-- tiny spark between plug and outlet -->
-    <path class="spark" d="M222 120 l-8 14 h9 l-6 14 16-20 h-9 l6-8z" fill="var(--plug)"/>
-    <!-- zzz -->
-    <text class="z" x="150" y="108">Z</text>
-    <text class="z b" x="150" y="108">Z</text>
-    <text class="z c" x="150" y="108">z</text>
+    <!-- nose + whiskers -->
+    <path d="M146 110 h8 l-4 5 z" fill="var(--pink)"/>
+    <path d="M110 112 h-24 M112 120 l-22 6 M190 112 h24 M188 120 l22 6" stroke="var(--ink)" stroke-width="2.5" stroke-linecap="round" opacity=".55"/>
+    <!-- the stolen plug, in its mouth, cord trailing to the floor -->
+    <g class="cord">
+      <path d="M168 124 C 230 120, 240 190, 280 210 S 330 226, 352 222" fill="none" stroke="var(--plug)" stroke-width="6" stroke-linecap="round"/>
+      <rect x="152" y="114" width="26" height="20" rx="6" fill="var(--plug)"/>
+      <rect x="140" y="117" width="14" height="5" rx="2" fill="var(--soft)"/>
+      <rect x="140" y="126" width="14" height="5" rx="2" fill="var(--soft)"/>
+    </g>
+    <path d="M140 124 q4 4 8 0" fill="none" stroke="var(--ink)" stroke-width="2.5" stroke-linecap="round" opacity=".6"/>
   </svg>
-  <h1>Unplugged.</h1>
-  <p>Recharging for a bit. Back soon.</p>
+  <h1>Sorry, my cat unplugged the website.</h1>
+  <p>She says she has no regrets. It'll be back after her nap.</p>
 </main>
 </body>
 </html>
